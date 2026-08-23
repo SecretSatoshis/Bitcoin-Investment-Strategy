@@ -4,8 +4,6 @@ A Bitcoin savings-plan notebook. [`bitcoin_savings_plan.ipynb`](notebooks/bitcoi
 
 Set your own contribution, cadence and start date, run it, and it reports cost basis against market price, sats accumulated, portfolio value, and how the plan compares with holding cash over the same period.
 
-Every figure it produces traces back to a dated, checksummed input. Nothing is hand-entered and nothing is fetched while the notebook runs.
-
 ## Pipeline
 
 ```text
