@@ -1,0 +1,401 @@
+{
+  "artifacts": {
+    "data/manifests/column_dictionary.csv": {
+      "bytes": 2575,
+      "columns": 4,
+      "rows": 41,
+      "sha256": "68735cb5dd1046eaa78de9f182f5da9ded48e30b9cbf33448747e336331fd3e7"
+    },
+    "data/manifests/source_registry.csv": {
+      "bytes": 273,
+      "columns": 5,
+      "rows": 2,
+      "sha256": "03faea62e9b22c2491d3de2efd23b4d8ffb95aa8d23bd2c205a8500d8819d50f"
+    },
+    "data/processed/bitcoin_daily.csv": {
+      "bytes": 4694814,
+      "columns": 55,
+      "data_end": "2026-08-22",
+      "data_start": "2009-01-03",
+      "rows": 6441,
+      "sha256": "608b01d34d58f8c1275906f3737d92c33692c57192b85a9f431aa7a7a643d4be"
+    },
+    "data/processed/median_household_income_annual.csv": {
+      "bytes": 566,
+      "columns": 2,
+      "data_end": "2024",
+      "data_start": "1984",
+      "rows": 41,
+      "sha256": "d9dbf652adf64d039602d34399cc43936610e9958c2ab19ebe99b1629fbad550"
+    },
+    "data/raw/brk/brk_daily.csv": {
+      "bytes": 3122860,
+      "columns": 38,
+      "data_end": "2026-08-22",
+      "data_start": "2009-01-03",
+      "rows": 6441,
+      "sha256": "7163394860ad5323ce96cc43d6545221ec1a66629292f5d3bdfb404a197e5439"
+    },
+    "data/raw/fred/median_household_income.csv": {
+      "bytes": 566,
+      "columns": 2,
+      "data_end": "2024",
+      "data_start": "1984",
+      "rows": 41,
+      "sha256": "d9dbf652adf64d039602d34399cc43936610e9958c2ab19ebe99b1629fbad550"
+    }
+  },
+  "core_data_end": "2026-08-22",
+  "last_completed_utc_day": "2026-08-22",
+  "release_id": "2026-08-22-235b23e4d7c2",
+  "requested_end_exclusive": "2026-08-23",
+  "requested_start": "2009-01-03",
+  "retrieved_at_utc": "2026-08-23T11:28:40.222397+00:00",
+  "schema_version": 1,
+  "sources": {
+    "brk": {
+      "base_url": "https://bitview.space/api",
+      "series": {
+        "addr_count": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:44Z",
+          "url": "https://bitview.space/api/series/addr_count/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 107
+        },
+        "addrs_over_100k_sats_addr_count": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:44Z",
+          "url": "https://bitview.space/api/series/addrs_over_100k_sats_addr_count/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 107
+        },
+        "addrs_over_10m_sats_addr_count": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:45Z",
+          "url": "https://bitview.space/api/series/addrs_over_10m_sats_addr_count/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 107
+        },
+        "addrs_over_1m_sats_addr_count": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:45Z",
+          "url": "https://bitview.space/api/series/addrs_over_1m_sats_addr_count/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 107
+        },
+        "coindays_destroyed_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:41Z",
+          "url": "https://bitview.space/api/series/coindays_destroyed_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 111
+        },
+        "difficulty": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:44Z",
+          "url": "https://bitview.space/api/series/difficulty/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 60
+        },
+        "fees_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:41Z",
+          "url": "https://bitview.space/api/series/fees_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 63
+        },
+        "hash_rate": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:44Z",
+          "url": "https://bitview.space/api/series/hash_rate/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 49
+        },
+        "lth_realized_loss_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:43Z",
+          "url": "https://bitview.space/api/series/lth_realized_loss_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 156
+        },
+        "lth_realized_price": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:42Z",
+          "url": "https://bitview.space/api/series/lth_realized_price/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 153
+        },
+        "lth_realized_profit_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:43Z",
+          "url": "https://bitview.space/api/series/lth_realized_profit_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 156
+        },
+        "lth_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:42Z",
+          "url": "https://bitview.space/api/series/lth_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "lth_transfer_volume_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:42Z",
+          "url": "https://bitview.space/api/series/lth_transfer_volume_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 162
+        },
+        "mvrv": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:41Z",
+          "url": "https://bitview.space/api/series/mvrv/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 336
+        },
+        "price_close": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:40Z",
+          "url": "https://bitview.space/api/series/price_close/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 93
+        },
+        "realized_cap": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:41Z",
+          "url": "https://bitview.space/api/series/realized_cap/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 153
+        },
+        "realized_price": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:41Z",
+          "url": "https://bitview.space/api/series/realized_price/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 156
+        },
+        "sth_realized_loss_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:43Z",
+          "url": "https://bitview.space/api/series/sth_realized_loss_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 156
+        },
+        "sth_realized_price": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:43Z",
+          "url": "https://bitview.space/api/series/sth_realized_price/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 153
+        },
+        "sth_realized_profit_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:43Z",
+          "url": "https://bitview.space/api/series/sth_realized_profit_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 156
+        },
+        "sth_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:42Z",
+          "url": "https://bitview.space/api/series/sth_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "subsidy_average_24h": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:44Z",
+          "url": "https://bitview.space/api/series/subsidy_average_24h/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 90
+        },
+        "subsidy_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:40Z",
+          "url": "https://bitview.space/api/series/subsidy_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 57
+        },
+        "supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:40Z",
+          "url": "https://bitview.space/api/series/supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 153
+        },
+        "supply_in_profit": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:41Z",
+          "url": "https://bitview.space/api/series/supply_in_profit/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 153
+        },
+        "utxos_over_10y_old_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:47Z",
+          "url": "https://bitview.space/api/series/utxos_over_10y_old_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "utxos_over_10y_old_transfer_volume_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:48Z",
+          "url": "https://bitview.space/api/series/utxos_over_10y_old_transfer_volume_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 162
+        },
+        "utxos_over_1y_old_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:45Z",
+          "url": "https://bitview.space/api/series/utxos_over_1y_old_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "utxos_over_1y_old_transfer_volume_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:45Z",
+          "url": "https://bitview.space/api/series/utxos_over_1y_old_transfer_volume_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 162
+        },
+        "utxos_over_2y_old_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:46Z",
+          "url": "https://bitview.space/api/series/utxos_over_2y_old_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "utxos_over_2y_old_transfer_volume_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:46Z",
+          "url": "https://bitview.space/api/series/utxos_over_2y_old_transfer_volume_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 162
+        },
+        "utxos_over_3y_old_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:46Z",
+          "url": "https://bitview.space/api/series/utxos_over_3y_old_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "utxos_over_3y_old_transfer_volume_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:46Z",
+          "url": "https://bitview.space/api/series/utxos_over_3y_old_transfer_volume_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 162
+        },
+        "utxos_over_4y_old_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:46Z",
+          "url": "https://bitview.space/api/series/utxos_over_4y_old_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "utxos_over_4y_old_transfer_volume_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:47Z",
+          "url": "https://bitview.space/api/series/utxos_over_4y_old_transfer_volume_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 162
+        },
+        "utxos_over_5y_old_supply": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:47Z",
+          "url": "https://bitview.space/api/series/utxos_over_5y_old_supply/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 150
+        },
+        "utxos_over_5y_old_transfer_volume_cumulative": {
+          "observations": 6441,
+          "response_end": 6443,
+          "response_index": "day1",
+          "response_start": 2,
+          "stamp": "2026-08-23T11:28:47Z",
+          "url": "https://bitview.space/api/series/utxos_over_5y_old_transfer_volume_cumulative/day?format=json&start=2009-01-03&end=2026-08-23",
+          "version": 162
+        }
+      },
+      "status": "live"
+    },
+    "fred_median_income": {
+      "cache_path": "data/raw/fred/median_household_income.csv",
+      "live_error": "RuntimeError: request failed after 2 attempts: https://fred.stlouisfed.org/graph/fredgraph.csv?id=MEHOINUSA646N",
+      "status": "cached"
+    }
+  }
+}

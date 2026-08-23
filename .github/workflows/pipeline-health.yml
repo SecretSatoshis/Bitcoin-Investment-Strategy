@@ -1,0 +1,77 @@
+name: Pipeline health check
+
+on:
+  pull_request:
+  schedule:
+    - cron: "17 07 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: bitcoin-pipeline-health-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    env:
+      MPLBACKEND: module://matplotlib_inline.backend_inline
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version-file: .python-version
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          version: "0.12.5"
+
+      - name: Install locked dependencies
+        run: uv sync --locked
+
+      - name: Run regression contracts
+        run: uv run --no-sync python -m unittest discover -s tests -v
+
+      - name: Refresh shared data once
+        if: github.event_name != 'pull_request'
+        run: uv run --no-sync python scripts/update_data.py
+
+      - name: Validate shared release
+        if: github.event_name != 'pull_request'
+        run: uv run --no-sync python scripts/validate_data.py
+
+      - name: Execute the notebook
+        if: github.event_name != 'pull_request'
+        run: uv run --no-sync python scripts/execute_notebooks.py --timeout 1200
+
+      - name: Validate the notebook did not alter shared data
+        if: github.event_name != 'pull_request'
+        run: uv run --no-sync python scripts/validate_data.py
+
+      - name: Restrict generated changes
+        if: github.event_name != 'pull_request'
+        run: uv run --no-sync python scripts/check_changed_paths.py
+
+      - name: Upload validated run
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: bitcoin-investment-strategy-${{ github.run_id }}
+          path: |
+            data/manifests/
+            data/processed/
+            notebooks/
+          if-no-files-found: error
+          retention-days: 30

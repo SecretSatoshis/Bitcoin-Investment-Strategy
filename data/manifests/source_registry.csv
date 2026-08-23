@@ -1,0 +1,3 @@
+source,dataset,frequency,consumers,canonical_artifact
+BRK / Bitview,BRK daily series API,daily,savings,data/processed/bitcoin_daily.csv
+FRED / U.S. Census Bureau,MEHOINUSA646N nominal median household income,annual,savings,data/processed/median_household_income_annual.csv
