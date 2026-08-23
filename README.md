@@ -1,10 +1,6 @@
 # Bitcoin Investment Strategy
 
-A Bitcoin savings-plan notebook backed by a reproducible, checksummed data release.
-
-## Follow the savings strategy
-
-[`bitcoin_savings_plan.ipynb`](notebooks/bitcoin_savings_plan.ipynb) is the companion to [**Should I buy bitcoin?**](https://newsletter.secretsatoshis.com/p/should-i-buy-bitcoin) — the post sets out the framework; the notebook is that framework in runnable form.
+A Bitcoin savings-plan notebook. [`bitcoin_savings_plan.ipynb`](notebooks/bitcoin_savings_plan.ipynb) is the companion to [**Should I buy bitcoin?**](https://newsletter.secretsatoshis.com/p/should-i-buy-bitcoin) — the post sets out the framework; the notebook is that framework in runnable form.
 
 Set your own contribution, cadence and start date, run it, and it reports cost basis against market price, sats accumulated, portfolio value, and how the plan compares with holding cash over the same period.
 
@@ -73,7 +69,7 @@ tests/           release and notebook-consumer contracts
 
 ## Scope and risk
 
-This notebook is a research and educational tool, not investment advice. Results are nominal, frictionless and pre-tax unless the notebook explicitly states otherwise. Past accumulation outcomes do not predict future ones, and Bitcoin can lose most or all of its value. See [`DATA_SOURCES.md`](DATA_SOURCES.md) for source-specific caveats.
+This notebook is a research and educational tool, not investment advice. Results are nominal, frictionless and pre-tax unless the notebook explicitly states otherwise. Past accumulation outcomes do not predict future ones. See [`DATA_SOURCES.md`](DATA_SOURCES.md) for source-specific caveats.
 
 ## License
 
