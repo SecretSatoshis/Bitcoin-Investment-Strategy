@@ -16,6 +16,12 @@ START_DATE = "2009-01-03"
 BRK_BASE_URL = "https://bitview.space/api"
 FRED_MEDIAN_INCOME_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MEHOINUSA646N"
 
+# MEHOINUSA646N is annual and published with roughly a one-year lag, so the newest year
+# in a healthy cache is normally the prior year. Three years allows for that lag plus a
+# late release; beyond it the committed fallback is a frozen figure being presented as
+# current, which every other stale-data path in this project refuses to do.
+FRED_CACHE_MAX_AGE_YEARS = 3
+
 COHORTS = ("1y", "2y", "3y", "4y", "5y", "10y")
 
 # One upstream request per metric. Values are canonical column names in the

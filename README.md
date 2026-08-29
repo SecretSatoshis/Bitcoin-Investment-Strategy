@@ -36,7 +36,11 @@ uv run --no-sync python -m unittest discover -s tests -v
 
 Use `--as-of YYYY-MM-DD` with `scripts/update_data.py` to request a specific completed UTC date. The default is the previous completed UTC day.
 
-Neither source needs an API key. FRED is a slow annual series and occasionally stalls; when the live request fails the updater falls back to the committed verified snapshot and records `status: cached` in the manifest.
+Neither source needs an API key. FRED is a slow annual series and occasionally stalls;
+when a transient live request fails, the updater can fall back to the committed verified
+snapshot and records `status: cached` in the manifest. The fallback is refused if its
+latest observation is more than three years behind the requested release year, and an
+upstream schema change fails loudly instead of silently freezing the dataset.
 
 ## Pipeline health check
 

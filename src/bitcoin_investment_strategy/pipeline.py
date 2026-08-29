@@ -10,6 +10,7 @@ import pandas as pd
 
 from .config import (
     BRK_SERIES,
+    FRED_CACHE_MAX_AGE_YEARS,
     MANIFEST_DIR,
     PROCESSED_DIR,
     RAW_DIR,
@@ -35,16 +36,44 @@ def _cached_fetch(
     cache_path: Path,
     *,
     parse_dates: list[str] | None = None,
+    fatal_errors: tuple[type[Exception], ...] = (ValueError,),
+    stale_cache_check: Callable[[pd.DataFrame], str | None] | None = None,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Fetch live, falling back to the committed cache only for recoverable failures.
+
+    Two things the bare `except Exception` could not distinguish:
+
+    * A timeout is transient and the cache is exactly the right answer. A schema change
+      is permanent — the source moved — and serving the cache turns a loud failure into
+      an indefinitely frozen number. `fatal_errors` re-raises that class.
+    * A cache is only a substitute while it is still current. `stale_cache_check` gives
+      the caller an explicit age budget, matching how every other source in this tree
+      is bounded.
+    """
     try:
         frame, provenance = fetcher()
         provenance = {**provenance, "status": "live"}
         return frame, provenance
+    except fatal_errors as error:
+        raise RuntimeError(
+            f"{label}: the source returned an unexpected schema, which the committed "
+            "cache cannot stand in for — the upstream format has changed and the "
+            "fetcher needs updating"
+        ) from error
     except Exception as error:
         if not cache_path.exists():
             raise RuntimeError(f"{label}: live retrieval failed and no verified cache exists") from error
         print(f"  {label}: live retrieval failed ({error.__class__.__name__}); using committed cache")
         frame = pd.read_csv(cache_path, parse_dates=parse_dates)
+
+        if stale_cache_check is not None:
+            reason = stale_cache_check(frame)
+            if reason is not None:
+                raise RuntimeError(
+                    f"{label}: live retrieval failed and the committed cache is no "
+                    f"longer usable — {reason}"
+                ) from error
+
         return frame, {
             "status": "cached",
             "cache_path": str(cache_path.relative_to(ROOT)),
@@ -66,6 +95,22 @@ def _artifact_metadata(path: Path) -> dict[str, Any]:
             if len(years):
                 metadata.update({"data_start": str(int(years.min())), "data_end": str(int(years.max()))})
     return metadata
+
+
+def _fred_cache_staleness(frame: pd.DataFrame, as_of: pd.Timestamp) -> str | None:
+    """Return why a committed FRED cache is unusable, or ``None`` if current."""
+    if "Year" not in frame.columns:
+        return "it contains no usable Year column"
+    years = pd.to_numeric(frame["Year"], errors="coerce").dropna()
+    if years.empty:
+        return "it contains no usable Year column"
+    age = int(as_of.year) - int(years.max())
+    if age > FRED_CACHE_MAX_AGE_YEARS:
+        return (
+            f"its newest observation is {int(years.max())}, {age} years behind "
+            f"{as_of.year} (limit {FRED_CACHE_MAX_AGE_YEARS})"
+        )
+    return None
 
 
 def _source_registry() -> pd.DataFrame:
@@ -105,7 +150,12 @@ def update_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
     validate_bitcoin_daily(bitcoin_daily)
 
     fred_path = RAW_DIR / "fred" / "median_household_income.csv"
-    income, fred_provenance = _cached_fetch("FRED median income", fetch_fred_median_income, fred_path)
+    income, fred_provenance = _cached_fetch(
+        "FRED median income",
+        fetch_fred_median_income,
+        fred_path,
+        stale_cache_check=lambda frame: _fred_cache_staleness(frame, as_of),
+    )
     if income["Year"].duplicated().any() or income["median_household_income_usd"].le(0).any():
         raise ValueError("FRED median income failed annual uniqueness or positivity checks")
 
