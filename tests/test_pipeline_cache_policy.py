@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import unittest
+import hashlib
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -18,6 +20,9 @@ class CachedFetchPolicyTests(unittest.TestCase):
         pd.DataFrame(
             {"Year": years, "median_household_income_usd": [1.0] * len(years)}
         ).to_csv(path, index=False)
+        (tmp / "manifest.json").write_text(json.dumps({"artifacts": {
+            str(path.relative_to(ROOT)): {"sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+        }}))
         return path
 
     def test_transient_failure_falls_back_to_cache(self):
@@ -27,7 +32,7 @@ class CachedFetchPolicyTests(unittest.TestCase):
             def fetcher():
                 raise TimeoutError("connection stalled")
 
-            frame, provenance = pipeline._cached_fetch("t", fetcher, path)
+            frame, provenance = pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json")
             self.assertEqual(provenance["status"], "cached")
             self.assertEqual(len(frame), 2)
 
@@ -39,7 +44,7 @@ class CachedFetchPolicyTests(unittest.TestCase):
                 raise ValueError("FRED median-income response has an unexpected schema")
 
             with self.assertRaises(RuntimeError) as ctx:
-                pipeline._cached_fetch("t", fetcher, path)
+                pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json")
             self.assertIn("unexpected schema", str(ctx.exception))
 
     def test_stale_cache_is_refused(self):
@@ -53,7 +58,7 @@ class CachedFetchPolicyTests(unittest.TestCase):
                 return "it is far too old"
 
             with self.assertRaises(RuntimeError) as ctx:
-                pipeline._cached_fetch("t", fetcher, path, stale_cache_check=stale)
+                pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json", stale_cache_check=stale)
             self.assertIn("no longer usable", str(ctx.exception))
 
     def test_missing_year_column_has_a_clear_stale_cache_error(self):
@@ -74,7 +79,7 @@ class CachedFetchPolicyTests(unittest.TestCase):
                 return None if age <= FRED_CACHE_MAX_AGE_YEARS else "too old"
 
             frame, provenance = pipeline._cached_fetch(
-                "t", fetcher, path, stale_cache_check=stale
+                "t", fetcher, path, cache_manifest_path=path.parent / "manifest.json", stale_cache_check=stale
             )
             self.assertEqual(provenance["status"], "cached")
 

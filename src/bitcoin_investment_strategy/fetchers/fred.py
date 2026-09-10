@@ -7,6 +7,7 @@ import pandas as pd
 
 from ..config import FRED_MEDIAN_INCOME_URL
 from ..io import request
+from ..validation import validate_income
 
 
 def fetch_fred_median_income() -> tuple[pd.DataFrame, dict[str, Any]]:
@@ -22,13 +23,15 @@ def fetch_fred_median_income() -> tuple[pd.DataFrame, dict[str, Any]]:
     frame["median_household_income_usd"] = pd.to_numeric(
         frame["MEHOINUSA646N"], errors="coerce"
     )
-    frame = frame.dropna(subset=[date_column, "median_household_income_usd"])
+    if frame[date_column].isna().any():
+        raise ValueError("FRED income contains invalid observation dates")
     frame = pd.DataFrame(
         {
             "Year": frame[date_column].dt.year.astype(int),
             "median_household_income_usd": frame["median_household_income_usd"],
         }
-    ).drop_duplicates("Year", keep="last")
+    )
+    validate_income(frame)
     return frame.sort_values("Year"), {
         "url": response.url,
         "series": "MEHOINUSA646N",

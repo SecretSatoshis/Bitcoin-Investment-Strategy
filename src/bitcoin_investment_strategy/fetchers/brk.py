@@ -11,6 +11,10 @@ from ..io import request
 def fetch_brk_daily(as_of: pd.Timestamp) -> tuple[pd.DataFrame, dict[str, Any]]:
     end_exclusive = (as_of + pd.Timedelta(days=1)).date().isoformat()
     expected = pd.date_range(START_DATE, end_exclusive, freq="D", inclusive="left", name="date")
+    # BRK day1 uses zero-based days since 2009-01-01 and an exclusive end.
+    epoch = pd.Timestamp("2009-01-01")
+    expected_start = (pd.Timestamp(START_DATE) - epoch).days
+    expected_end = (pd.Timestamp(end_exclusive) - epoch).days
     frames: dict[str, pd.Series] = {}
     provenance: dict[str, Any] = {}
 
@@ -26,6 +30,18 @@ def fetch_brk_daily(as_of: pd.Timestamp) -> tuple[pd.DataFrame, dict[str, Any]]:
             raise ValueError(
                 f"{source_name}: expected {len(expected)} daily observations, "
                 f"received {len(values) if isinstance(values, list) else 'invalid payload'}"
+            )
+        if (
+            payload.get("index") != "day1"
+            or type(payload.get("start")) is not int
+            or type(payload.get("end")) is not int
+            or payload["start"] != expected_start
+            or payload["end"] != expected_end
+        ):
+            raise ValueError(
+                f"{source_name}: expected BRK day1 range [{expected_start}, {expected_end}), "
+                f"received index={payload.get('index')!r}, "
+                f"start={payload.get('start')!r}, end={payload.get('end')!r}"
             )
         series = pd.Series(pd.to_numeric(values, errors="raise"), index=expected, name=source_name)
         frames[source_name] = series

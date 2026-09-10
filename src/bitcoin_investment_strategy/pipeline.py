@@ -25,6 +25,7 @@ from .io import atomic_write_csv, atomic_write_json, sha256
 from .transforms import build_bitcoin_daily
 from .validation import (
     validate_bitcoin_daily,
+    validate_income,
     validate_brk_raw,
     validate_release_manifest,
 )
@@ -38,6 +39,7 @@ def _cached_fetch(
     parse_dates: list[str] | None = None,
     fatal_errors: tuple[type[Exception], ...] = (ValueError,),
     stale_cache_check: Callable[[pd.DataFrame], str | None] | None = None,
+    cache_manifest_path: Path | None = None,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Fetch live, falling back to the committed cache only for recoverable failures.
 
@@ -64,6 +66,15 @@ def _cached_fetch(
         if not cache_path.exists():
             raise RuntimeError(f"{label}: live retrieval failed and no verified cache exists") from error
         print(f"  {label}: live retrieval failed ({error.__class__.__name__}); using committed cache")
+        previous_path = cache_manifest_path or MANIFEST_DIR / "data_manifest.json"
+        try:
+            previous = json.loads(previous_path.read_text())
+            relative = str(cache_path.relative_to(ROOT))
+            expected = previous["artifacts"][relative]["sha256"]
+            if sha256(cache_path) != expected:
+                raise ValueError("checksum mismatch")
+        except (OSError, KeyError, ValueError) as cache_error:
+            raise RuntimeError(f"{label}: cache is not verified by the previous manifest") from cache_error
         frame = pd.read_csv(cache_path, parse_dates=parse_dates)
 
         if stale_cache_check is not None:
@@ -140,6 +151,8 @@ def _column_dictionary() -> pd.DataFrame:
 def update_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
     ensure_directories()
     as_of = (as_of or last_completed_utc()).normalize()
+    if pd.isna(as_of) or as_of.tz is not None or as_of > last_completed_utc():
+        raise ValueError("as_of must be a completed UTC calendar day")
     retrieved_at = datetime.now(timezone.utc).isoformat()
     print(f"Building shared data release through completed UTC day {as_of.date()}")
 
@@ -147,6 +160,8 @@ def update_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
     validate_brk_raw(raw_brk)
 
     bitcoin_daily, core_end = build_bitcoin_daily(raw_brk)
+    if core_end != as_of:
+        raise ValueError(f"Required BRK series end at {core_end.date()}, expected {as_of.date()}; refusing truncated release")
     validate_bitcoin_daily(bitcoin_daily)
 
     fred_path = RAW_DIR / "fred" / "median_household_income.csv"
@@ -156,8 +171,7 @@ def update_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
         fred_path,
         stale_cache_check=lambda frame: _fred_cache_staleness(frame, as_of),
     )
-    if income["Year"].duplicated().any() or income["median_household_income_usd"].le(0).any():
-        raise ValueError("FRED median income failed annual uniqueness or positivity checks")
+    validate_income(income, as_of)
 
     raw_paths = {
         RAW_DIR / "brk" / "brk_daily.csv": raw_brk.reset_index(),

@@ -70,6 +70,7 @@ jobs:
         with:
           name: bitcoin-investment-strategy-${{ github.run_id }}
           path: |
+            data/raw/
             data/manifests/
             data/processed/
             notebooks/

@@ -18,7 +18,11 @@ raw snapshots → validation and transforms → processed release + manifest
 
 The updater retrieves each upstream metric once. Daily price and network series live in `data/processed/bitcoin_daily.csv`; median household income is annual and stays separate because it has a different frequency and revision cycle.
 
+All required daily metrics must reach the requested cutoff; the updater rejects a shorter release. Income observations must be nonempty, finite, positive and unique by completed calendar year. Cached inputs must match the previous release manifest before reuse.
+
 Every published data input is covered by `data/manifests/data_manifest.json`, which records the release ID, retrieval time, coverage, source status and SHA-256 checksum. The notebook verifies its inputs against that manifest before calculating anything.
+
+The notebook uses the tested savings engine in `src/bitcoin_investment_strategy/savings.py`. Purchases require an observed positive price on every trading day; leading pre-market zero or missing prices are excluded. Combined allocations cannot exceed income. Contribution status follows the plan's stop date, and milestone estimates respect that horizon and avoid unsupported distant dates.
 
 ## Reproduce locally
 
@@ -51,7 +55,7 @@ upstream schema change fails loudly instead of silently freezing the dataset.
 3. validates the release;
 4. executes the notebook;
 5. validates again, and checks that only expected paths changed; and
-6. uploads the resulting data and notebook as a workflow artifact.
+6. uploads raw and processed data, all manifests, and the notebook as a workflow artifact, so the downloaded release can be validated.
 
 Nothing is committed. The committed data is a dated snapshot, refreshed deliberately rather than automatically; run the commands above locally for current figures. A red run means an upstream changed shape or went away.
 

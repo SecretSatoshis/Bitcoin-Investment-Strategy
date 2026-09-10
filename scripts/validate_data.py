@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from bitcoin_investment_strategy.validation import (  # noqa: E402
     validate_bitcoin_daily,
+    validate_income,
     validate_release_manifest,
 )
 
@@ -21,8 +22,7 @@ def main() -> None:
     daily = pd.read_csv(ROOT / "data/processed/bitcoin_daily.csv", parse_dates=["date"]).set_index("date")
     validate_bitcoin_daily(daily)
     income = pd.read_csv(ROOT / "data/processed/median_household_income_annual.csv")
-    if income["Year"].duplicated().any() or income["median_household_income_usd"].le(0).any():
-        raise SystemExit("median household income failed annual uniqueness or positivity checks")
+    validate_income(income, pd.Timestamp(manifest["core_data_end"]))
     print(f"Validated release {manifest['release_id']} ({len(manifest['artifacts'])} artifacts)")
 
 
