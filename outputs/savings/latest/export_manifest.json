@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "run_id": "20260924T134413958962Z",
+  "report_date": "2026-09-21",
+  "snapshot_status": "interim",
+  "provenance": {
+    "source_release_id": "2026-09-21-8016f7d9edfb",
+    "source_data_end": "2026-09-21",
+    "price_file": "data/processed/bitcoin_daily.csv",
+    "price_sha256": "5b8338c31c8369ad77f6afa577f85ad74e08be4d2d1ba0bfb08104ca572c00e5",
+    "source_manifest_sha256": "afb17ea514e912bb9a8a388ba9deefde1eecbfb58aefc40f5ec8996c25caae27",
+    "engine_sha256": "53a44110b6e5a02b91b1b38caca284413fe59fbfb19f1421c1a63062a1cf55ab",
+    "exporter_sha256": "7fb21a5e5793768ac4295a6314bdbee0e9476421ddb2feefc72f7eb6c5b205d2"
+  },
+  "files": {
+    "README.md": {
+      "sha256": "c43b18509bfbb6364495d35fe9c946515bc6e3054d1950880e2b0c078f2a4e2b",
+      "bytes": 1995
+    },
+    "benchmark_results.csv": {
+      "sha256": "b7a8050841b1b62ec0e595d0476868a1d9006d072df703297f0de31fe86a1bce",
+      "bytes": 1511
+    },
+    "cohort_accumulation.png": {
+      "sha256": "a6dc60288e1f5a12fe7c8a915900af95a81c239886f809b41498b3db17c454b8",
+      "bytes": 78345
+    },
+    "cohort_paths.csv": {
+      "sha256": "12957d0da89f5fc892e543e0523aaa299efb1eb50d267af6a6f2828240894488",
+      "bytes": 1002468
+    },
+    "cohort_summary.csv": {
+      "sha256": "db6c3672989f66d1bd13f472d0a053cce01dca227925770c31bdd2539b0ef088",
+      "bytes": 1977
+    },
+    "contribution_schedule.csv": {
+      "sha256": "e6d6d38e49431f240d59bfe787117034d9b4e2e6db7380c04fec983a2814ba0b",
+      "bytes": 18684
+    },
+    "current_year_savings.png": {
+      "sha256": "95a652848d84627a6115b6a752bc3445209e9febe98337f6f155ab309ba8e235",
+      "bytes": 99757
+    },
+    "plan_definition.json": {
+      "sha256": "6e324d74887291254e160b2f563460fd5c52ca94609ffce11d7aa1526b2fb9ca",
+      "bytes": 1156
+    },
+    "section3_packet.json": {
+      "sha256": "15895b6a14ebb10b522efe2e46dcb941a68f33eb8fb15414b19c306c1a7b27d9",
+      "bytes": 17142
+    },
+    "ytd_gains_vs_cash.png": {
+      "sha256": "0925c69bf880964c5d1bdc4152cb45085ecb80fad2105c783a7c76cc37af6dea",
+      "bytes": 67693
+    },
+    "ytd_summary.csv": {
+      "sha256": "9dea71a85719a74aabd72a86405ecc58fd269918b8602d13d26776bbbb3746ee",
+      "bytes": 1837
+    }
+  }
+}

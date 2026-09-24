@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "report_date": "2026-09-21",
+  "report_year": 2026,
+  "calendar_quarter": 3,
+  "is_quarter_end": false,
+  "snapshot_status": "interim",
+  "cutoff_selection": "latest_available_completed_day",
+  "ytd_start": "2026-01-01",
+  "opening_balance_date": "2025-12-31",
+  "cohort_years": [
+    2026,
+    2025,
+    2024,
+    2023,
+    2022
+  ],
+  "annual_income_usd": 100000.0,
+  "bitcoin_fraction_of_income": 0.1,
+  "cash_fraction_of_income": 0.1,
+  "cash_apy": 0.03,
+  "cadence": "monthly",
+  "still_buying": true,
+  "stop_after_yrs": null,
+  "annual_bitcoin_contribution_usd": 10000.0,
+  "annual_cash_contribution_usd": 10000.0,
+  "benchmark": "cash_only_same_total_contributions_and_dates",
+  "rebalancing": "none; percentages apply to new income contributions",
+  "cash_timing": "prior cash earns daily interest; new deposits enter after that day's interest",
+  "purchase_timing": "scheduled day's observed daily price",
+  "cash_day_basis": 365.25,
+  "limitations": [
+    "modeled results, not an actual investor account",
+    "fixed nominal income and cash APY",
+    "no fees, taxes, inflation adjustment, or satoshi rounding"
+  ]
+}

@@ -63,6 +63,11 @@ class ReviewValidationTests(unittest.TestCase):
             import shutil
             target=Path(tmp)
             for prefix in prefixes:
-                shutil.copytree(ROOT/prefix,target/prefix,dirs_exist_ok=True)
+                source = ROOT / prefix
+                if source.is_dir():
+                    shutil.copytree(source,target/prefix,dirs_exist_ok=True)
+                else:
+                    (target/prefix).parent.mkdir(parents=True,exist_ok=True)
+                    shutil.copyfile(source,target/prefix)
             validation.validate_release_manifest(target/'data/manifests/data_manifest.json',root=target)
             self.assertTrue(all(any(name.startswith(prefix) for prefix in prefixes) for name in manifest['artifacts']))
