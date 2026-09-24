@@ -15,7 +15,7 @@ REPORT_NAMES = {
     "plan_definition.json", "section3_packet.json", "README.md",
     "cohort_summary.csv", "ytd_summary.csv", "benchmark_results.csv",
     "cohort_paths.csv", "contribution_schedule.csv",
-    "current_year_savings.png", "cohort_accumulation.png", "ytd_gains_vs_cash.png",
+    "cohort_comparison.png", "cohort_comparison.svg", "current_year_savings.png", "current_year_savings.svg",
 }
 PUBLICATION_FILES = DATA_FILES | {
     "data/manifests/data_manifest.json", "notebooks/bitcoin_savings_plan.ipynb",

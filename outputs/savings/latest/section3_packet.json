@@ -44,7 +44,7 @@
     "price_sha256": "a7a15179be8aec04d5679ea5f867b2c9f0036cc49a0994e8b5b92f05512a5c6a",
     "source_manifest_sha256": "0c542270b1c345a2ddaf55c65392ab31c9f631270e974943740debd27374f9fa",
     "engine_sha256": "53a44110b6e5a02b91b1b38caca284413fe59fbfb19f1421c1a63062a1cf55ab",
-    "exporter_sha256": "7fb21a5e5793768ac4295a6314bdbee0e9476421ddb2feefc72f7eb6c5b205d2"
+    "exporter_sha256": "43e7a19d715cc5c4e63d48cae71155eeef09fef9937920e00580fd5c6194e2b6"
   },
   "cohort_summary": [
     {
@@ -433,8 +433,9 @@
     "README.md"
   ],
   "visuals": [
+    "cohort_comparison.png",
+    "cohort_comparison.svg",
     "current_year_savings.png",
-    "cohort_accumulation.png",
-    "ytd_gains_vs_cash.png"
+    "current_year_savings.svg"
   ]
 }

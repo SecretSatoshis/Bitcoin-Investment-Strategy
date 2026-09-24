@@ -84,8 +84,19 @@ The personal `PLAN_START` does not change those January 1 cohort starts.
 The stable public bundle lives at [`outputs/savings/latest/`](outputs/savings/latest/).
 Start with `section3_packet.json`: assumptions, source/code checksums, since-start
 results, YTD attribution, and matched cash comparisons. Supporting CSVs contain
-daily paths and purchase schedules. Three PNG charts accompany the data; their
-editorial selection can be decided independently of the calculations.
+daily paths and purchase schedules. `cohort_comparison.png` is the main since-start
+comparison table, showing contributions, BTC held, BTC value, accumulated cash,
+combined plan value, gain/loss, cash-only value at the assumed APY, and surplus
+versus cash only. The income and allocation assumptions appear beneath the title;
+the cash-only value and surplus columns share a comparison heading. The current-year
+savings chart is the second newsletter visual. YTD figures remain available as data.
+The cohort table uses the Secret Satoshis dark palette and bundled Syne / JetBrains
+Mono fonts. It exports at 3200 × 1800 (16:9), with a matching SVG for scaling in
+presentations. Fonts and their licenses are bundled for consistent offline rendering.
+The current-year savings chart uses the same 16:9 design and exports both
+`current_year_savings.png` and `current_year_savings.svg`, with closing balances
+in a side panel for the savings plan, matched cash-only plan, and contributions.
+The taller plot spans January 1 through December 31; series stop at the report date.
 
 Every daily publication replaces the latest bundle **in the same commit** as its
 data and executed notebook. Git history preserves prior snapshots. A quarterly
