@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_id": "20260927T130535123068Z",
+  "run_id": "20260927T171053430604Z",
   "report_date": "2026-09-26",
   "snapshot_status": "interim",
   "provenance": {
@@ -22,11 +22,11 @@
       "bytes": 1510
     },
     "cohort_comparison.png": {
-      "sha256": "9cc12a992b3acc45e675aec841aa8dd4d5526c65e64de652107eb71707f1363c",
-      "bytes": 286522
+      "sha256": "d069606f3d28927a0b3af1f4bc2f1ee2d36d02b8b0f56bc2863fb6d572560d1e",
+      "bytes": 256557
     },
     "cohort_comparison.svg": {
-      "sha256": "8b4d9843d5d10a42a576726ba125724b0ecf86c7b68766cb73f776168bc6af15",
+      "sha256": "391cd042821cd426e5bc3b36f177935b7c13c8012c47271db6b5aac470361c06",
       "bytes": 139977
     },
     "cohort_paths.csv": {
@@ -42,11 +42,11 @@
       "bytes": 18684
     },
     "current_year_savings.png": {
-      "sha256": "83410bc2963c79019e159d365e8237bbaa0371cf2d76e1d9e3d3fcddd574227b",
-      "bytes": 200210
+      "sha256": "9326f9959c77b4013fbcfa19abdb1c83903c9b2d4b196b68a80d7abfce4f7d30",
+      "bytes": 185869
     },
     "current_year_savings.svg": {
-      "sha256": "9f789c85b7358aac0980e8ee42a3291d65b5d81ad4c66cd0fb972222c84010e5",
+      "sha256": "b552d27924c04b7d7b96cc1b2a34af2083c097431fa84efb48b61eb468887d63",
       "bytes": 106483
     },
     "plan_definition.json": {

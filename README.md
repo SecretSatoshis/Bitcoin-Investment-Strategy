@@ -47,6 +47,21 @@ snapshot and records `status: cached` in the manifest. The fallback is refused i
 latest observation is more than three years behind the requested release year, and an
 upstream schema change fails loudly instead of silently freezing the dataset.
 
+## Notebook visual style
+
+All savings notebook plots use the same Secret Satoshis dark theme as the quarterly
+newsletter visuals, with bundled Syne / JetBrains Mono fonts, consistent headings,
+legends, units and source notes. Bitcoin uses orange; cash and comparison series use
+the shared supporting palette. This presentation update preserves the calculations,
+series and assumptions displayed by each chart.
+
+Historical article exports are separate local deliverables under ignored
+`outputs/newsletter/`; they do not replace the daily notebook or `outputs/savings/latest/`.
+The refreshed *Should I Buy Bitcoin?* illustrations cover January 2021–December 2025
+and use 3% APY for both cash balances. Their revised results require matching article
+copy updates before publication. Local illustration generators and the six-image
+review bundle remain outside the daily workflow and public push.
+
 ## Daily publication
 
 `.github/workflows/pipeline-health.yml` runs daily at 07:17 UTC (subject to GitHub
