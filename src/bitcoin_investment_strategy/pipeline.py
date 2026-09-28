@@ -21,7 +21,7 @@ from .config import (
 )
 from .fetchers.brk import fetch_brk_daily
 from .fetchers.fred import fetch_fred_median_income
-from .io import atomic_write_csv, atomic_write_json, sha256
+from .io import SourceSchemaError, atomic_write_csv, atomic_write_json, sha256
 from .transforms import build_bitcoin_daily
 from .validation import (
     validate_bitcoin_daily,
@@ -37,7 +37,7 @@ def _cached_fetch(
     cache_path: Path,
     *,
     parse_dates: list[str] | None = None,
-    fatal_errors: tuple[type[Exception], ...] = (ValueError,),
+    fatal_errors: tuple[type[Exception], ...] = (SourceSchemaError,),
     stale_cache_check: Callable[[pd.DataFrame], str | None] | None = None,
     cache_manifest_path: Path | None = None,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
@@ -47,7 +47,9 @@ def _cached_fetch(
 
     * A timeout is transient and the cache is exactly the right answer. A schema change
       is permanent — the source moved — and serving the cache turns a loud failure into
-      an indefinitely frozen number. `fatal_errors` re-raises that class.
+      an indefinitely frozen number. `fatal_errors` re-raises that class. It is a
+      dedicated `SourceSchemaError`, not every `ValueError`: pandas raises ValueError
+      subclasses for a transient empty or HTML body, which the cache should absorb.
     * A cache is only a substitute while it is still current. `stale_cache_check` gives
       the caller an explicit age budget, matching how every other source in this tree
       is bounded.
@@ -139,10 +141,9 @@ def _column_dictionary() -> pd.DataFrame:
         rows.append({"column": column, "upstream_series": source_name, "source": "BRK / Bitview", "consumers": consumers})
     rows.extend(
         [
-            {"column": "subsidy_daily", "upstream_series": "subsidy_cumulative", "source": "derived", "consumers": ""},
-            {"column": "fees_daily", "upstream_series": "fees_cumulative", "source": "derived", "consumers": ""},
             {"column": "market_cap_usd", "upstream_series": "price \u00d7 supply", "source": "derived", "consumers": ""},
             {"column": "days_since_genesis", "upstream_series": "date \u2212 2009-01-03", "source": "derived", "consumers": ""},
+            {"column": "years_since_genesis", "upstream_series": "days_since_genesis \u00f7 365.25", "source": "derived", "consumers": ""},
         ]
     )
     return pd.DataFrame(rows).drop_duplicates("column", keep="first")

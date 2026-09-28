@@ -16,7 +16,7 @@ raw snapshots → validation and transforms → processed release + manifest
                                           savings plan notebook
 ```
 
-The updater retrieves each upstream metric once. Daily price and network series live in `data/processed/bitcoin_daily.csv`; median household income is annual and stays separate because it has a different frequency and revision cycle.
+The updater retrieves each upstream metric once and publishes only what the notebook uses: daily BTC price and supply in `data/processed/bitcoin_daily.csv` (plus derived market cap and days since genesis). Median household income is annual and stays separate because it has a different frequency and revision cycle. The wider BRK research catalogue (`FULL_BRK_SERIES` in `config.py`) is not part of the public release, so a rename in an unused upstream series cannot stop the daily savings publication.
 
 All required daily metrics must reach the requested cutoff; the updater rejects a shorter release. Income observations must be nonempty, finite, positive and unique by completed calendar year. Cached inputs must match the previous release manifest before reuse.
 
@@ -42,10 +42,13 @@ uv run --no-sync python -m unittest discover -s tests -v
 Use `--as-of YYYY-MM-DD` with `scripts/update_data.py` to request a specific completed UTC date. The default is the previous completed UTC day.
 
 Neither source needs an API key. FRED is a slow annual series and occasionally stalls;
-when a transient live request fails, the updater can fall back to the committed verified
+when a transient live request fails — a timeout, a rate limit, a server error, or an
+empty or unparseable response body — the updater can fall back to the committed verified
 snapshot and records `status: cached` in the manifest. The fallback is refused if its
 latest observation is more than three years behind the requested release year, and an
-upstream schema change fails loudly instead of silently freezing the dataset.
+upstream schema change (missing columns, invalid dates or unusable values) fails loudly
+instead of silently freezing the dataset. HTTP requests honor `Retry-After` and retry
+only rate limits, timeouts and server errors; a 404 or other client error fails at once.
 
 ## Notebook visual style
 
@@ -57,10 +60,7 @@ series and assumptions displayed by each chart.
 
 Historical article exports are separate local deliverables under ignored
 `outputs/newsletter/`; they do not replace the daily notebook or `outputs/savings/latest/`.
-The refreshed *Should I Buy Bitcoin?* illustrations cover January 2021–December 2025
-and use 3% APY for both cash balances. Their revised results require matching article
-copy updates before publication. Local illustration generators and the six-image
-review bundle remain outside the daily workflow and public push.
+Article illustration generators are local tools and are not part of the daily workflow.
 
 ## Daily publication
 
@@ -75,6 +75,11 @@ scheduling delays) and can also be started manually. Each scheduled or manual ru
 6. uploads the exact public data, manifests, executed notebook, and savings-report
    bundle as a workflow artifact retained for 30 days; and
 7. on `main`, commits those validated outputs back to `main` in a separate publish job.
+
+The data and savings-report bundle are committed every day. The executed notebook embeds
+its charts (~0.8 MB), so it is committed weekly — when the data runs through a Sunday, or
+whenever the committed copy has fallen seven days behind — to keep repository growth down.
+Its charts on GitHub are therefore at most a week old.
 
 Pull requests run regression tests only. Manual runs on other branches do not
 publish. The build job has read-only repository access; only the separate publish
@@ -93,8 +98,10 @@ these updates.
 Notebook Section 14 uses the public exporter in
 `src/bitcoin_investment_strategy/savings_report.py` and the same tested savings
 engine as the personal plan. It exports the reporting-year starter cohort and
-the previous four cohorts using the contribution assumptions from Section 1.
-The personal `PLAN_START` does not change those January 1 cohort starts.
+the previous four cohorts using the exporter's fixed public assumptions — the
+article's $100,000 household income, 10% to Bitcoin and 10% to cash at 3% APY,
+bought monthly. Section 1's personal settings, including `PLAN_START`, never
+change the published bundle.
 
 The stable public bundle lives at [`outputs/savings/latest/`](outputs/savings/latest/).
 Start with `section3_packet.json`: assumptions, source/code checksums, since-start
@@ -114,7 +121,7 @@ in a side panel for the savings plan, matched cash-only plan, and contributions.
 The taller plot spans January 1 through December 31; series stop at the report date.
 
 Every daily publication replaces the latest bundle **in the same commit** as its
-data and executed notebook. Git history preserves prior snapshots. A quarterly
+data (and, on weekly refreshes, the executed notebook). Git history preserves prior snapshots. A quarterly
 newsletter must pin a commit whose bundle `report_date` equals the intended
 quarter-end and whose `snapshot_status` is `quarter_end`; it must not use a later
 live `main` bundle or relabel an interim run. Read the complete bundle from that
@@ -127,7 +134,8 @@ The daily publication validator requires the bundle to match the data release's
 latest date. The committed notebook should therefore keep `REPORT_AS_OF = None`
 and `REPORT_COHORT_YEARS = None`; historical reconstruction is a separate local task.
 
-Running the notebook also updates this tracked bundle locally. Older dated local
+Running the notebook also regenerates this tracked bundle locally, with the same fixed
+public assumptions. Older dated local
 exports under `outputs/savings/<date>/<run-id>/` remain ignored. The calculation
 definitions and limitations are included in every bundle's `README.md`.
 

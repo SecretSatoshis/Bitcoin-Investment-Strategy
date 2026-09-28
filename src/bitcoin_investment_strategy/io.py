@@ -13,6 +13,18 @@ import pandas as pd
 
 USER_AGENT = "bitcoin-investment-strategy-data/0.1 (+public research notebook)"
 
+# Statuses worth retrying: timeouts, rate limits and server-side failures. Anything else
+# (404 for a renamed series, 400 for a bad request) will not change on a retry.
+TRANSIENT_STATUSES = {408, 425, 429}
+
+
+class SourceSchemaError(ValueError):
+    """An upstream response has a shape the fetcher does not understand.
+
+    Unlike a timeout or an unparseable one-off body, this persists until the fetcher is
+    updated, so a committed cache must not quietly stand in for it.
+    """
+
 
 def sha256(path: Path) -> str:
     with path.open("rb") as handle:
@@ -36,9 +48,14 @@ def request(
             return response
         except requests.RequestException as error:
             last_error = error
+            # A failed Response is falsy (its truthiness is `.ok`), so test identity.
+            response = error.response
+            status = response.status_code if response is not None else None
+            if status is not None and status not in TRANSIENT_STATUSES and status < 500:
+                raise RuntimeError(f"request failed with HTTP {status}: {url}") from error
             if attempt == attempts:
                 break
-            retry_after = getattr(error.response, "headers", {}).get("Retry-After") if error.response else None
+            retry_after = response.headers.get("Retry-After") if response is not None else None
             wait = float(retry_after) if retry_after and retry_after.isdigit() else 2 ** attempt
             time.sleep(min(wait, 30))
     raise RuntimeError(f"request failed after {attempts} attempts: {url}") from last_error

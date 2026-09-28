@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch,Mock
 import numpy as np
 import pandas as pd
-from bitcoin_investment_strategy import pipeline,validation
+from bitcoin_investment_strategy import transforms, pipeline,validation
 from bitcoin_investment_strategy.config import ROOT
 from bitcoin_investment_strategy.fetchers import fred
 
@@ -47,12 +47,21 @@ class ReviewValidationTests(unittest.TestCase):
             broken=daily.copy();broken.loc[broken.index[-1],column]=value
             with self.subTest(column=column),self.assertRaises(ValueError):validation.validate_bitcoin_daily(broken)
 
-    def test_unused_stale_metric_cannot_publish_truncated_release(self):
+    def test_stale_required_metric_cannot_publish_truncated_release(self):
         raw=pd.read_csv(ROOT/'data/raw/brk/brk_daily.csv',parse_dates=['date']).set_index('date')
-        cutoff=raw.index[-1];raw.loc[raw.index>pd.Timestamp('2022-12-31'),'hash_rate']=np.nan
-        with patch.object(pipeline,'ensure_directories'),patch.object(pipeline,'fetch_brk_daily',return_value=(raw,{})),patch.object(pipeline,'atomic_write_csv') as write:
+        cutoff=raw.index[-1];raw.loc[raw.index>pd.Timestamp('2022-12-31'),'price_close']=np.nan
+        with patch.object(pipeline,'ensure_directories'),patch.object(pipeline,'fetch_brk_daily',return_value=(raw,{})),\
+                patch.object(pipeline,'atomic_write_csv') as write,patch.object(pipeline,'atomic_write_json') as write_json:
             with self.assertRaisesRegex(ValueError,'refusing truncated release'):pipeline.update_data(cutoff)
-            write.assert_not_called()
+            write.assert_not_called();write_json.assert_not_called()
+
+    def test_public_release_ignores_research_catalogue_series(self):
+        raw=pd.read_csv(ROOT/'data/raw/brk/brk_daily.csv',parse_dates=['date']).set_index('date')
+        raw.loc[raw.index>pd.Timestamp('2022-12-31'),'hash_rate']=np.nan
+        daily,core_end=transforms.build_bitcoin_daily(raw)
+        self.assertEqual(core_end,raw.index[-1])
+        self.assertEqual(set(daily.columns),{'price','supply','market_cap_usd','days_since_genesis','years_since_genesis'})
+        validation.validate_bitcoin_daily(daily)
 
     def test_artifact_bundle_includes_every_manifest_member(self):
         workflow=(ROOT/'.github/workflows/pipeline-health.yml').read_text()

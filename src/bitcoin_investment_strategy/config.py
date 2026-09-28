@@ -25,8 +25,17 @@ FRED_CACHE_MAX_AGE_YEARS = 3
 COHORTS = ("1y", "2y", "3y", "4y", "5y", "10y")
 
 # One upstream request per metric. Values are canonical column names in the
-# shared daily table. price_close is the one price request used by all notebooks.
-BRK_SERIES = OrderedDict(
+# shared daily table.
+#
+# The public release publishes only what the savings notebook consumes: the daily price
+# and supply (for market cap and the known no-block dates). The wider set below is the
+# research catalogue; private research pipelines pass it explicitly. Keeping it out of
+# the public release means a rename or gap in an unused upstream series cannot stop the
+# daily savings publication, and the committed CSVs stay small.
+BRK_SERIES = OrderedDict([("price_close", "price"), ("supply", "supply")])
+FLOW_SERIES: OrderedDict = OrderedDict()
+
+FULL_BRK_SERIES = OrderedDict(
     [
         ("price_close", "price"),
         ("supply", "supply"),
@@ -57,12 +66,12 @@ BRK_SERIES = OrderedDict(
 )
 
 for _age in COHORTS:
-    BRK_SERIES[f"utxos_over_{_age}_old_supply"] = f"utxos_over_{_age}_old_supply"
-    BRK_SERIES[
+    FULL_BRK_SERIES[f"utxos_over_{_age}_old_supply"] = f"utxos_over_{_age}_old_supply"
+    FULL_BRK_SERIES[
         f"utxos_over_{_age}_old_transfer_volume_cumulative"
     ] = f"utxos_over_{_age}_old_transfer_volume_cumulative"
 
-FLOW_SERIES = OrderedDict(
+FULL_FLOW_SERIES = OrderedDict(
     [
         ("subsidy_daily", "subsidy_cumulative"),
         ("fees_daily", "fees_cumulative"),
@@ -75,7 +84,7 @@ FLOW_SERIES = OrderedDict(
     ]
 )
 for _age in COHORTS:
-    FLOW_SERIES[
+    FULL_FLOW_SERIES[
         f"utxos_over_{_age}_old_transfer_volume_daily"
     ] = f"utxos_over_{_age}_old_transfer_volume_cumulative"
 

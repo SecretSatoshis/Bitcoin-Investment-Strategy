@@ -12,6 +12,7 @@ import pandas as pd
 
 from bitcoin_investment_strategy import pipeline
 from bitcoin_investment_strategy.config import FRED_CACHE_MAX_AGE_YEARS, ROOT
+from bitcoin_investment_strategy.io import SourceSchemaError
 
 
 class CachedFetchPolicyTests(unittest.TestCase):
@@ -41,11 +42,23 @@ class CachedFetchPolicyTests(unittest.TestCase):
             path = self._cache(Path(tmpdir), [2023, 2024])
 
             def fetcher():
-                raise ValueError("FRED median-income response has an unexpected schema")
+                raise SourceSchemaError("FRED median-income response has an unexpected schema")
 
             with self.assertRaises(RuntimeError) as ctx:
                 pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json")
             self.assertIn("unexpected schema", str(ctx.exception))
+
+    def test_unparseable_body_is_transient_and_uses_the_cache(self):
+        # pandas raises ValueError subclasses for an empty or HTML body; that is a bad
+        # response, not a schema change, so the verified cache must stand in.
+        with TemporaryDirectory(dir=ROOT) as tmpdir:
+            path = self._cache(Path(tmpdir), [2023, 2024])
+
+            def fetcher():
+                raise pd.errors.EmptyDataError("No columns to parse from file")
+
+            frame, provenance = pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json")
+            self.assertEqual(provenance["status"], "cached")
 
     def test_stale_cache_is_refused(self):
         with TemporaryDirectory(dir=ROOT) as tmpdir:

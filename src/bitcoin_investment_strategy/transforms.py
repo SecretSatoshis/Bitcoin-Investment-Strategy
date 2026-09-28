@@ -17,19 +17,23 @@ def nonoverlapping_daily(cumulative: pd.Series) -> pd.Series:
     return flow
 
 
-def build_bitcoin_daily(raw_brk: pd.DataFrame) -> tuple[pd.DataFrame, pd.Timestamp]:
-    missing = set(BRK_SERIES).difference(raw_brk.columns)
+def build_bitcoin_daily(
+    raw_brk: pd.DataFrame, series=None, flows=None
+) -> tuple[pd.DataFrame, pd.Timestamp]:
+    series = BRK_SERIES if series is None else series
+    flows = FLOW_SERIES if flows is None else flows
+    missing = set(series).difference(raw_brk.columns)
     if missing:
         raise ValueError(f"BRK input is missing required series: {sorted(missing)}")
-    last_valid = {column: raw_brk[column].last_valid_index() for column in BRK_SERIES}
+    last_valid = {column: raw_brk[column].last_valid_index() for column in series}
     empty = [column for column, ending in last_valid.items() if ending is None]
     if empty:
         raise ValueError(f"BRK input has all-null required series: {empty}")
     core_end = min(last_valid.values())
-    raw_brk = raw_brk.loc[:core_end, list(BRK_SERIES)].copy()
-    daily = raw_brk.rename(columns=BRK_SERIES).copy()
+    raw_brk = raw_brk.loc[:core_end, list(series)].copy()
+    daily = raw_brk.rename(columns=series).copy()
 
-    for daily_name, cumulative_name in FLOW_SERIES.items():
+    for daily_name, cumulative_name in flows.items():
         daily[daily_name] = nonoverlapping_daily(daily[cumulative_name])
 
     daily["market_cap_usd"] = daily["price"] * daily["supply"]

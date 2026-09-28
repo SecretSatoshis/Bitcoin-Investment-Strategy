@@ -20,27 +20,30 @@ def _daily_index(frame: pd.DataFrame, name: str) -> None:
         raise ValueError(f"{name}: index contains calendar gaps")
 
 
-def validate_brk_raw(frame: pd.DataFrame) -> None:
+def validate_brk_raw(frame: pd.DataFrame, series=None) -> None:
+    series = BRK_SERIES if series is None else series
     _daily_index(frame, "BRK raw")
-    missing = set(BRK_SERIES).difference(frame.columns)
+    missing = set(series).difference(frame.columns)
     if missing:
         raise ValueError(f"BRK raw: missing columns {sorted(missing)}")
     quiet = frame.index[frame["supply"].isna()]
     if not quiet.equals(KNOWN_NO_BLOCK_DATES):
         raise ValueError(f"BRK raw: unexpected supply gaps {list(quiet[:10])}")
-    for column in BRK_SERIES:
-        series = frame[column].drop(index=KNOWN_NO_BLOCK_DATES, errors="ignore")
-        first, last = series.first_valid_index(), series.last_valid_index()
+    for column in series:
+        values = frame[column].drop(index=KNOWN_NO_BLOCK_DATES, errors="ignore")
+        first, last = values.first_valid_index(), values.last_valid_index()
         if first is None:
             raise ValueError(f"BRK raw: {column} is all-null")
-        if series.loc[first:last].isna().any():
-            date = series.loc[first:last].index[series.loc[first:last].isna()][0]
+        if values.loc[first:last].isna().any():
+            date = values.loc[first:last].index[values.loc[first:last].isna()][0]
             raise ValueError(f"BRK raw: {column} has an internal gap on {date.date()}")
 
 
-def validate_bitcoin_daily(frame: pd.DataFrame) -> None:
+def validate_bitcoin_daily(frame: pd.DataFrame, series=None, flows=None) -> None:
+    series = BRK_SERIES if series is None else series
+    flows = FLOW_SERIES if flows is None else flows
     _daily_index(frame, "bitcoin_daily")
-    required = set(BRK_SERIES.values()) | set(FLOW_SERIES) | {
+    required = set(series.values()) | set(flows) | {
         "market_cap_usd",
         "days_since_genesis",
         "years_since_genesis",
@@ -55,20 +58,25 @@ def validate_bitcoin_daily(frame: pd.DataFrame) -> None:
     if not np.allclose(frame["market_cap_usd"], frame["price"] * frame["supply"],
                        rtol=1e-9, atol=1e-6, equal_nan=True):
         raise ValueError("bitcoin_daily: market cap disagrees with price times supply")
-    subsidy_restart = frame.loc[pd.Timestamp("2009-01-09"), "subsidy_daily"]
-    if not np.isclose(subsidy_restart, 700.0):
-        raise ValueError(f"bitcoin_daily: expected 700 BTC on 2009-01-09, got {subsidy_restart}")
-    first_1y = frame.index[frame["utxos_over_1y_old_supply"].gt(0)][0]
-    if first_1y != pd.Timestamp("2010-01-09"):
-        raise ValueError(f"bitcoin_daily: first positive 1y+ cohort is {first_1y.date()}")
-    for column in FLOW_SERIES:
+    # Research-catalogue invariants apply whenever those series are published.
+    if "subsidy_daily" in frame:
+        subsidy_restart = frame.loc[pd.Timestamp("2009-01-09"), "subsidy_daily"]
+        if not np.isclose(subsidy_restart, 700.0):
+            raise ValueError(f"bitcoin_daily: expected 700 BTC on 2009-01-09, got {subsidy_restart}")
+    if "utxos_over_1y_old_supply" in frame:
+        first_1y = frame.index[frame["utxos_over_1y_old_supply"].gt(0)][0]
+        if first_1y != pd.Timestamp("2010-01-09"):
+            raise ValueError(f"bitcoin_daily: first positive 1y+ cohort is {first_1y.date()}")
+    for column in flows:
         if frame[column].dropna().lt(-1e-7).any():
             raise ValueError(f"bitcoin_daily: negative flow in {column}")
-    thresholds = [frame[f"utxos_over_{age}_old_supply"] for age in COHORTS]
-    for younger, older in zip(thresholds, thresholds[1:]):
-        valid = younger.notna() & older.notna()
-        if older[valid].gt(younger[valid] + 1e-6).any():
-            raise ValueError("bitcoin_daily: age-cohort nesting is violated")
+    cohort_columns = [f"utxos_over_{age}_old_supply" for age in COHORTS]
+    if set(cohort_columns).issubset(frame.columns):
+        thresholds = [frame[column] for column in cohort_columns]
+        for younger, older in zip(thresholds, thresholds[1:]):
+            valid = younger.notna() & older.notna()
+            if older[valid].gt(younger[valid] + 1e-6).any():
+                raise ValueError("bitcoin_daily: age-cohort nesting is violated")
 
 
 EXPECTED_ARTIFACTS = {

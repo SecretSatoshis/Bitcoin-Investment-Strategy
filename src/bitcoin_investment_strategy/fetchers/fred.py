@@ -6,7 +6,7 @@ from typing import Any
 import pandas as pd
 
 from ..config import FRED_MEDIAN_INCOME_URL
-from ..io import request
+from ..io import SourceSchemaError, request
 from ..validation import validate_income
 
 
@@ -15,23 +15,29 @@ def fetch_fred_median_income() -> tuple[pd.DataFrame, dict[str, Any]]:
     # central pipeline has a committed verified fallback, so do not stall an
     # entire daily run for several minutes on this slow annual source.
     response = request(FRED_MEDIAN_INCOME_URL, timeout=20, attempts=2)
+    # An empty or HTML maintenance body fails to parse here with a pandas ParserError /
+    # EmptyDataError. That is a transient response, not a schema change, so it is left
+    # as an ordinary error and the verified cache may stand in for it.
     frame = pd.read_csv(StringIO(response.text))
     date_column = next((column for column in ("DATE", "observation_date") if column in frame.columns), None)
     if date_column is None or "MEHOINUSA646N" not in frame.columns:
-        raise ValueError("FRED median-income response has an unexpected schema")
+        raise SourceSchemaError("FRED median-income response has an unexpected schema")
     frame[date_column] = pd.to_datetime(frame[date_column], errors="coerce")
     frame["median_household_income_usd"] = pd.to_numeric(
         frame["MEHOINUSA646N"], errors="coerce"
     )
     if frame[date_column].isna().any():
-        raise ValueError("FRED income contains invalid observation dates")
+        raise SourceSchemaError("FRED income contains invalid observation dates")
     frame = pd.DataFrame(
         {
             "Year": frame[date_column].dt.year.astype(int),
             "median_household_income_usd": frame["median_household_income_usd"],
         }
     )
-    validate_income(frame)
+    try:
+        validate_income(frame)
+    except ValueError as error:
+        raise SourceSchemaError(f"FRED median-income values are unusable: {error}") from error
     return frame.sort_values("Year"), {
         "url": response.url,
         "series": "MEHOINUSA646N",

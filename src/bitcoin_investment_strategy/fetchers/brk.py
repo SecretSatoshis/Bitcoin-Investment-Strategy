@@ -8,7 +8,11 @@ from ..config import BRK_BASE_URL, BRK_SERIES, START_DATE
 from ..io import request
 
 
-def fetch_brk_daily(as_of: pd.Timestamp) -> tuple[pd.DataFrame, dict[str, Any]]:
+def fetch_brk_daily(
+    as_of: pd.Timestamp, series: dict[str, str] | None = None
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Fetch daily BRK series; defaults to the public savings set (config.BRK_SERIES)."""
+    series = BRK_SERIES if series is None else series
     end_exclusive = (as_of + pd.Timedelta(days=1)).date().isoformat()
     expected = pd.date_range(START_DATE, end_exclusive, freq="D", inclusive="left", name="date")
     # BRK day1 uses zero-based days since 2009-01-01 and an exclusive end.
@@ -18,8 +22,8 @@ def fetch_brk_daily(as_of: pd.Timestamp) -> tuple[pd.DataFrame, dict[str, Any]]:
     frames: dict[str, pd.Series] = {}
     provenance: dict[str, Any] = {}
 
-    for position, source_name in enumerate(BRK_SERIES, start=1):
-        print(f"  BRK [{position:>2}/{len(BRK_SERIES)}] {source_name}")
+    for position, source_name in enumerate(series, start=1):
+        print(f"  BRK [{position:>2}/{len(series)}] {source_name}")
         response = request(
             f"{BRK_BASE_URL}/series/{source_name}/day",
             params={"format": "json", "start": START_DATE, "end": end_exclusive},
@@ -43,8 +47,8 @@ def fetch_brk_daily(as_of: pd.Timestamp) -> tuple[pd.DataFrame, dict[str, Any]]:
                 f"received index={payload.get('index')!r}, "
                 f"start={payload.get('start')!r}, end={payload.get('end')!r}"
             )
-        series = pd.Series(pd.to_numeric(values, errors="raise"), index=expected, name=source_name)
-        frames[source_name] = series
+        observed = pd.Series(pd.to_numeric(values, errors="raise"), index=expected, name=source_name)
+        frames[source_name] = observed
         provenance[source_name] = {
             "url": response.url,
             "response_index": payload.get("index"),
@@ -52,7 +56,7 @@ def fetch_brk_daily(as_of: pd.Timestamp) -> tuple[pd.DataFrame, dict[str, Any]]:
             "response_end": payload.get("end"),
             "version": payload.get("version"),
             "stamp": payload.get("stamp"),
-            "observations": len(series),
+            "observations": len(observed),
         }
 
     frame = pd.concat(frames.values(), axis=1)
