@@ -30,10 +30,16 @@ class ReleaseTests(unittest.TestCase):
         self.assertFalse(income["Year"].duplicated().any())
         self.assertTrue(income["median_household_income_usd"].gt(0).all())
 
+    def test_public_release_publishes_only_what_the_savings_plan_reads(self) -> None:
+        self.assertEqual(
+            list(self.daily.columns),
+            ["price", "supply", "market_cap_usd", "days_since_genesis", "years_since_genesis"],
+        )
+
     def test_known_supply_regressions(self) -> None:
-        self.assertTrue(np.isclose(self.daily.loc["2009-01-09", "subsidy_daily"], 700.0))
-        first = self.daily.index[self.daily["utxos_over_1y_old_supply"].gt(0)][0]
-        self.assertEqual(first, pd.Timestamp("2010-01-09"))
+        # No blocks were mined 2009-01-04..08; the restart day's 14 blocks issued 700 BTC.
+        self.assertTrue(self.daily.loc["2009-01-04":"2009-01-08", "supply"].isna().all())
+        self.assertTrue(np.isclose(self.daily.loc["2009-01-09", "supply"], 700.0))
 
     def test_price_is_not_duplicated(self) -> None:
         self.assertIn("price", self.daily.columns)

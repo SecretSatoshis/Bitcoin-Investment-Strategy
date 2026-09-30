@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from bitcoin_investment_strategy.config import ROOT
 from bitcoin_investment_strategy.savings_report import (
@@ -80,11 +81,30 @@ class PublicationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "quarter-end"):
             validate_report_bundle(self.bundle, root=ROOT)
 
+    def payload_notebook_reports(self, source, data_end):
+        """Make the payload's executed notebook report `data_end`; other notebooks read as-is."""
+        real = publication.notebook_data_end
+        payload_notebook = source / publication.NOTEBOOK
+        return patch.object(
+            publication, "notebook_data_end",
+            side_effect=lambda path: data_end if Path(path) == payload_notebook else real(path),
+        )
+
     def test_verified_payload_restores_only_exact_public_files(self):
         source, target = self.payload()
-        publication.restore(source, target)
+        release_end = json.loads((source / "data/manifests/data_manifest.json").read_text())["core_data_end"]
+        # The committed notebook refreshes weekly, so its data date can trail the daily
+        # release; a real run always executes it against the release being published.
+        with self.payload_notebook_reports(source, release_end):
+            publication.restore(source, target)
         for name in publication.PUBLICATION_FILES:
             self.assertEqual((source / name).read_bytes(), (target / name).read_bytes())
+
+    def test_notebook_from_another_release_is_rejected(self):
+        source, target = self.payload()
+        with self.payload_notebook_reports(source, "2000-01-01"), \
+                self.assertRaisesRegex(ValueError, "does not report this data release"):
+            publication.restore(source, target)
 
     def test_private_notebook_in_payload_is_rejected_before_copy(self):
         source, target = self.payload()
