@@ -1,6 +1,5 @@
-import sys
+"""Savings report accounting: cohorts, YTD attribution and the cash benchmark."""
 import unittest
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -8,7 +7,7 @@ import pandas as pd
 from bitcoin_investment_strategy.savings_report import build_report
 
 
-class Section3Tests(unittest.TestCase):
+class SavingsReportTests(unittest.TestCase):
     def setUp(self):
         self.prices = pd.Series(100., index=pd.date_range("2022-01-01", "2026-09-21"))
         self.settings = dict(as_of="2026-06-30", annual_income=12000,

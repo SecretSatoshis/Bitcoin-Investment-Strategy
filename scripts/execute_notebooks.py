@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Execute the savings notebook in place, as CI does."""
 from __future__ import annotations
 
 import argparse
@@ -12,13 +13,11 @@ from jupyter_client import AsyncKernelManager
 
 
 ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOKS = [
-    ROOT / "notebooks/bitcoin_savings_plan.ipynb",
-]
+NOTEBOOKS = [ROOT / "notebooks/bitcoin_savings_plan.ipynb"]
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Execute the public notebooks in place")
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout", type=int, default=1200, help="Per-cell timeout in seconds")
     arguments = parser.parse_args()
     # Capture figures into notebook output cells so GitHub renders the public

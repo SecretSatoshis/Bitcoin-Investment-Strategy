@@ -1,4 +1,4 @@
-"""L6 — the committed cache substitutes for a slow source, never for a dead one."""
+"""The saved copy stands in for a failed fetch, never for a changed source format."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ class CachedFetchPolicyTests(unittest.TestCase):
             def fetcher():
                 raise TimeoutError("connection stalled")
 
-            frame, provenance = pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json")
+            frame, provenance = pipeline.cached_fetch("t", fetcher, path, manifest_path=path.parent / "manifest.json")
             self.assertEqual(provenance["status"], "cached")
             self.assertEqual(len(frame), 2)
 
@@ -45,19 +45,18 @@ class CachedFetchPolicyTests(unittest.TestCase):
                 raise SourceSchemaError("FRED median-income response has an unexpected schema")
 
             with self.assertRaises(RuntimeError) as ctx:
-                pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json")
+                pipeline.cached_fetch("t", fetcher, path, manifest_path=path.parent / "manifest.json")
             self.assertIn("unexpected schema", str(ctx.exception))
 
     def test_unparseable_body_is_transient_and_uses_the_cache(self):
-        # pandas raises ValueError subclasses for an empty or HTML body; that is a bad
-        # response, not a schema change, so the verified cache must stand in.
+        # An empty or HTML body is a passing outage, not a schema change.
         with TemporaryDirectory(dir=ROOT) as tmpdir:
             path = self._cache(Path(tmpdir), [2023, 2024])
 
             def fetcher():
                 raise pd.errors.EmptyDataError("No columns to parse from file")
 
-            frame, provenance = pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json")
+            frame, provenance = pipeline.cached_fetch("t", fetcher, path, manifest_path=path.parent / "manifest.json")
             self.assertEqual(provenance["status"], "cached")
 
     def test_stale_cache_is_refused(self):
@@ -71,7 +70,7 @@ class CachedFetchPolicyTests(unittest.TestCase):
                 return "it is far too old"
 
             with self.assertRaises(RuntimeError) as ctx:
-                pipeline._cached_fetch("t", fetcher, path, cache_manifest_path=path.parent / "manifest.json", stale_cache_check=stale)
+                pipeline.cached_fetch("t", fetcher, path, manifest_path=path.parent / "manifest.json", stale_cache_check=stale)
             self.assertIn("no longer usable", str(ctx.exception))
 
     def test_missing_year_column_has_a_clear_stale_cache_error(self):
@@ -91,8 +90,8 @@ class CachedFetchPolicyTests(unittest.TestCase):
                 age = 2026 - int(pd.to_numeric(frame["Year"]).max())
                 return None if age <= FRED_CACHE_MAX_AGE_YEARS else "too old"
 
-            frame, provenance = pipeline._cached_fetch(
-                "t", fetcher, path, cache_manifest_path=path.parent / "manifest.json", stale_cache_check=stale
+            frame, provenance = pipeline.cached_fetch(
+                "t", fetcher, path, manifest_path=path.parent / "manifest.json", stale_cache_check=stale
             )
             self.assertEqual(provenance["status"], "cached")
 

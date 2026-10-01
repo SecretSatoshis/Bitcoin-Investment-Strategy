@@ -1,7 +1,6 @@
 """Public savings-report exports using the shared savings engine."""
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 import tempfile
@@ -11,26 +10,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from bitcoin_investment_strategy.savings import (
-    prepare_prices, run_plan, validate_allocations, money_weighted_return,
-)
-
-
-def sha256(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+from .io import sha256
+from .release_files import REPORT_FILES
+from .savings import money_weighted_return, prepare_prices, run_plan, validate_allocations
 
 
 def records(frame):
     # Pandas serializes unavailable annualized returns to JSON null, not NaN.
     return json.loads(frame.to_json(orient="records", date_format="iso", double_precision=15))
-
-
-REPORT_FILES = {
-    "plan_definition.json", "section3_packet.json", "README.md",
-    "cohort_summary.csv", "ytd_summary.csv", "benchmark_results.csv",
-    "cohort_paths.csv", "contribution_schedule.csv",
-    "cohort_comparison.png", "cohort_comparison.svg", "current_year_savings.png", "current_year_savings.svg",
-}
 
 
 def validate_report_bundle(directory, *, root, require_latest=False):
@@ -231,96 +218,90 @@ def build_report(prices, *, as_of=None, cohort_years=None, annual_income=100000,
 
 
 def render_cohort_comparison(assumptions, summary):
-    """Presentation-sized table using the Secret Satoshis website brand system."""
+    """Presentation-sized cohort table in the Secret Satoshis style."""
     import matplotlib.pyplot as plt
-    from matplotlib.font_manager import FontProperties
     from matplotlib.patches import Rectangle
+    from .style import (ALTERNATE as alternate, BG as bg, BORDER as border, DISPLAY as display,
+                        HIGHLIGHT, MONO as mono, MONO_MEDIUM as medium, ORANGE as accent,
+                        PRIMARY as primary, SECONDARY as secondary, SURFACE as surface)
 
-    fonts = Path(__file__).parent / "assets/fonts"
-    mono = FontProperties(fname=fonts / "JetBrainsMono-400.ttf")
-    medium = FontProperties(fname=fonts / "JetBrainsMono-600.ttf")
-    display = FontProperties(fname=fonts / "Syne-700.ttf")
-    bg, surface, alternate = "#08080c", "#0e0e16", "#13131d"
-    primary, secondary, accent, border = "#e4e4ef", "#9090a8", "#F7931A", "#2a2a42"
-    # Embed glyph paths in SVG so slides render faithfully without installed fonts.
-    with plt.rc_context({"svg.fonttype": "path", "svg.hashsalt": "secret-satoshis-savings"}):
-        fig = plt.figure(figsize=(16, 9), facecolor=bg)
-        ax = fig.add_axes([0, 0, 1, 1])
-        ax.set(xlim=(0, 1), ylim=(0, 1))
-        ax.axis("off")
+    fig = plt.figure(figsize=(16, 9), facecolor=bg)
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set(xlim=(0, 1), ylim=(0, 1))
+    ax.axis("off")
 
-        def text(x, y, label, size=12, color=primary, font=mono, align="left", **kwargs):
-            ax.text(x, y, label, fontsize=size, color=color, fontproperties=font,
-                    ha=align, va="center", **kwargs)
+    def text(x, y, label, size=12, color=primary, font=mono, align="left", **kwargs):
+        ax.text(x, y, label, fontsize=size, color=color, fontproperties=font,
+                ha=align, va="center", **kwargs)
 
-        left, right = .045, .955
-        ax.add_patch(Rectangle((left, .927), .007, .017, color=accent, linewidth=0))
-        text(left + .018, .935, "SECRET SATOSHIS", 12, font=medium)
-        text(right, .935, "BITCOIN SAVINGS STRATEGY", 10, secondary, align="right")
-        ax.plot([left, right], [.90, .90], color=border, linewidth=.8)
-        text(left, .841, "The savings experience", 30, font=display)
-        income = assumptions["annual_income_usd"]
-        btc_share = assumptions["bitcoin_fraction_of_income"]
-        cash_share = assumptions["cash_fraction_of_income"]
-        cash_rate = f"{assumptions['cash_apy'] * 100:g}%"
-        text(left, .785, f"Family income: ${income:,.0f} / year  ·  {btc_share:.0%} to Bitcoin  ·  {cash_share:.0%} to USD savings", 12)
-        text(left, .739, "Cohort comparison  /  Since each January 1 start", 10, secondary)
-        status = "Quarter-end" if assumptions["is_quarter_end"] else "Interim"
-        stamp = pd.Timestamp(assumptions["report_date"]).strftime("%d %b %Y").lstrip("0")
-        text(right, .739, f"{status}  ·  {stamp}", 10, secondary, align="right")
+    left, right = .045, .955
+    ax.add_patch(Rectangle((left, .927), .007, .017, color=accent, linewidth=0))
+    text(left + .018, .935, "SECRET SATOSHIS", 12, font=medium)
+    text(right, .935, "BITCOIN SAVINGS STRATEGY", 10, secondary, align="right")
+    ax.plot([left, right], [.90, .90], color=border, linewidth=.8)
+    text(left, .841, "The savings experience", 30, font=display)
+    income = assumptions["annual_income_usd"]
+    btc_share = assumptions["bitcoin_fraction_of_income"]
+    cash_share = assumptions["cash_fraction_of_income"]
+    cash_rate = f"{assumptions['cash_apy'] * 100:g}%"
+    text(left, .785, f"Family income: ${income:,.0f} / year  ·  {btc_share:.0%} to Bitcoin  ·  {cash_share:.0%} to USD savings", 12)
+    text(left, .739, "Cohort comparison  /  Since each January 1 start", 10, secondary)
+    status = "Quarter-end" if assumptions["is_quarter_end"] else "Interim"
+    stamp = pd.Timestamp(assumptions["report_date"]).strftime("%d %b %Y").lstrip("0")
+    text(right, .739, f"{status}  ·  {stamp}", 10, secondary, align="right")
 
-        widths = np.array([.06, .115, .12, .11, .11, .125, .115, .12, .125])
-        edges = left + np.r_[0, np.cumsum(widths)] * (right - left)
-        columns = ["cohort_year", "total_contributed_usd", "btc_held", "btc_value_usd",
-                   "cash_value_usd", "total_value_usd", "total_gain_usd",
-                   "cash_only_value_usd", "advantage_vs_cash_usd"]
-        headings = ["Start\nyear", "USD\ncontributed", "BTC\naccumulated", "BTC value\nUSD",
-                    "USD\naccumulated", "Savings plan\nvalue · USD", "Total gain /\nloss · USD",
-                    f"Cash only\n@ {cash_rate} · USD", "BTC surplus vs\ncash only · USD"]
-        header_top, header_bottom, bottom = .70, .58, .28
-        ax.add_patch(Rectangle((left, header_bottom), right-left, header_top-header_bottom,
-                               facecolor=surface, linewidth=0))
-        ax.plot([left, right], [header_top, header_top], color=accent, linewidth=1.2)
-        text(left + .010, .677, "SAVINGS PLAN", 9, secondary, medium)
-        text((edges[7] + right) / 2, .677, "CASH-ONLY COMPARISON", 9, accent, medium, "center")
-        ax.plot([left, right], [.653, .653], color=border, linewidth=.5)
-        for c, heading in enumerate(headings):
-            text(edges[c]+.010 if c == 0 else edges[c+1]-.010, .617, heading, 9,
-                 accent if c == 5 else secondary, medium,
-                 "left" if c == 0 else "right", linespacing=1.6)
-        summary = summary.sort_values("cohort_year", ascending=False)
-        height = (header_bottom-bottom) / len(summary)
-        for r, (_, row) in enumerate(summary.iterrows()):
-            top = header_bottom-r*height
-            current = int(row.cohort_year) == assumptions["report_year"]
-            ax.add_patch(Rectangle((left, top-height), right-left, height,
-                                   facecolor="#211a12" if current else alternate if r % 2 else surface,
-                                   linewidth=0))
-            if current:
-                ax.add_patch(Rectangle((left, top-height), .0025, height, facecolor=accent, linewidth=0))
-            ax.plot([left, right], [top-height, top-height], color=border, linewidth=.5)
-            for c, col in enumerate(columns):
-                value = row[col]
-                label = (str(int(value)) if c == 0 else f"{value:.6f}" if c == 2 else
-                         f"−${abs(value):,.0f}" if value < 0 else
-                         f"+${value:,.0f}" if c in (6, 8) and value > 0 else f"${value:,.0f}")
-                text(edges[c]+.010 if c == 0 else edges[c+1]-.010, top-height/2,
-                     label, 12, accent if c == 5 or (c == 0 and current) else primary,
-                     medium if c in (0, 5) else mono, "left" if c == 0 else "right")
-        # Thin separators distinguish holdings from combined results without a heavy grid.
-        for c in (3, 5, 7):
-            ax.plot([edges[c], edges[c]], [bottom, header_top], color=border, linewidth=.6)
+    widths = np.array([.06, .115, .12, .11, .11, .125, .115, .12, .125])
+    edges = left + np.r_[0, np.cumsum(widths)] * (right - left)
+    columns = ["cohort_year", "total_contributed_usd", "btc_held", "btc_value_usd",
+               "cash_value_usd", "total_value_usd", "total_gain_usd",
+               "cash_only_value_usd", "advantage_vs_cash_usd"]
+    headings = ["Start\nyear", "USD\ncontributed", "BTC\naccumulated", "BTC value\nUSD",
+                "USD\naccumulated", "Savings plan\nvalue · USD", "Total gain /\nloss · USD",
+                f"Cash only\n@ {cash_rate} · USD", "BTC surplus vs\ncash only · USD"]
+    header_top, header_bottom, bottom = .70, .58, .28
+    ax.add_patch(Rectangle((left, header_bottom), right-left, header_top-header_bottom,
+                           facecolor=surface, linewidth=0))
+    ax.plot([left, right], [header_top, header_top], color=accent, linewidth=1.2)
+    text(left + .010, .677, "SAVINGS PLAN", 9, secondary, medium)
+    text((edges[7] + right) / 2, .677, "CASH-ONLY COMPARISON", 9, accent, medium, "center")
+    ax.plot([left, right], [.653, .653], color=border, linewidth=.5)
+    for c, heading in enumerate(headings):
+        text(edges[c]+.010 if c == 0 else edges[c+1]-.010, .617, heading, 9,
+             accent if c == 5 else secondary, medium,
+             "left" if c == 0 else "right", linespacing=1.6)
+    summary = summary.sort_values("cohort_year", ascending=False)
+    height = (header_bottom-bottom) / len(summary)
+    for r, (_, row) in enumerate(summary.iterrows()):
+        top = header_bottom-r*height
+        current = int(row.cohort_year) == assumptions["report_year"]
+        ax.add_patch(Rectangle((left, top-height), right-left, height,
+                               facecolor=HIGHLIGHT if current else alternate if r % 2 else surface,
+                               linewidth=0))
+        if current:
+            ax.add_patch(Rectangle((left, top-height), .0025, height, facecolor=accent, linewidth=0))
+        ax.plot([left, right], [top-height, top-height], color=border, linewidth=.5)
+        for c, col in enumerate(columns):
+            value = row[col]
+            label = (str(int(value)) if c == 0 else f"{value:.6f}" if c == 2 else
+                     f"−${abs(value):,.0f}" if value < 0 else
+                     f"+${value:,.0f}" if c in (6, 8) and value > 0 else f"${value:,.0f}")
+            text(edges[c]+.010 if c == 0 else edges[c+1]-.010, top-height/2,
+                 label, 12, accent if c == 5 or (c == 0 and current) else primary,
+                 medium if c in (0, 5) else mono, "left" if c == 0 else "right")
+    # Thin separators distinguish holdings from combined results without a heavy grid.
+    for c in (3, 5, 7):
+        ax.plot([edges[c], edges[c]], [bottom, header_top], color=border, linewidth=.6)
 
-        text(left, .227, "READING THE TABLE", 9, accent, medium)
-        text(left, .188, "USD contributed = Bitcoin + cash deposits.", 9, secondary)
-        text(left, .154, "USD accumulated = cash balance including interest.", 9, secondary)
-        text(left, .120, "Plan value = BTC value + accumulated cash.", 9, secondary)
-        text(.54, .188, "Gain / loss = plan value − total contributions.", 9, secondary)
-        text(.54, .154, "Surplus = plan value − matched cash-only balance.", 9, secondary)
-        text(.54, .120, f"Cash only = same total deposits earning {cash_rate} APY.", 9, secondary)
-        ax.plot([left, right], [.081, .081], color=border, linewidth=.8)
-        text(left, .045, "Source: Secret Satoshis · Earlier cohorts saved for longer · USD rounded.", 8, secondary)
-        text(right, .045, "Modeled · Nominal USD · Excludes fees / taxes", 8, secondary, align="right")
+    text(left, .227, "READING THE TABLE", 9, accent, medium)
+    text(left, .188, "USD contributed = Bitcoin + cash deposits.", 9, secondary)
+    text(left, .154, "USD accumulated = cash balance including interest.", 9, secondary)
+    text(left, .120, "Plan value = BTC value + accumulated cash.", 9, secondary)
+    text(.54, .188, "Gain / loss = plan value − total contributions.", 9, secondary)
+    text(.54, .154, "Surplus = plan value − matched cash-only balance.", 9, secondary)
+    text(.54, .120, f"Cash only = same total deposits earning {cash_rate} APY.", 9, secondary)
+    ax.plot([left, right], [.081, .081], color=border, linewidth=.8)
+    text(left, .045, "Source: Secret Satoshis · Earlier cohorts saved for longer · USD rounded.", 8, secondary)
+    text(right, .045, "Modeled · Nominal USD · Excludes fees / taxes", 8, secondary, align="right")
     return fig
 
 
@@ -328,16 +309,11 @@ def render_current_year_savings(assumptions, current):
     """Branded 16:9 savings path with matching endpoint summaries and legend."""
     import matplotlib.pyplot as plt
     import matplotlib.dates as mdates
-    from matplotlib.font_manager import FontProperties
     from matplotlib.patches import Rectangle
     from matplotlib.ticker import FuncFormatter, MaxNLocator
-
-    fonts = Path(__file__).parent / "assets/fonts"
-    mono = FontProperties(fname=fonts / "JetBrainsMono-400.ttf")
-    medium = FontProperties(fname=fonts / "JetBrainsMono-600.ttf")
-    display = FontProperties(fname=fonts / "Syne-700.ttf")
-    bg, primary, secondary = "#08080c", "#e4e4ef", "#9090a8"
-    accent, border, cash_color = "#F7931A", "#2a2a42", "#B0A5D8"
+    from .style import (BG as bg, BORDER as border, CASH as cash_color, DISPLAY as display,
+                        MONO as mono, MONO_MEDIUM as medium, ORANGE as accent,
+                        PRIMARY as primary, SECONDARY as secondary)
     fig = plt.figure(figsize=(16, 9), facecolor=bg)
     shell = fig.add_axes([0, 0, 1, 1])
     shell.set(xlim=(0, 1), ylim=(0, 1))
@@ -402,7 +378,7 @@ def render_current_year_savings(assumptions, current):
         spine.set_visible(False)
     ax.set_axisbelow(True)
     ax.grid(False, axis="x")
-    ax.grid(axis="y", color=border, linewidth=.6)
+    ax.grid(axis="y", color=border, linewidth=.6, alpha=.25)
     text(left, .742, "USD", 9, secondary)
     text(left, .112, "Cash-only comparison receives the same total deposits on the same dates.", 9, secondary)
     text(right, .112, "Balances include contributions and gains / losses.", 9, secondary, align="right")
@@ -413,21 +389,21 @@ def render_current_year_savings(assumptions, current):
 
 
 def render_charts(assumptions, tables, directory):
+    """Write both visuals as 3200 x 1800 PNG and SVG, independent of the caller's settings."""
     import matplotlib.pyplot as plt
     year = assumptions["report_year"]
     paths = tables["cohort_paths"]
     current = paths[paths.cohort_year == year]
-    with plt.rc_context({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False}):
-        comparison = render_cohort_comparison(assumptions, tables["cohort_summary"])
-        comparison.savefig(directory / "cohort_comparison.png", dpi=200, facecolor=comparison.get_facecolor())
-        with plt.rc_context({"svg.fonttype": "path", "svg.hashsalt": "secret-satoshis-savings"}):
-            comparison.savefig(directory / "cohort_comparison.svg", facecolor=comparison.get_facecolor())
-        plt.close(comparison)
-        current_chart = render_current_year_savings(assumptions, current)
-        current_chart.savefig(directory / "current_year_savings.png", dpi=200, facecolor=current_chart.get_facecolor())
-        with plt.rc_context({"svg.fonttype": "path", "svg.hashsalt": "secret-satoshis-savings"}):
-            current_chart.savefig(directory / "current_year_savings.svg", facecolor=current_chart.get_facecolor())
-        plt.close(current_chart)
+    # Default settings plus a fixed font size. SVGs embed glyph outlines so slides render
+    # without the fonts installed; a fixed salt and no timestamp keep them byte-stable.
+    settings = {"font.size": 10, "svg.fonttype": "path", "svg.hashsalt": "secret-satoshis-savings"}
+    with plt.style.context("default"), plt.rc_context(settings):
+        for render, name, data in ((render_cohort_comparison, "cohort_comparison", tables["cohort_summary"]),
+                                   (render_current_year_savings, "current_year_savings", current)):
+            fig = render(assumptions, data)
+            fig.savefig(directory / f"{name}.png", dpi=200, facecolor=fig.get_facecolor())
+            fig.savefig(directory / f"{name}.svg", facecolor=fig.get_facecolor(), metadata={"Date": None})
+            plt.close(fig)
 
 
 EXPORT_NOTES = """# Section 3 savings data

@@ -54,7 +54,7 @@ class PublicationTests(unittest.TestCase):
         manifest = validate_report_bundle(self.bundle, root=ROOT, require_latest=True)
         source = json.loads((ROOT / "data/manifests/data_manifest.json").read_text())
         self.assertEqual(manifest["report_date"], source["core_data_end"])
-        self.assertEqual(REPORT_FILES, publication.REPORT_NAMES)
+        self.assertEqual(REPORT_FILES, publication.REPORT_FILES)
 
     def test_missing_and_modified_files_fail(self):
         path = self.bundle / "cohort_summary.csv"
@@ -106,9 +106,9 @@ class PublicationTests(unittest.TestCase):
                 self.assertRaisesRegex(ValueError, "does not report this data release"):
             publication.restore(source, target)
 
-    def test_private_notebook_in_payload_is_rejected_before_copy(self):
+    def test_unlisted_file_in_payload_is_rejected_before_copy(self):
         source, target = self.payload()
-        (source / "notebooks/bitcoin_supply_dynamics.ipynb").write_text("private")
+        (source / "notebooks/other.ipynb").write_text("not part of the release")
         with self.assertRaisesRegex(ValueError, "allowlist"):
             publication.restore(source, target)
         self.assertFalse((target / "notebooks").exists())

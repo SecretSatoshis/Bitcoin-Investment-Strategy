@@ -1,3 +1,4 @@
+"""U.S. median household income from FRED."""
 from __future__ import annotations
 
 from io import StringIO
@@ -11,26 +12,23 @@ from ..validation import validate_income
 
 
 def fetch_fred_median_income() -> tuple[pd.DataFrame, dict[str, Any]]:
-    # FRED occasionally accepts a connection but delays the response body. The
-    # central pipeline has a committed verified fallback, so do not stall an
-    # entire daily run for several minutes on this slow annual source.
+    # FRED sometimes accepts a connection and then stalls. A short timeout lets the
+    # release fall back to its verified saved copy instead of hanging the daily run.
     response = request(FRED_MEDIAN_INCOME_URL, timeout=20, attempts=2)
-    # An empty or HTML maintenance body fails to parse here with a pandas ParserError /
-    # EmptyDataError. That is a transient response, not a schema change, so it is left
-    # as an ordinary error and the verified cache may stand in for it.
+    # An empty or HTML maintenance page fails to parse here; that is a passing outage,
+    # not a schema change, so it raises an ordinary error.
     frame = pd.read_csv(StringIO(response.text))
-    date_column = next((column for column in ("DATE", "observation_date") if column in frame.columns), None)
-    if date_column is None or "MEHOINUSA646N" not in frame.columns:
+    if not {"observation_date", "MEHOINUSA646N"}.issubset(frame.columns):
         raise SourceSchemaError("FRED median-income response has an unexpected schema")
-    frame[date_column] = pd.to_datetime(frame[date_column], errors="coerce")
+    frame["observation_date"] = pd.to_datetime(frame["observation_date"], errors="coerce")
     frame["median_household_income_usd"] = pd.to_numeric(
         frame["MEHOINUSA646N"], errors="coerce"
     )
-    if frame[date_column].isna().any():
+    if frame["observation_date"].isna().any():
         raise SourceSchemaError("FRED income contains invalid observation dates")
     frame = pd.DataFrame(
         {
-            "Year": frame[date_column].dt.year.astype(int),
+            "Year": frame["observation_date"].dt.year.astype(int),
             "median_household_income_usd": frame["median_household_income_usd"],
         }
     )

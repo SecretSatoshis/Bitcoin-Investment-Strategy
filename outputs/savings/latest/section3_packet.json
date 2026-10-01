@@ -38,13 +38,13 @@
     ]
   },
   "provenance": {
-    "source_release_id": "2026-09-30-eb081ec97af4",
+    "source_release_id": "2026-09-30-5820a398d92d",
     "source_data_end": "2026-09-30",
     "price_file": "data/processed/bitcoin_daily.csv",
-    "price_sha256": "08e20875f258631665f3db4dba566b1d2e09d98a1b751c1b84b12afc8824cabf",
-    "source_manifest_sha256": "7101592f15524d337c6be94084bc12a8db4903af9215989d14017e13f31b4ce3",
+    "price_sha256": "bd1f5984137a73063417797e0232f3138276caf5190c519e241e4a3b34bce30b",
+    "source_manifest_sha256": "c81827f3d34b1e45e0f22d80b0233e8c7b3f0fa7f46eaa3c74d8c7c9c71363d8",
     "engine_sha256": "53a44110b6e5a02b91b1b38caca284413fe59fbfb19f1421c1a63062a1cf55ab",
-    "exporter_sha256": "43e7a19d715cc5c4e63d48cae71155eeef09fef9937920e00580fd5c6194e2b6"
+    "exporter_sha256": "004d677e653ed7d71c6ff78ea0d019d74fb4b17e2e2e522731a12d31877e3c3c"
   },
   "cohort_summary": [
     {

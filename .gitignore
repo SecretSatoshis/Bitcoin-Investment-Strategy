@@ -35,8 +35,7 @@ htmlcov/
 *.tmp
 data/.staging/
 
-# Publish only the stable savings-report bundle. Research and older local runs
-# remain excluded; daily versions of latest/ are retained in Git history.
+# Only the latest savings report is tracked; Git history keeps each day's version.
 outputs/*
 !outputs/savings/
 outputs/savings/*

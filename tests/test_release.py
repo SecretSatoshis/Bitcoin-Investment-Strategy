@@ -1,21 +1,13 @@
+"""The committed data release and the notebook that reads it."""
 from __future__ import annotations
 
-import sys
 import unittest
-from pathlib import Path
 
 import nbformat
-import numpy as np
 import pandas as pd
 
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
-
-from bitcoin_investment_strategy.validation import (  # noqa: E402
-    validate_bitcoin_daily,
-    validate_release_manifest,
-)
+from bitcoin_investment_strategy.config import ROOT
+from bitcoin_investment_strategy.validation import validate_bitcoin_daily, validate_release_manifest
 
 
 class ReleaseTests(unittest.TestCase):
@@ -30,29 +22,17 @@ class ReleaseTests(unittest.TestCase):
         self.assertFalse(income["Year"].duplicated().any())
         self.assertTrue(income["median_household_income_usd"].gt(0).all())
 
-    def test_public_release_publishes_only_what_the_savings_plan_reads(self) -> None:
-        self.assertEqual(
-            list(self.daily.columns),
-            ["price", "supply", "market_cap_usd", "days_since_genesis", "years_since_genesis"],
-        )
-
-    def test_known_supply_regressions(self) -> None:
-        # No blocks were mined 2009-01-04..08; the restart day's 14 blocks issued 700 BTC.
-        self.assertTrue(self.daily.loc["2009-01-04":"2009-01-08", "supply"].isna().all())
-        self.assertTrue(np.isclose(self.daily.loc["2009-01-09", "supply"], 700.0))
-
-    def test_price_is_not_duplicated(self) -> None:
-        self.assertIn("price", self.daily.columns)
-        self.assertNotIn("price_close", self.daily.columns)
+    def test_release_publishes_only_what_the_notebook_reads(self) -> None:
+        self.assertEqual(list(self.daily.columns), ["price"])
 
     def test_notebook_is_an_offline_consumer(self) -> None:
-        forbidden = ("requests.get", "subprocess.run", "nbconvert", "bitview.space/api")
+        forbidden = ("requests.get", "subprocess.run", "nbconvert", "secretsatoshis.github.io")
         notebook = nbformat.read(ROOT / "notebooks" / "bitcoin_savings_plan.ipynb", as_version=4)
         code = "\n".join(cell.source for cell in notebook.cells if cell.cell_type == "code")
         self.assertIn("data/processed/bitcoin_daily.csv", code)
         self.assertIn("data/processed/median_household_income_annual.csv", code)
         for pattern in forbidden:
-            self.assertNotIn(pattern, code, f"savings plan still contains {pattern}")
+            self.assertNotIn(pattern, code, f"the notebook contains {pattern}")
 
 
 if __name__ == "__main__":

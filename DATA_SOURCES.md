@@ -1,22 +1,21 @@
-# Data sources and evidence boundaries
+# Data sources
 
-The pipeline preserves source-native frequencies and records every live or cached retrieval in `data/manifests/data_manifest.json`.
+Every release records each source's retrieval, and whether a saved copy stood in for a failed fetch, in `data/manifests/data_manifest.json`.
 
-| Source | Dataset | Frequency | Important limitation |
+| Source | Dataset | Frequency | Limitation |
 |---|---|---:|---|
-| [BRK / Bitview](https://bitview.space/api) | BTC price and supply | Daily | Five post-genesis no-block dates are explicitly handled |
-| [FRED MEHOINUSA646N](https://fred.stlouisfed.org/series/MEHOINUSA646N) / U.S. Census Bureau | Nominal median U.S. household income | Annual | Current dollars, annual, and published with a lag |
+| [Bitcoin Report Library](https://github.com/SecretSatoshis/Bitcoin-Report-Library) (BRK data) | BTC daily close, `price_close` in `master_metrics_data.csv.gz` | Daily | Starts at the first traded price, 2010-08-16 |
+| [FRED MEHOINUSA646N](https://fred.stlouisfed.org/series/MEHOINUSA646N) / U.S. Census Bureau | Nominal median U.S. household income | Annual | Current dollars, published about a year late |
 
-The savings plan reads `price` from the daily table and median household income from the annual one. `supply` is published for market capitalization and to verify the known no-block dates. The wider BRK research catalogue is not part of the public release.
+The notebook reads `price` from `data/processed/bitcoin_daily.csv` and income from `data/processed/median_household_income_annual.csv`.
+
+## Rules
+
+- A release covers through the previous completed UTC day, and every series must reach it.
+- The price comes from the Report Library release for exactly that day, and the download must match the checksum in its `release_manifest.json`. Until that release is published the update waits or fails; it never uses an older price. The manifest records the Report Library release it used.
+- The Report Library's `price_close` is published as `price`.
+- If FRED fails, the release reuses its saved copy only when the previous manifest verifies it and its newest year is at most three years old; the manifest then records `status: cached`. A changed FRED format stops the release instead.
 
 ## Redistribution
 
-The [GPL-3.0](LICENSE) license applies to repository code and original prose, not automatically to third-party datasets. Data retain the terms of their upstream publishers. Before redistributing a fork or mirror, review the current terms for BRK and FRED. FRED series sourced from the U.S. Census Bureau are U.S. government works, but FRED's own terms of use govern the delivery.
-
-## Historical data rules
-
-- The canonical as-of date is the previous completed UTC day.
-- One BRK price request serves the notebook; `price_close` is published as canonical column `price`.
-- The no-block dates from 2009-01-04 through 2009-01-08 are expected source gaps in `supply`.
-- Where flow series are built (the research catalogue, not the public release), daily flows are differences of cumulative observations, not sums of rolling 24-hour windows, and the observation after a gap is differenced from the last valid one — preserving the 700 BTC issued on 2009-01-09.
-- Supplemental cached data are never silent: the manifest records `status: cached` and the failed live request class.
+The [GPL-3.0](LICENSE) license covers this repository's code and original prose, not third-party data. Data keep their publishers' terms, so review BRK's (the Report Library's upstream source) and FRED's current terms before redistributing a fork or mirror. FRED series from the U.S. Census Bureau are U.S. government works, but FRED's terms of use govern how they are delivered.

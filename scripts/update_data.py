@@ -1,25 +1,31 @@
 #!/usr/bin/env python3
+"""Fetch, check and write the daily data release."""
 from __future__ import annotations
 
 import argparse
-import sys
-from pathlib import Path
+import time
 
-import pandas as pd
+from bitcoin_investment_strategy.fetchers.report_library import ReleaseNotReady
+from bitcoin_investment_strategy.pipeline import update_data
 
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
-
-from bitcoin_investment_strategy.pipeline import update_data  # noqa: E402
+RETRY_SECONDS = 600
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Refresh the shared notebook data release")
-    parser.add_argument("--as-of", help="Last completed UTC date to request (YYYY-MM-DD)")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--wait-minutes", type=float, default=0,
+                        help="How long to wait for the Report Library to publish the day")
     arguments = parser.parse_args()
-    as_of = pd.Timestamp(arguments.as_of) if arguments.as_of else None
-    update_data(as_of)
+    deadline = time.monotonic() + arguments.wait_minutes * 60
+    while True:
+        try:
+            update_data()
+            return
+        except ReleaseNotReady as error:
+            if time.monotonic() + RETRY_SECONDS > deadline:
+                raise
+            print(f"Waiting for the Report Library: {error}; retrying in {RETRY_SECONDS // 60} minutes")
+            time.sleep(RETRY_SECONDS)
 
 
 if __name__ == "__main__":

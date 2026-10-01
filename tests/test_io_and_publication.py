@@ -8,6 +8,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+import pandas as pd
 import requests
 
 from bitcoin_investment_strategy import io
@@ -48,6 +49,24 @@ class RequestRetryTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "after 3 attempts"):
                 io.request("https://example.invalid/data", attempts=3)
         self.assertEqual(get.call_count, 3)
+
+
+class ReleaseMetadataTests(unittest.TestCase):
+    def test_verify_artifacts_and_release_id(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "data.csv"
+            path.write_text("date,price\n2026-01-01,1\n")
+            artifacts = {"data.csv": io.artifact_metadata(path)}
+            self.assertEqual(artifacts["data.csv"]["data_end"], "2026-01-01")
+            io.verify_artifacts({"artifacts": artifacts}, root, [path])
+            release = io.release_id(pd.Timestamp("2026-01-01"), artifacts)
+            self.assertTrue(release.startswith("2026-01-01-"))
+            path.write_text("date,price\n2026-01-01,2\n")
+            with self.assertRaisesRegex(ValueError, "checksum"):
+                io.verify_artifacts({"artifacts": artifacts}, root, [path])
+            self.assertNotEqual(release, io.release_id(
+                pd.Timestamp("2026-01-01"), {"data.csv": io.artifact_metadata(path)}))
 
 
 class WeeklyNotebookTests(unittest.TestCase):

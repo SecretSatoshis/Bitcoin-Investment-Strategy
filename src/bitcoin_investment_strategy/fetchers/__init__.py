@@ -1,1 +1,1 @@
-"""Upstream-specific data retrieval functions."""
+"""One module per upstream data source."""

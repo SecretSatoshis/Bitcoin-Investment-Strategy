@@ -1,163 +1,101 @@
 # Bitcoin Investment Strategy
 
-A Bitcoin savings-plan notebook. [`bitcoin_savings_plan.ipynb`](notebooks/bitcoin_savings_plan.ipynb) is the companion to [**Should I buy bitcoin?**](https://newsletter.secretsatoshis.com/p/should-i-buy-bitcoin) — the post sets out the framework; the notebook is that framework in runnable form.
+A Bitcoin savings-plan notebook from [Secret Satoshis](https://secretsatoshis.com), and the
+companion to [**Should I buy bitcoin?**](https://newsletter.secretsatoshis.com/p/should-i-buy-bitcoin).
+The article sets out the idea of saving a fixed share of income in bitcoin; the notebook
+lets you run it against real price history.
 
-Set your own contribution, cadence and start date, run it, and it reports cost basis against market price, sats accumulated, portfolio value, and how the plan compares with holding cash over the same period.
+- **Open the notebook:** [`bitcoin_savings_plan.ipynb`](notebooks/bitcoin_savings_plan.ipynb)
+- **Read the article:** [Should I buy bitcoin?](https://newsletter.secretsatoshis.com/p/should-i-buy-bitcoin)
 
-## Pipeline
+## What it does
 
-```text
-BRK / Bitview        FRED / U.S. Census
-      ↓                      ↓
-        scripts/update_data.py
-                 ↓
-raw snapshots → validation and transforms → processed release + manifest
-                                                   ↓
-                                          savings plan notebook
+Set your income, the share going to bitcoin and to cash, how often you buy, and when you
+started. The notebook then shows what that plan has done to date: sats accumulated, the
+average price you paid, value against what you put in, a money-weighted return, and the
+same contributions held as cash instead.
+
+It also publishes a daily **savings report** in [`outputs/savings/latest/`](outputs/savings/latest/):
+results for five yearly starting cohorts under fixed example assumptions ($100,000 income,
+10% to bitcoin, 10% to cash at 3% APY, bought monthly), as tables and two charts.
+Start with `section3_packet.json`.
+
+## How it works
+
+```mermaid
+flowchart LR
+    subgraph Sources
+        RL["Bitcoin Report Library<br/>bitcoin price"]
+        FRED["FRED<br/>household income"]
+    end
+
+    subgraph Release
+        direction LR
+        U["Fetch"] --> V["Check"] --> D[("data/")]
+    end
+
+    N["Savings plan<br/>notebook"]
+    S["Savings report<br/>outputs/savings/latest"]
+
+    RL & FRED --> U
+    D --> N --> S
 ```
 
-The updater retrieves each upstream metric once and publishes only what the notebook uses: daily BTC price and supply in `data/processed/bitcoin_daily.csv` (plus derived market cap and days since genesis). Median household income is annual and stays separate because it has a different frequency and revision cycle. The wider BRK research catalogue (`FULL_BRK_SERIES` in `config.py`) is not part of the public release, so a rename in an unused upstream series cannot stop the daily savings publication.
+Every file in a release is listed with its checksum in `data/manifests/data_manifest.json`,
+and the notebook checks them before calculating anything. Purchases always use that day's
+observed price, nothing looks ahead, and results are nominal, before fees and tax.
 
-All required daily metrics must reach the requested cutoff; the updater rejects a shorter release. Income observations must be nonempty, finite, positive and unique by completed calendar year. Cached inputs must match the previous release manifest before reuse.
+## Quick start
 
-Every published data input is covered by `data/manifests/data_manifest.json`, which records the release ID, retrieval time, coverage, source status and SHA-256 checksum. The notebook verifies its inputs against that manifest before calculating anything.
-
-The notebook uses the tested savings engine in `src/bitcoin_investment_strategy/savings.py`. Purchases require an observed positive price on every trading day; leading pre-market zero or missing prices are excluded. Combined allocations cannot exceed income. Contribution status follows the plan's stop date, and milestone estimates respect that horizon and avoid unsupported distant dates.
-
-## Reproduce locally
-
-Python 3.12 is the supported runtime.
+You need Python 3.12 and [uv](https://docs.astral.sh/uv/).
 
 ```bash
+git clone https://github.com/SecretSatoshis/Bitcoin-Investment-Strategy.git
+cd Bitcoin-Investment-Strategy
 uv sync --locked
-
-uv run --no-sync python scripts/update_data.py
-uv run --no-sync python scripts/validate_data.py
-uv run --no-sync python scripts/execute_notebooks.py
-uv run --no-sync python scripts/validate_data.py
-uv run --no-sync python scripts/validate_savings_report.py
-uv run --no-sync python -m unittest discover -s tests -v
 ```
 
-Use `--as-of YYYY-MM-DD` with `scripts/update_data.py` to request a specific completed UTC date. The default is the previous completed UTC day.
+Refresh the data, then run the notebook:
 
-Neither source needs an API key. FRED is a slow annual series and occasionally stalls;
-when a transient live request fails — a timeout, a rate limit, a server error, or an
-empty or unparseable response body — the updater can fall back to the committed verified
-snapshot and records `status: cached` in the manifest. The fallback is refused if its
-latest observation is more than three years behind the requested release year, and an
-upstream schema change (missing columns, invalid dates or unusable values) fails loudly
-instead of silently freezing the dataset. HTTP requests honor `Retry-After` and retry
-only rate limits, timeouts and server errors; a 404 or other client error fails at once.
+```bash
+uv run --no-sync python scripts/update_data.py
+uv run --no-sync python scripts/execute_notebooks.py
+```
 
-## Notebook visual style
+To change the plan, open the notebook in Jupyter or VS Code with this environment's Python
+kernel and edit Section 1. Run the tests with:
 
-All savings notebook plots use the same Secret Satoshis dark theme as the quarterly
-newsletter visuals, with bundled Syne / JetBrains Mono fonts, consistent headings,
-legends, units and source notes. Bitcoin uses orange; cash and comparison series use
-the shared supporting palette. This presentation update preserves the calculations,
-series and assumptions displayed by each chart.
-
-Historical article exports are separate local deliverables under ignored
-`outputs/newsletter/`; they do not replace the daily notebook or `outputs/savings/latest/`.
-Article illustration generators are local tools and are not part of the daily workflow.
+```bash
+uv run --no-sync python -m unittest discover -s tests
+```
 
 ## Daily publication
 
-`.github/workflows/pipeline-health.yml` runs daily at 07:17 UTC (subject to GitHub
-scheduling delays) and can also be started manually. Each scheduled or manual run:
+A GitHub Actions workflow runs every day, scheduled for 07:17 UTC. It runs the tests,
+refreshes the data (waiting up to three hours for that day's Report Library release), runs
+the notebook, checks the release and the savings report, and
+commits them. The executed notebook embeds its charts, so it is committed weekly to keep
+the repository small. Any failed check stops publication and leaves the last release in place.
 
-1. runs the regression contracts;
-2. refreshes both sources once;
-3. validates the release;
-4. executes the notebook;
-5. validates the data again and checks the savings-report bundle and generated paths;
-6. uploads the exact public data, manifests, executed notebook, and savings-report
-   bundle as a workflow artifact retained for 30 days; and
-7. on `main`, commits those validated outputs back to `main` in a separate publish job.
+## Project layout
 
-The data and savings-report bundle are committed every day. The executed notebook embeds
-its charts (~0.8 MB), so it is committed weekly — when the data runs through a Sunday, or
-whenever the committed copy has fallen seven days behind — to keep repository growth down.
-Its charts on GitHub are therefore at most a week old.
+| Path | What's there |
+|------|--------------|
+| `notebooks/` | The savings plan notebook |
+| `src/bitcoin_investment_strategy/` | Savings engine, data fetchers and checks, savings report and chart style |
+| `scripts/` | Data update, notebook runner, validation and publication |
+| `data/` | The data release: raw, processed and manifests |
+| `outputs/savings/latest/` | The latest savings report |
+| `tests/` | Unit tests |
 
-Pull requests run regression tests only. Manual runs on other branches do not
-publish. The build job has read-only repository access; only the separate publish
-job receives write permission. It restores an exact allowlist of hash-verified
-files from the successful build. Research notebooks and local research data are
-excluded. A concurrent change to `main` causes the push to fail safely; rerun the
-workflow against the new revision instead of overwriting or rebasing generated data.
-
-A critical fetch, validation, or notebook failure stops publication and leaves the
-last committed release available. A concurrency lock prevents overlapping runs on
-the same branch. Repository branch rules must permit the workflow's bot to commit
-these updates.
-
-## Quarterly newsletter inputs
-
-Notebook Section 14 uses the public exporter in
-`src/bitcoin_investment_strategy/savings_report.py` and the same tested savings
-engine as the personal plan. It exports the reporting-year starter cohort and
-the previous four cohorts using the exporter's fixed public assumptions — the
-article's $100,000 household income, 10% to Bitcoin and 10% to cash at 3% APY,
-bought monthly. Section 1's personal settings, including `PLAN_START`, never
-change the published bundle.
-
-The stable public bundle lives at [`outputs/savings/latest/`](outputs/savings/latest/).
-Start with `section3_packet.json`: assumptions, source/code checksums, since-start
-results, YTD attribution, and matched cash comparisons. Supporting CSVs contain
-daily paths and purchase schedules. `cohort_comparison.png` is the main since-start
-comparison table, showing contributions, BTC held, BTC value, accumulated cash,
-combined plan value, gain/loss, cash-only value at the assumed APY, and surplus
-versus cash only. The income and allocation assumptions appear beneath the title;
-the cash-only value and surplus columns share a comparison heading. The current-year
-savings chart is the second newsletter visual. YTD figures remain available as data.
-The cohort table uses the Secret Satoshis dark palette and bundled Syne / JetBrains
-Mono fonts. It exports at 3200 × 1800 (16:9), with a matching SVG for scaling in
-presentations. Fonts and their licenses are bundled for consistent offline rendering.
-The current-year savings chart uses the same 16:9 design and exports both
-`current_year_savings.png` and `current_year_savings.svg`, with closing balances
-in a side panel for the savings plan, matched cash-only plan, and contributions.
-The taller plot spans January 1 through December 31; series stop at the report date.
-
-Every daily publication replaces the latest bundle **in the same commit** as its
-data (and, on weekly refreshes, the executed notebook). Git history preserves prior snapshots. A quarterly
-newsletter must pin a commit whose bundle `report_date` equals the intended
-quarter-end and whose `snapshot_status` is `quarter_end`; it must not use a later
-live `main` bundle or relabel an interim run. Read the complete bundle from that
-same commit and verify its export manifest. This is a savings-data producer, not
-the quarterly newsletter writing workflow.
-
-If a quarter-end run was missed, regenerate an explicit `REPORT_AS_OF` snapshot
-from data covering that date and validate it before handing it to the newsletter.
-The daily publication validator requires the bundle to match the data release's
-latest date. The committed notebook should therefore keep `REPORT_AS_OF = None`
-and `REPORT_COHORT_YEARS = None`; historical reconstruction is a separate local task.
-
-Running the notebook also regenerates this tracked bundle locally, with the same fixed
-public assumptions. Older dated local
-exports under `outputs/savings/<date>/<run-id>/` remain ignored. The calculation
-definitions and limitations are included in every bundle's `README.md`.
-
-## Repository layout
-
-```text
-notebooks/       the savings plan notebook
-data/raw/        one stable snapshot per upstream dataset
-data/processed/  canonical notebook inputs
-data/manifests/  source registry, column dictionary and release manifest
-src/             fetch, transformation and validation library
-scripts/         update, validation and execution entry points
-tests/           release and notebook-consumer contracts
-outputs/savings/latest/  public newsletter data and chart bundle
-```
+See [`DATA_SOURCES.md`](DATA_SOURCES.md) for each source and its limitations.
 
 ## Scope and risk
 
-This notebook is a research and educational tool, not investment advice. Results are nominal, frictionless and pre-tax unless the notebook explicitly states otherwise. Past accumulation outcomes do not predict future ones. See [`DATA_SOURCES.md`](DATA_SOURCES.md) for source-specific caveats.
+This is a research and educational tool, not investment advice. Past results do not
+predict future ones.
 
 ## License
 
-[GPL-3.0](LICENSE) for the code and original prose in this repository.
-
-The license does not extend to third-party datasets. Data retain the terms of their upstream publishers — see [`DATA_SOURCES.md`](DATA_SOURCES.md) before redistributing a fork or mirror.
+[GPL-3.0](LICENSE) for the code and original prose. Data keep their publishers' terms; see
+[`DATA_SOURCES.md`](DATA_SOURCES.md) before redistributing.

@@ -1,3 +1,4 @@
+"""HTTP requests, checksums, atomic writes and release metadata."""
 from __future__ import annotations
 
 import hashlib
@@ -21,14 +22,47 @@ TRANSIENT_STATUSES = {408, 425, 429}
 class SourceSchemaError(ValueError):
     """An upstream response has a shape the fetcher does not understand.
 
-    Unlike a timeout or an unparseable one-off body, this persists until the fetcher is
-    updated, so a committed cache must not quietly stand in for it.
+    Unlike a timeout, this persists until the fetcher is updated, so a saved copy of the
+    data must not stand in for it.
     """
 
 
-def sha256(path: Path) -> str:
-    with path.open("rb") as handle:
+def sha256(path: Path | str) -> str:
+    with Path(path).open("rb") as handle:
         return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
+def verify_artifacts(manifest: dict[str, Any], root: Path, paths) -> None:
+    """Require each file's checksum to match its entry in a release manifest."""
+    for path in paths:
+        relative = str(Path(path).resolve().relative_to(Path(root).resolve()))
+        if sha256(path) != manifest["artifacts"][relative]["sha256"]:
+            raise ValueError(f"{relative}: checksum does not match the release manifest")
+
+
+def artifact_metadata(path: Path) -> dict[str, Any]:
+    """Checksum, size and, for a CSV, its row count and date or year coverage."""
+    metadata: dict[str, Any] = {"sha256": sha256(path), "bytes": path.stat().st_size}
+    if path.suffix == ".csv":
+        frame = pd.read_csv(path)
+        metadata.update({"rows": len(frame), "columns": len(frame.columns)})
+        if "date" in frame.columns and len(frame):
+            dates = pd.to_datetime(frame["date"], errors="coerce").dropna()
+            if len(dates):
+                metadata.update({"data_start": dates.min().date().isoformat(), "data_end": dates.max().date().isoformat()})
+        elif "Year" in frame.columns and len(frame):
+            years = pd.to_numeric(frame["Year"], errors="coerce").dropna()
+            if len(years):
+                metadata.update({"data_start": str(int(years.min())), "data_end": str(int(years.max()))})
+    return metadata
+
+
+def release_id(data_end: pd.Timestamp, artifacts: dict[str, dict[str, Any]]) -> str:
+    """The data end date plus a short fingerprint of every artifact's checksum."""
+    fingerprint = hashlib.sha256(
+        "".join(metadata["sha256"] for _, metadata in sorted(artifacts.items())).encode()
+    ).hexdigest()[:12]
+    return f"{data_end.date().isoformat()}-{fingerprint}"
 
 
 def request(

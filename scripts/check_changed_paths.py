@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Fail if a daily run changed any file outside the publication allowlist."""
 from __future__ import annotations
 
 import subprocess
