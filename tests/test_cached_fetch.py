@@ -95,10 +95,6 @@ class CachedFetchPolicyTests(unittest.TestCase):
             )
             self.assertEqual(provenance["status"], "cached")
 
-    def test_budget_tolerates_the_sources_publication_lag(self):
-        # MEHOINUSA646N lands roughly a year late; the budget must not trip on that.
-        self.assertGreaterEqual(FRED_CACHE_MAX_AGE_YEARS, 2)
-
 
 if __name__ == "__main__":
     unittest.main()

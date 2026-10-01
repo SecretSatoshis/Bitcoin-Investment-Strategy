@@ -73,7 +73,7 @@ class WeeklyNotebookTests(unittest.TestCase):
     def notebook(self, directory, release_date):
         path = Path(directory) / "notebook.ipynb"
         path.write_text(json.dumps({"cells": [{"cell_type": "code", "outputs": [
-            {"output_type": "stream", "text": [f"Shared data release: {release_date}-abc123\n"]}]}]}))
+            {"output_type": "stream", "text": [f"Data release: {release_date}-abc123\n"]}]}]}))
         return path
 
     def test_notebook_is_committed_for_sunday_data_or_after_a_week(self):

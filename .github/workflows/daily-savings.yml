@@ -46,12 +46,12 @@ jobs:
       - name: Run regression contracts
         run: uv run --no-sync python -m unittest discover -s tests -v
 
-      - name: Refresh shared data once
+      - name: Refresh the data release
         if: github.event_name != 'pull_request'
         # The Report Library's daily release can land a few hours after its schedule.
         run: uv run --no-sync python scripts/update_data.py --wait-minutes 180
 
-      - name: Validate shared release
+      - name: Validate the data release
         if: github.event_name != 'pull_request'
         run: uv run --no-sync python scripts/validate_data.py
 
@@ -59,7 +59,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: uv run --no-sync python scripts/execute_notebooks.py --timeout 1200
 
-      - name: Validate the notebook did not alter shared data
+      - name: Validate the notebook did not alter the data release
         if: github.event_name != 'pull_request'
         run: uv run --no-sync python scripts/validate_data.py
 

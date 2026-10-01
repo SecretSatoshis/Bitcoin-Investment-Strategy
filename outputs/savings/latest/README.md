@@ -1,4 +1,4 @@
-# Section 3 savings data
+# Savings report
 
 Read `section3_packet.json` first. It contains the assumptions, provenance, cohort
 totals, YTD attribution and cash comparisons. CSVs preserve numerical detail; the

@@ -1,4 +1,4 @@
-"""Public savings-report exports using the shared savings engine."""
+"""The daily savings report: starting-year cohorts under fixed example assumptions."""
 from __future__ import annotations
 
 import json
@@ -406,7 +406,7 @@ def render_charts(assumptions, tables, directory):
             plt.close(fig)
 
 
-EXPORT_NOTES = """# Section 3 savings data
+EXPORT_NOTES = """# Savings report
 
 Read `section3_packet.json` first. It contains the assumptions, provenance, cohort
 totals, YTD attribution and cash comparisons. CSVs preserve numerical detail; the

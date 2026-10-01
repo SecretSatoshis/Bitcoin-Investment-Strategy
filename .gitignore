@@ -12,18 +12,6 @@
 credentials*.json
 secrets*.json
 
-# Local AI-agent tooling
-AGENTS.md
-CLAUDE.md
-.agents/
-.claude/
-.codex/
-.local/
-
-# Private/generated local artifacts
-artifacts/
-runs/
-
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -33,7 +21,6 @@ __pycache__/
 .coverage
 htmlcov/
 *.tmp
-data/.staging/
 
 # Only the latest savings report is tracked; Git history keeps each day's version.
 outputs/*

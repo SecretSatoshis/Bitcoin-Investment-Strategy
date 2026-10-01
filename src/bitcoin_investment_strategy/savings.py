@@ -147,10 +147,14 @@ def money_weighted_return(dates, amounts, final_value, final_date):
 
     # Bracket wide enough for a plan that multiplied many times over a short window.
     lo, hi = -0.999, 100.0
-    if npv(lo) * npv(hi) > 0:
+    npv_lo = npv(lo)
+    if npv_lo * npv(hi) > 0:
         return np.nan
     for _ in range(300):
         mid = (lo + hi) / 2
-        if npv(lo) * npv(mid) <= 0: hi = mid
-        else: lo = mid
+        npv_mid = npv(mid)
+        if npv_lo * npv_mid <= 0:
+            hi = mid
+        else:
+            lo, npv_lo = mid, npv_mid
     return (lo + hi) / 2

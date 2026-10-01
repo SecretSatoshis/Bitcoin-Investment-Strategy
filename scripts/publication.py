@@ -21,7 +21,7 @@ from bitcoin_investment_strategy.release_files import (  # noqa: E402
 # the savings report still publish daily; the notebook is committed weekly — for data
 # through a Sunday — or whenever the committed copy has fallen a week behind.
 NOTEBOOK_REFRESH_DAYS = 7
-NOTEBOOK_RELEASE = re.compile(r"Shared data release: (\d{4}-\d{2}-\d{2})")
+NOTEBOOK_RELEASE = re.compile(r"Data release: (\d{4}-\d{2}-\d{2})")
 
 
 def notebook_data_end(path):
