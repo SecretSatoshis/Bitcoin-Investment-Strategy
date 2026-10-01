@@ -14,8 +14,8 @@ DATA_FILES = frozenset({
 REPORT_DIR = "outputs/savings/latest"
 REPORT_MANIFEST = "export_manifest.json"
 REPORT_FILES = frozenset({
-    "plan_definition.json", "section3_packet.json", "README.md",
-    "cohort_summary.csv", "ytd_summary.csv", "benchmark_results.csv",
+    "plan_definition.json", "savings_report.json", "README.md",
+    "cohort_summary.csv", "ytd_summary.csv",
     "cohort_paths.csv", "contribution_schedule.csv",
     "cohort_comparison.png", "cohort_comparison.svg",
     "current_year_savings.png", "current_year_savings.svg",

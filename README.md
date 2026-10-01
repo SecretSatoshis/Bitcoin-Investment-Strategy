@@ -18,7 +18,7 @@ same contributions held as cash instead.
 It also publishes a daily **savings report** in [`outputs/savings/latest/`](outputs/savings/latest/):
 results for five yearly starting cohorts under fixed example assumptions ($100,000 income,
 10% to bitcoin, 10% to cash at 3% APY, bought monthly), as tables and two charts.
-Start with `section3_packet.json`.
+Start with `savings_report.json`.
 
 ## How it works
 

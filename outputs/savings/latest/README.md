@@ -1,8 +1,8 @@
 # Savings report
 
-Read `section3_packet.json` first. It contains the assumptions, provenance, cohort
-totals, YTD attribution and cash comparisons. CSVs preserve numerical detail; the
-daily paths and contribution schedule support charts and checking.
+Read `savings_report.json` first. It contains the assumptions, provenance, cohort
+totals and YTD attribution, each with its cash-only comparison. CSVs preserve numerical
+detail; the daily paths and contribution schedule support charts and checking.
 
 `cohort_comparison.png` is the main cohort comparison: start year, total USD
 contributed, BTC accumulated, BTC value, cash accumulated (including interest),
@@ -33,8 +33,8 @@ or where the engine cannot solve it. It is supporting data, not the headline res
 - Both plans receive identical total contributions on identical dates. The cash-only
   scenario earns the same constant APY. It is a modeled alternative, not a bank product.
 - `advantage_vs_cash_usd` is the cumulative difference in closing balances.
-- `incremental_advantage_ytd_usd` and the YTD benchmark `gain_advantage_usd` measure
-  the change in that advantage this year, allowing for different opening balances.
+- `incremental_advantage_ytd_usd` measures the change in that advantage this year,
+  allowing for different opening balances.
 - The annual allocation percentages apply to contributions, with no rebalancing.
 - `worst_gain_to_contributions_ratio` is the lowest value/contributions minus one;
   it is NOT a drawdown or a cash-flow-adjusted investment return.

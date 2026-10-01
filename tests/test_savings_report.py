@@ -50,8 +50,6 @@ class SavingsReportTests(unittest.TestCase):
         opening_advantage = y.opening_total_value_usd - y.cash_only_opening_value_usd
         closing_advantage = y.closing_total_value_usd - y.cash_only_closing_value_usd
         np.testing.assert_allclose(closing_advantage - opening_advantage, y.incremental_advantage_ytd_usd, atol=1e-8)
-        s = t["contribution_schedule"]
-        np.testing.assert_allclose(s.total_contribution_usd, s.cash_only_contribution_usd)
 
     def test_cutoff_excludes_future_prices_and_purchases(self):
         _, expected = build_report(self.prices, **self.settings)
@@ -83,8 +81,7 @@ class SavingsReportTests(unittest.TestCase):
             _, t = build_report(self.prices, **{**self.settings, "cadence": cadence})
             y = t["ytd_summary"]
             np.testing.assert_allclose(y.total_gain_ytd_usd, 0., atol=1e-8)
-            s = t["contribution_schedule"]
-            np.testing.assert_allclose(s.total_contribution_usd, s.cash_only_contribution_usd)
+            np.testing.assert_allclose(t["cohort_summary"].advantage_vs_cash_usd, 0., atol=1e-8)
 
 
 if __name__ == "__main__":

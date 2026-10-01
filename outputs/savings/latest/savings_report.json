@@ -44,7 +44,7 @@
     "price_sha256": "bd1f5984137a73063417797e0232f3138276caf5190c519e241e4a3b34bce30b",
     "source_manifest_sha256": "c81827f3d34b1e45e0f22d80b0233e8c7b3f0fa7f46eaa3c74d8c7c9c71363d8",
     "engine_sha256": "30a4596f9af08e3b2d025cdd70bcde2d747d11578b9e32f488ad161c54607964",
-    "exporter_sha256": "153a98b21d49f274fa87ad17e4eb8ab0717a4f87543ac83476d74a2b89d007dd"
+    "exporter_sha256": "e25edd1fe993861515e083632d6e2e7408385b118c7bd705ba2da7b7b8c02998"
   },
   "cohort_summary": [
     {
@@ -293,138 +293,6 @@
       "cash_only_closing_value_usd": 102109.27664137738,
       "cash_only_gain_ytd_usd": 2084.3828147404565,
       "incremental_advantage_ytd_usd": -3772.4272563224076
-    }
-  ],
-  "benchmark_results": [
-    {
-      "cohort_year": 2026,
-      "period": "since_start",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 0.0,
-      "cash_only_opening_value_usd": 0.0,
-      "contributions_usd": 14999.999999999998,
-      "plan_closing_value_usd": 16381.64280538214,
-      "cash_only_closing_value_usd": 15185.00365009335,
-      "plan_gain_usd": 1381.642805382142,
-      "cash_only_gain_usd": 185.0036500933511,
-      "gain_advantage_usd": 1196.6391552887908
-    },
-    {
-      "cohort_year": 2026,
-      "period": "ytd",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 0.0,
-      "cash_only_opening_value_usd": 0.0,
-      "contributions_usd": 14999.999999999998,
-      "plan_closing_value_usd": 16381.64280538214,
-      "cash_only_closing_value_usd": 15185.00365009335,
-      "plan_gain_usd": 1381.642805382142,
-      "cash_only_gain_usd": 185.0036500933511,
-      "gain_advantage_usd": 1196.6391552887908
-    },
-    {
-      "cohort_year": 2025,
-      "period": "since_start",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 0.0,
-      "cash_only_opening_value_usd": 0.0,
-      "contributions_usd": 35000.00000000001,
-      "plan_closing_value_usd": 35131.08559519668,
-      "cash_only_closing_value_usd": 35961.96643675367,
-      "plan_gain_usd": 131.08559519667324,
-      "cash_only_gain_usd": 961.9664367536607,
-      "gain_advantage_usd": -830.8808415569874
-    },
-    {
-      "cohort_year": 2025,
-      "period": "ytd",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 18918.224904044975,
-      "cash_only_opening_value_usd": 20322.966119635115,
-      "contributions_usd": 15000.000000000007,
-      "plan_closing_value_usd": 35131.08559519668,
-      "cash_only_closing_value_usd": 35961.96643675367,
-      "plan_gain_usd": 1212.8606911516981,
-      "cash_only_gain_usd": 639.0003171185454,
-      "gain_advantage_usd": 573.8603740331528
-    },
-    {
-      "cohort_year": 2024,
-      "period": "since_start",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 0.0,
-      "cash_only_opening_value_usd": 0.0,
-      "contributions_usd": 54999.99999999998,
-      "plan_closing_value_usd": 59603.97400739498,
-      "cash_only_closing_value_usd": 57362.09733318848,
-      "plan_gain_usd": 4603.9740073950015,
-      "cash_only_gain_usd": 2362.0973331885034,
-      "gain_advantage_usd": 2241.876674206498
-    },
-    {
-      "cohort_year": 2024,
-      "period": "ytd",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 43809.26676777216,
-      "cash_only_opening_value_usd": 41255.48352507779,
-      "contributions_usd": 14999.999999999978,
-      "plan_closing_value_usd": 59603.97400739498,
-      "cash_only_closing_value_usd": 57362.09733318848,
-      "plan_gain_usd": 794.7072396228396,
-      "cash_only_gain_usd": 1106.6138081107129,
-      "gain_advantage_usd": -311.9065684878733
-    },
-    {
-      "cohort_year": 2023,
-      "period": "since_start",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 0.0,
-      "cash_only_opening_value_usd": 0.0,
-      "contributions_usd": 74999.99999999999,
-      "plan_closing_value_usd": 101784.70218637725,
-      "cash_only_closing_value_usd": 79405.26908589281,
-      "plan_gain_usd": 26784.702186377268,
-      "cash_only_gain_usd": 4405.269085892825,
-      "gain_advantage_usd": 22379.433100484443
-    },
-    {
-      "cohort_year": 2023,
-      "period": "ytd",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 87224.13411245987,
-      "cash_only_opening_value_usd": 62816.99072415361,
-      "contributions_usd": 15000.000000000015,
-      "plan_closing_value_usd": 101784.70218637725,
-      "cash_only_closing_value_usd": 79405.26908589281,
-      "plan_gain_usd": -439.4319260826305,
-      "cash_only_gain_usd": 1588.2783617391833,
-      "gain_advantage_usd": -2027.7102878218138
-    },
-    {
-      "cohort_year": 2022,
-      "period": "since_start",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 0.0,
-      "cash_only_opening_value_usd": 0.0,
-      "contributions_usd": 95000.00000000004,
-      "plan_closing_value_usd": 144754.12466860583,
-      "cash_only_closing_value_usd": 102109.27664137738,
-      "plan_gain_usd": 49754.124668605786,
-      "cash_only_gain_usd": 7109.276641377335,
-      "gain_advantage_usd": 42644.84802722845
-    },
-    {
-      "cohort_year": 2022,
-      "period": "ytd",
-      "report_date": "2026-09-30",
-      "plan_opening_value_usd": 131442.16911018774,
-      "cash_only_opening_value_usd": 85024.89382663688,
-      "contributions_usd": 15000.000000000044,
-      "plan_closing_value_usd": 144754.12466860583,
-      "cash_only_closing_value_usd": 102109.27664137738,
-      "plan_gain_usd": -1688.044441581951,
-      "cash_only_gain_usd": 2084.3828147404565,
-      "gain_advantage_usd": -3772.4272563224076
     }
   ],
   "supporting_files": [

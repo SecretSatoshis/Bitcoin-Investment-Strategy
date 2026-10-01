@@ -33,7 +33,7 @@ def validate_report_bundle(directory, *, root, require_latest=False):
         if path.is_symlink() or not path.is_file() or sha256(path) != metadata["sha256"]:
             raise ValueError(f"Savings checksum mismatch: {name}")
     plan = json.loads((directory / "plan_definition.json").read_text())
-    packet = json.loads((directory / "section3_packet.json").read_text())
+    packet = json.loads((directory / "savings_report.json").read_text())
     if packet.get("schema_version") != 1 or packet.get("plan") != plan:
         raise ValueError("Savings packet and plan disagree")
     provenance = manifest["provenance"]
@@ -65,7 +65,7 @@ def validate_report_bundle(directory, *, root, require_latest=False):
             or manifest["snapshot_status"] != status or plan["snapshot_status"] != status
             or plan["is_quarter_end"] != bool(cutoff.is_quarter_end)):
         raise ValueError("Savings report date or quarter-end status disagrees")
-    for name in ("cohort_summary", "ytd_summary", "benchmark_results"):
+    for name in ("cohort_summary", "ytd_summary"):
         table = pd.read_csv(directory / f"{name}.csv")
         encoded = pd.DataFrame(packet[name])
         pd.testing.assert_frame_equal(table, encoded, check_dtype=False, rtol=1e-10, atol=1e-8)
@@ -127,7 +127,7 @@ def build_report(prices, *, as_of=None, cohort_years=None, annual_income=100000,
         "limitations": ["modeled results, not an actual investor account", "fixed nominal income and cash APY",
                         "no fees, taxes, inflation adjustment, or satoshi rounding"],
     }
-    summaries, ytd_rows, benchmark_rows, paths, schedules = [], [], [], [], []
+    summaries, ytd_rows, paths, schedules = [], [], [], []
     for year in years:
         start = pd.Timestamp(year, 1, 1)
         args = dict(start=start, cadence=cadence, cash_apy=cash_apy, prices=prices,
@@ -187,16 +187,6 @@ def build_report(prices, *, as_of=None, cohort_years=None, annual_income=100000,
             "cash_only_gain_ytd_usd": benchmark_gain,
             "incremental_advantage_ytd_usd": btc_gain + cash_gain - benchmark_gain,
         })
-        for period, opening_plan, opening_cash, contributed in [
-            ("since_start", 0., 0., float(final.total_contributed)),
-            ("ytd", float(opening.total_value), cash_opening, deposits),
-        ]:
-            pg, cg = float(final.total_value) - opening_plan - contributed, float(cf.total_value) - opening_cash - contributed
-            benchmark_rows.append({"cohort_year": year, "period": period, "report_date": str(cutoff.date()),
-                "plan_opening_value_usd": opening_plan, "cash_only_opening_value_usd": opening_cash,
-                "contributions_usd": contributed, "plan_closing_value_usd": float(final.total_value),
-                "cash_only_closing_value_usd": float(cf.total_value), "plan_gain_usd": pg,
-                "cash_only_gain_usd": cg, "gain_advantage_usd": pg - cg})
         path = plan.rename(columns={"coins": "btc_held", "price": "spot_price_usd", "cost_basis": "average_purchase_price_usd",
             **{k: k + "_usd" for k in ["btc_value", "cash_value", "btc_contributed", "cash_contributed", "total_value", "total_contributed"]}}).copy()
         path.attrs = {}
@@ -208,11 +198,10 @@ def build_report(prices, *, as_of=None, cohort_years=None, annual_income=100000,
         for day, btc_amount, cash_amount in zip(buys, plan.attrs["btc_contributions"], plan.attrs["cash_contributions"]):
             schedules.append({"cohort_year": year, "date": day, "btc_contribution_usd": btc_amount,
                 "cash_contribution_usd": cash_amount, "total_contribution_usd": btc_amount + cash_amount,
-                "purchase_price_usd": float(prices.loc[day]), "btc_bought": btc_amount / float(prices.loc[day]),
-                "cash_only_contribution_usd": btc_amount + cash_amount})
+                "purchase_price_usd": float(prices.loc[day]), "btc_bought": btc_amount / float(prices.loc[day])})
     return assumptions, {
         "cohort_summary": pd.DataFrame(summaries), "ytd_summary": pd.DataFrame(ytd_rows),
-        "benchmark_results": pd.DataFrame(benchmark_rows), "cohort_paths": pd.concat(paths, ignore_index=True),
+        "cohort_paths": pd.concat(paths, ignore_index=True),
         "contribution_schedule": pd.DataFrame(schedules),
     }
 
@@ -408,9 +397,9 @@ def render_charts(assumptions, tables, directory):
 
 EXPORT_NOTES = """# Savings report
 
-Read `section3_packet.json` first. It contains the assumptions, provenance, cohort
-totals, YTD attribution and cash comparisons. CSVs preserve numerical detail; the
-daily paths and contribution schedule support charts and checking.
+Read `savings_report.json` first. It contains the assumptions, provenance, cohort
+totals and YTD attribution, each with its cash-only comparison. CSVs preserve numerical
+detail; the daily paths and contribution schedule support charts and checking.
 
 `cohort_comparison.png` is the main cohort comparison: start year, total USD
 contributed, BTC accumulated, BTC value, cash accumulated (including interest),
@@ -441,8 +430,8 @@ or where the engine cannot solve it. It is supporting data, not the headline res
 - Both plans receive identical total contributions on identical dates. The cash-only
   scenario earns the same constant APY. It is a modeled alternative, not a bank product.
 - `advantage_vs_cash_usd` is the cumulative difference in closing balances.
-- `incremental_advantage_ytd_usd` and the YTD benchmark `gain_advantage_usd` measure
-  the change in that advantage this year, allowing for different opening balances.
+- `incremental_advantage_ytd_usd` measures the change in that advantage this year,
+  allowing for different opening balances.
 - The annual allocation percentages apply to contributions, with no rebalancing.
 - `worst_gain_to_contributions_ratio` is the lowest value/contributions minus one;
   it is NOT a drawdown or a cash-flow-adjusted investment return.
@@ -483,10 +472,10 @@ def export_report(root, *, output_dir=None, **settings):
             table.to_csv(stage / f"{name}.csv", index=False, date_format="%Y-%m-%d", float_format="%.15g")
         (stage / "plan_definition.json").write_text(json.dumps(assumptions, indent=2, allow_nan=False) + "\n")
         packet = {"schema_version": 1, "plan": assumptions, "provenance": provenance,
-                  **{k: records(tables[k]) for k in ["cohort_summary", "ytd_summary", "benchmark_results"]},
+                  **{k: records(tables[k]) for k in ["cohort_summary", "ytd_summary"]},
                   "supporting_files": ["cohort_paths.csv", "contribution_schedule.csv", "README.md"],
                   "visuals": ["cohort_comparison.png", "cohort_comparison.svg", "current_year_savings.png", "current_year_savings.svg"]}
-        (stage / "section3_packet.json").write_text(json.dumps(packet, indent=2, allow_nan=False) + "\n")
+        (stage / "savings_report.json").write_text(json.dumps(packet, indent=2, allow_nan=False) + "\n")
         (stage / "README.md").write_text(EXPORT_NOTES)
         render_charts(assumptions, tables, stage)
         exported_manifest = {"schema_version": 1, "run_id": run_id,
