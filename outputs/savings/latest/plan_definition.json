@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "report_date": "2026-09-29",
+  "report_date": "2026-09-30",
   "report_year": 2026,
   "calendar_quarter": 3,
-  "is_quarter_end": false,
-  "snapshot_status": "interim",
+  "is_quarter_end": true,
+  "snapshot_status": "quarter_end",
   "cutoff_selection": "latest_available_completed_day",
   "ytd_start": "2026-01-01",
   "opening_balance_date": "2025-12-31",

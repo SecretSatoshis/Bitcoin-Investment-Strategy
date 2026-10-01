@@ -13,12 +13,12 @@
       "sha256": "03faea62e9b22c2491d3de2efd23b4d8ffb95aa8d23bd2c205a8500d8819d50f"
     },
     "data/processed/bitcoin_daily.csv": {
-      "bytes": 499614,
+      "bytes": 499696,
       "columns": 6,
-      "data_end": "2026-09-29",
+      "data_end": "2026-09-30",
       "data_start": "2009-01-03",
-      "rows": 6479,
-      "sha256": "5fa414c28032d501e87c90298f7b76b48f483dbb35e957024e1223dbe9bc2947"
+      "rows": 6480,
+      "sha256": "08e20875f258631665f3db4dba566b1d2e09d98a1b751c1b84b12afc8824cabf"
     },
     "data/processed/median_household_income_annual.csv": {
       "bytes": 566,
@@ -29,12 +29,12 @@
       "sha256": "d9dbf652adf64d039602d34399cc43936610e9958c2ab19ebe99b1629fbad550"
     },
     "data/raw/brk/brk_daily.csv": {
-      "bytes": 227168,
+      "bytes": 227205,
       "columns": 3,
-      "data_end": "2026-09-29",
+      "data_end": "2026-09-30",
       "data_start": "2009-01-03",
-      "rows": 6479,
-      "sha256": "54c48fcd8c78b75f1957dda875d3ea936a5954c4d8d06d5fef2ef4370ab2afad"
+      "rows": 6480,
+      "sha256": "677574ea876264632be63405f8719a8f8167b1e7507a521d87ba8ee5e7677741"
     },
     "data/raw/fred/median_household_income.csv": {
       "bytes": 566,
@@ -45,33 +45,33 @@
       "sha256": "d9dbf652adf64d039602d34399cc43936610e9958c2ab19ebe99b1629fbad550"
     }
   },
-  "core_data_end": "2026-09-29",
-  "last_completed_utc_day": "2026-09-29",
-  "release_id": "2026-09-29-21bbc471665a",
-  "requested_end_exclusive": "2026-09-30",
+  "core_data_end": "2026-09-30",
+  "last_completed_utc_day": "2026-09-30",
+  "release_id": "2026-09-30-eb081ec97af4",
+  "requested_end_exclusive": "2026-10-01",
   "requested_start": "2009-01-03",
-  "retrieved_at_utc": "2026-09-30T13:58:54.392929+00:00",
+  "retrieved_at_utc": "2026-10-01T12:28:48.657798+00:00",
   "schema_version": 1,
   "sources": {
     "brk": {
       "base_url": "https://bitview.space/api",
       "series": {
         "price_close": {
-          "observations": 6479,
-          "response_end": 6481,
+          "observations": 6480,
+          "response_end": 6482,
           "response_index": "day1",
           "response_start": 2,
-          "stamp": "2026-09-30T13:58:54Z",
-          "url": "https://bitview.space/api/series/price_close/day?format=json&start=2009-01-03&end=2026-09-30",
+          "stamp": "2026-10-01T12:28:48Z",
+          "url": "https://bitview.space/api/series/price_close/day?format=json&start=2009-01-03&end=2026-10-01",
           "version": 89
         },
         "supply": {
-          "observations": 6479,
-          "response_end": 6481,
+          "observations": 6480,
+          "response_end": 6482,
           "response_index": "day1",
           "response_start": 2,
-          "stamp": "2026-09-30T13:58:54Z",
-          "url": "https://bitview.space/api/series/supply/day?format=json&start=2009-01-03&end=2026-09-30",
+          "stamp": "2026-10-01T12:28:49Z",
+          "url": "https://bitview.space/api/series/supply/day?format=json&start=2009-01-03&end=2026-10-01",
           "version": 2451393256
         }
       },
