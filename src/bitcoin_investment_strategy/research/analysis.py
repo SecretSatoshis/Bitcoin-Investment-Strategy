@@ -166,8 +166,8 @@ WORDMARK = "SECRET SATOSHIS · RESEARCH"
 
 
 def apply_research_theme():
-    """The Secret Satoshis dark chart theme (as the savings notebook), with a light grid and the
-    brand colours as the default cycle, for every following figure."""
+    """The Secret Satoshis dark chart theme (as the savings notebook), with a faint horizontal grid
+    and the brand colours as the default cycle, for every following figure."""
     from cycler import cycler
     import matplotlib.pyplot as plt
     apply_theme()
@@ -184,10 +184,10 @@ def finish(fig, title=None, ax=None, sources=()):
     """Lay out the figure with the Secret Satoshis wordmark at the top and the source credit at
     the bottom, then show it."""
     import matplotlib.pyplot as plt
+    from matplotlib.dates import DateLocator
     from matplotlib.patches import Rectangle
     if title and ax is not None:
         ax.set_title(title, fontsize=12, pad=12)
-    from matplotlib.dates import DateLocator
     for axis in fig.axes:
         # Slant date labels so they never collide; numeric and category axes stay level.
         if isinstance(axis.xaxis.get_major_locator(), DateLocator):
