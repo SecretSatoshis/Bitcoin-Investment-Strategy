@@ -1,0 +1,6 @@
+source,dataset,frequency,canonical_artifact
+Bitcoin Report Library (BRK data),on-chain daily series,daily,data/research/bitcoin_daily.csv
+Bitcoin Report Library (Coin Metrics Labs data),network mining efficiency,monthly,data/research/bitcoin_daily.csv
+Bitcoin Report Library (World Bank and Our World in Data),internet users and population,annual,data/research/technology_adoption_annual.csv
+Bitcoin Report Library (Crypto.com estimates),bitcoin-owner estimates,sparse annual,data/research/bitcoin_owner_estimates.csv
+Bitcoin Report Library (ETF issuers and SEC filings),"US spot ETF holdings, flows and reported cost",daily,data/research/etf_daily.csv;data/research/etf_totals_daily.csv;data/research/etf_quarterly.csv

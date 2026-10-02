@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .config import FRED_CACHE_MAX_AGE_YEARS, ROOT, last_completed_utc
+from .config import INCOME_MAX_AGE_YEARS, ROOT, last_completed_utc
 from .io import sha256
 from .release_files import DATA_FILES
 from .savings import prepare_prices
@@ -64,5 +64,5 @@ def validate_income(frame: pd.DataFrame, as_of=None) -> None:
     cutoff = last_completed_utc() if as_of is None else pd.Timestamp(as_of)
     if years.min() < 1900 or years.max() >= cutoff.year:
         raise ValueError("Income years must be completed annual periods on the report date")
-    if cutoff.year - years.max() > FRED_CACHE_MAX_AGE_YEARS:
+    if cutoff.year - years.max() > INCOME_MAX_AGE_YEARS:
         raise ValueError("Income observations are too old for the report date")

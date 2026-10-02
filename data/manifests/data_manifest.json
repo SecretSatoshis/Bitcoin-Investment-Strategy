@@ -1,59 +1,49 @@
 {
   "artifacts": {
     "data/manifests/column_dictionary.csv": {
-      "bytes": 222,
+      "bytes": 298,
       "columns": 4,
       "rows": 2,
-      "sha256": "67f7bdde125fb0ceead9a2458b5611129b0b918d8ca7de435a6f58f5d9fc1708"
+      "sha256": "25bc4cb6f4b21aed4840ffa11e24ef72c17a659ab1bc2df15162050ecbeafedb"
     },
     "data/manifests/source_registry.csv": {
-      "bytes": 270,
+      "bytes": 300,
       "columns": 4,
       "rows": 2,
-      "sha256": "a6dc325efcd743c6ead88d388d57bbec52a2d9bfbabb6a5a70e3d72a79217489"
+      "sha256": "7588ce1a10c65e45a533b62d3da4efe20760a47fec361646168473140c176ade"
     },
     "data/processed/bitcoin_daily.csv": {
-      "bytes": 109851,
+      "bytes": 109871,
       "columns": 2,
-      "data_end": "2026-09-30",
+      "data_end": "2026-10-01",
       "data_start": "2010-08-16",
-      "rows": 5890,
-      "sha256": "bd1f5984137a73063417797e0232f3138276caf5190c519e241e4a3b34bce30b"
+      "rows": 5891,
+      "sha256": "c77ccd1922bfd6d09e4fd2c0c3c0457df5bbfd8aad46642506b636f92f15aeb3"
     },
     "data/processed/median_household_income_annual.csv": {
-      "bytes": 566,
+      "bytes": 579,
       "columns": 2,
-      "data_end": "2024",
+      "data_end": "2025",
       "data_start": "1984",
-      "rows": 41,
-      "sha256": "d9dbf652adf64d039602d34399cc43936610e9958c2ab19ebe99b1629fbad550"
-    },
-    "data/raw/fred/median_household_income.csv": {
-      "bytes": 566,
-      "columns": 2,
-      "data_end": "2024",
-      "data_start": "1984",
-      "rows": 41,
-      "sha256": "d9dbf652adf64d039602d34399cc43936610e9958c2ab19ebe99b1629fbad550"
+      "rows": 42,
+      "sha256": "a44f84a53f997e9bafb44a297b3b44aad9ab26349fc381e983f004da22403eeb"
     }
   },
-  "core_data_end": "2026-09-30",
-  "last_completed_utc_day": "2026-09-30",
-  "release_id": "2026-09-30-5820a398d92d",
-  "retrieved_at_utc": "2026-10-01T13:07:52.923902+00:00",
+  "core_data_end": "2026-10-01",
+  "last_completed_utc_day": "2026-10-01",
+  "release_id": "2026-10-01-7ca7734351fe",
+  "retrieved_at_utc": "2026-10-02T11:15:40.144542+00:00",
   "schema_version": 1,
   "sources": {
-    "fred_median_income": {
-      "cache_path": "data/raw/fred/median_household_income.csv",
-      "live_error": "RuntimeError: request failed after 2 attempts: https://fred.stlouisfed.org/graph/fredgraph.csv?id=MEHOINUSA646N",
-      "status": "cached"
-    },
     "report_library": {
-      "generated_at": "2026-10-01T06:23:23+00:00",
-      "release_id": "2026-09-30",
-      "sha256": "977cb1437173ff5178e649b5dc5368d5fcd40a7327487ed9c264d55a490677c7",
+      "generated_at": "2026-10-02T06:02:00+00:00",
+      "release_id": "2026-10-01",
+      "sha256": {
+        "annual_reference_data.csv": "c94f4e504570e1f7a5c96249f3866b7e388850433e329101bd0ebba5fe2eb83b",
+        "master_metrics_data.csv.gz": "491eb093fb3cdba633a0b6595fae0c89a2f890ae066fb135415c46be283350fb"
+      },
       "status": "live",
-      "url": "https://secretsatoshis.github.io/Bitcoin-Report-Library/csv/master_metrics_data.csv.gz"
+      "url": "https://secretsatoshis.github.io/Bitcoin-Report-Library/csv"
     }
   }
 }

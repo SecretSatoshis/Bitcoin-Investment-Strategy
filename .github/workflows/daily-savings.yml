@@ -1,4 +1,4 @@
-name: Daily savings data and notebook
+name: Daily data and notebooks
 
 on:
   pull_request:
@@ -55,7 +55,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: uv run --no-sync python scripts/validate_data.py
 
-      - name: Execute the notebook
+      - name: Execute the notebooks
         if: github.event_name != 'pull_request'
         run: uv run --no-sync python scripts/execute_notebooks.py --timeout 1200
 
@@ -78,13 +78,13 @@ jobs:
         with:
           name: bitcoin-investment-strategy-${{ github.run_id }}
           path: |
-            data/raw/fred/median_household_income.csv
             data/manifests/data_manifest.json
             data/manifests/source_registry.csv
             data/manifests/column_dictionary.csv
             data/processed/bitcoin_daily.csv
             data/processed/median_household_income_annual.csv
-            notebooks/bitcoin_savings_plan.ipynb
+            data/research/
+            notebooks/
             outputs/savings/latest/
           if-no-files-found: error
           retention-days: 30
@@ -117,7 +117,7 @@ jobs:
           python3 scripts/check_changed_paths.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- data/raw/fred/median_household_income.csv data/manifests/data_manifest.json data/manifests/source_registry.csv data/manifests/column_dictionary.csv data/processed/bitcoin_daily.csv data/processed/median_household_income_annual.csv notebooks/bitcoin_savings_plan.ipynb outputs/savings/latest/
+          git add -- data/manifests/data_manifest.json data/manifests/source_registry.csv data/manifests/column_dictionary.csv data/processed/bitcoin_daily.csv data/processed/median_household_income_annual.csv data/research/ notebooks/ outputs/savings/latest/
           if git diff --cached --quiet; then
             echo 'Published snapshot is already current.'
             exit 0

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Execute the savings notebook in place, as CI does."""
+"""Execute the notebooks in place, as CI does.
+
+The savings notebook must succeed. The supply and demand notebooks read CoinGecko live, which
+can rate-limit; if one fails, its last good copy is kept and the run goes on.
+"""
 from __future__ import annotations
 
 import argparse
@@ -14,6 +18,8 @@ from jupyter_client import AsyncKernelManager
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS = [ROOT / "notebooks/bitcoin_savings_plan.ipynb"]
+OPTIONAL_NOTEBOOKS = [ROOT / "notebooks/bitcoin_supply_dynamics.ipynb",
+                      ROOT / "notebooks/bitcoin_demand_dynamics.ipynb"]
 
 
 def main() -> None:
@@ -32,7 +38,7 @@ def main() -> None:
         [interpreter_dir, os.environ.get("PATH", "")]
     ).rstrip(os.pathsep)
 
-    for path in NOTEBOOKS:
+    for path in NOTEBOOKS + OPTIONAL_NOTEBOOKS:
         print(f"Executing {path.relative_to(ROOT)}")
         notebook = nbformat.read(path, as_version=4)
         # Keep local kernel traffic off TCP where the platform supports Unix
@@ -49,7 +55,13 @@ def main() -> None:
             resources={"metadata": {"path": str(ROOT)}},
             allow_errors=False,
         )
-        client.execute()
+        try:
+            client.execute()
+        except Exception as error:
+            if path not in OPTIONAL_NOTEBOOKS:
+                raise
+            print(f"  {path.name} failed ({type(error).__name__}); keeping its last good copy")
+            continue
         nbformat.write(notebook, path)
         print(f"  completed {path.name}")
 

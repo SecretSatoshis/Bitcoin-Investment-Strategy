@@ -14,12 +14,13 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from bitcoin_investment_strategy.release_files import (  # noqa: E402
-    DATA_FILES, DATA_MANIFEST, NOTEBOOK, PUBLICATION_FILES, REPORT_DIR, REPORT_FILES, REPORT_MANIFEST,
+    DATA_FILES, DATA_MANIFEST, NOTEBOOK, NOTEBOOKS, PUBLICATION_FILES, REPORT_DIR, REPORT_FILES, REPORT_MANIFEST,
+    RESEARCH_FILES, RESEARCH_MANIFEST,
 )
 
-# The executed notebook embeds ~0.8 MB of chart images that change every day. Data and
-# the savings report still publish daily; the notebook is committed weekly — for data
-# through a Sunday — or whenever the committed copy has fallen a week behind.
+# The executed notebooks embed chart images that change every day. Data and the savings
+# report still publish daily; the notebooks are committed weekly — for data through a
+# Sunday — or whenever the committed savings notebook has fallen a week behind.
 NOTEBOOK_REFRESH_DAYS = 7
 NOTEBOOK_RELEASE = re.compile(r"Data release: (\d{4}-\d{2}-\d{2})")
 
@@ -75,6 +76,14 @@ def restore(source, root=ROOT):
             raise ValueError(f"Savings checksum mismatch: {name}")
     if report["report_date"] != data["core_data_end"]:
         raise ValueError("Savings and data report dates disagree")
+    research = json.loads((source / RESEARCH_MANIFEST).read_text())
+    if research.get("schema_version") != 1 or set(research.get("artifacts", {})) != RESEARCH_FILES:
+        raise ValueError("Incomplete supply and demand manifest")
+    for name, metadata in research["artifacts"].items():
+        if digest(source / name) != metadata["sha256"]:
+            raise ValueError(f"Data checksum mismatch: {name}")
+    if research["core_data_end"] != data["core_data_end"]:
+        raise ValueError("Supply and demand release and savings data dates disagree")
     previous = json.loads((root / DATA_MANIFEST).read_text())
     if data["core_data_end"] < previous["core_data_end"]:
         raise ValueError("Refusing to replace a newer data release")
@@ -91,15 +100,15 @@ def restore(source, root=ROOT):
         raise ValueError("Publication provenance disagrees with source data or checked-out code")
     if notebook_data_end(source / NOTEBOOK) != data["core_data_end"]:
         raise ValueError("Executed notebook does not report this data release")
-    include_notebook = notebook_due(data["core_data_end"], root / NOTEBOOK)
+    include_notebooks = notebook_due(data["core_data_end"], root / NOTEBOOK)
     for name in sorted(PUBLICATION_FILES):
-        if name == NOTEBOOK and not include_notebook:
+        if name in NOTEBOOKS and not include_notebooks:
             continue
         target = root / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source / name, target)
-    print("Executed notebook " + ("updated (weekly refresh)" if include_notebook
-                                  else "left at its last weekly refresh"))
+    print("Executed notebooks " + ("updated (weekly refresh)" if include_notebooks
+                                   else "left at their last weekly refresh"))
     return data["core_data_end"]
 
 

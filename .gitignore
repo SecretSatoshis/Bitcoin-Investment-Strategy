@@ -27,3 +27,6 @@ outputs/*
 !outputs/savings/
 outputs/savings/*
 !outputs/savings/latest/
+
+# CoinGecko snapshots are never committed (its API terms); kept here up to 24 hours.
+.cache/

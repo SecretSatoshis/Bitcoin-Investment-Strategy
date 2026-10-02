@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Fetch, check and write the daily data release."""
+"""Fetch, check and write the daily data releases: the savings data and the supply and
+demand release, both from the same Report Library release."""
 from __future__ import annotations
 
 import argparse
 import time
 
+import pandas as pd
+
 from bitcoin_investment_strategy.fetchers.report_library import ReleaseNotReady
 from bitcoin_investment_strategy.pipeline import update_data
+from bitcoin_investment_strategy.research.pipeline import update_research_data
 
 RETRY_SECONDS = 600
 
@@ -19,7 +23,8 @@ def main() -> None:
     deadline = time.monotonic() + arguments.wait_minutes * 60
     while True:
         try:
-            update_data()
+            manifest = update_data()
+            update_research_data(pd.Timestamp(manifest["core_data_end"]))
             return
         except ReleaseNotReady as error:
             if time.monotonic() + RETRY_SECONDS > deadline:

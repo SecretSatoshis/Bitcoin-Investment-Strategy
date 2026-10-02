@@ -1,4 +1,4 @@
-"""The Report Library price fetch: publication timing, checksums and schema."""
+"""The Report Library fetch: publication timing, checksums and schema."""
 from __future__ import annotations
 
 import gzip
@@ -13,21 +13,28 @@ from bitcoin_investment_strategy.fetchers.report_library import ReleaseNotReady
 from bitcoin_investment_strategy.io import SourceSchemaError
 
 MASTER = "date,price_close,supply\n2010-08-15,,1\n2010-08-16,0.06,2\n2010-08-17,0.07,3\n"
+ANNUAL = ("series,year,value,unit,source,source_url,note,retrieved_date\n"
+          "us_median_household_income_usd,2008,50303,current USD,FRED,,,2010-08-17\n"
+          "us_median_household_income_usd,2009,49777,current USD,FRED,,,2010-08-17\n"
+          "world_population,2009,6.8e9,people,World Bank,,,2010-08-17\n")
 
 
 class ReportLibraryTests(unittest.TestCase):
-    def fetch(self, as_of="2010-08-17", report_date="2010-08-17", master=MASTER, sha=None):
-        content = gzip.compress(master.encode())
-        manifest = {"report_date": report_date, "release_id": report_date,
-                    "files": {"master_metrics_data.csv.gz": {"sha256": sha or hashlib.sha256(content).hexdigest()}}}
-        responses = [Mock(**{"json.return_value": manifest}), Mock(content=content, url="https://example.invalid/master")]
+    def fetch(self, as_of="2010-08-17", report_date="2010-08-17", master=MASTER, annual=ANNUAL, sha=None):
+        master_bytes, annual_bytes = gzip.compress(master.encode()), annual.encode()
+        manifest = {"report_date": report_date, "release_id": report_date, "files": {
+            "master_metrics_data.csv.gz": {"sha256": sha or hashlib.sha256(master_bytes).hexdigest()},
+            "annual_reference_data.csv": {"sha256": hashlib.sha256(annual_bytes).hexdigest()},
+        }}
+        responses = [Mock(**{"json.return_value": manifest}), Mock(content=master_bytes), Mock(content=annual_bytes)]
         with patch.object(report_library, "request", side_effect=responses):
-            return report_library.fetch_bitcoin_price(pd.Timestamp(as_of))
+            return report_library.fetch_savings_inputs(pd.Timestamp(as_of))
 
-    def test_price_starts_on_the_first_traded_day(self):
-        frame, provenance = self.fetch()
-        self.assertEqual(list(frame.columns), ["price"])
-        self.assertEqual(list(frame.index.strftime("%Y-%m-%d")), ["2010-08-16", "2010-08-17"])
+    def test_price_starts_on_the_first_traded_day_and_income_comes_from_the_same_release(self):
+        price, income, provenance = self.fetch()
+        self.assertEqual(list(price.columns), ["price"])
+        self.assertEqual(list(price.index.strftime("%Y-%m-%d")), ["2010-08-16", "2010-08-17"])
+        self.assertEqual(income.to_dict("list"), {"Year": [2008, 2009], "median_household_income_usd": [50303, 49777]})
         self.assertEqual(provenance["release_id"], "2010-08-17")
 
     def test_waits_for_a_release_that_has_not_reached_the_cutoff(self):
@@ -49,9 +56,11 @@ class ReportLibraryTests(unittest.TestCase):
     def test_schema_changes_are_schema_errors(self):
         with self.assertRaises(SourceSchemaError):
             self.fetch(master=MASTER.replace("price_close", "close"))
+        with self.assertRaises(SourceSchemaError):
+            self.fetch(annual=ANNUAL.replace("us_median_household_income_usd", "income"))
         responses = [Mock(**{"json.return_value": {"report_date": "2010-08-17"}})]
         with patch.object(report_library, "request", side_effect=responses), self.assertRaises(SourceSchemaError):
-            report_library.fetch_bitcoin_price(pd.Timestamp("2010-08-17"))
+            report_library.fetch_savings_inputs(pd.Timestamp("2010-08-17"))
 
 
 if __name__ == "__main__":

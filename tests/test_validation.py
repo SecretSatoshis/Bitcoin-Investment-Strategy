@@ -1,18 +1,15 @@
-"""Release validation, the saved-copy policy and the workflow's artifact list."""
-import hashlib
+"""Release validation and the workflow's artifact list."""
 import json
 import shutil
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 import numpy as np
 import pandas as pd
 
-from bitcoin_investment_strategy import pipeline, validation
+from bitcoin_investment_strategy import validation
 from bitcoin_investment_strategy.config import ROOT
-from bitcoin_investment_strategy.fetchers import fred
 
 
 class ValidationTests(unittest.TestCase):
@@ -24,28 +21,6 @@ class ValidationTests(unittest.TestCase):
                 validation.validate_income(frame, pd.Timestamp("2026-09-09"))
         valid = pd.DataFrame({"Year": [2024], "median_household_income_usd": [80000]})
         validation.validate_income(valid, pd.Timestamp("2026-09-09"))
-
-    def test_fred_missing_values_are_fatal(self):
-        response = Mock(text="observation_date,MEHOINUSA646N\n2025-01-01,.\n")
-        with patch.object(fred, "request", return_value=response), self.assertRaises(ValueError):
-            fred.fetch_fred_median_income()
-
-    def test_cache_requires_previous_membership_and_unchanged_bytes(self):
-        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
-            cache = Path(tmp) / "income.csv"
-            cache.write_text("Year,median_household_income_usd\n2025,80000\n")
-            manifest = Path(tmp) / "manifest.json"
-
-            def offline():
-                raise TimeoutError("offline")
-
-            with self.assertRaisesRegex(RuntimeError, "not verified"):
-                pipeline.cached_fetch("income", offline, cache, manifest_path=manifest)
-            digest = hashlib.sha256(cache.read_bytes()).hexdigest()
-            manifest.write_text(json.dumps({"artifacts": {str(cache.relative_to(ROOT)): {"sha256": digest}}}))
-            cache.write_text("Year,median_household_income_usd\n2025,999999999\n")
-            with self.assertRaisesRegex(RuntimeError, "not verified"):
-                pipeline.cached_fetch("income", offline, cache, manifest_path=manifest)
 
     def test_manifest_cannot_omit_expected_files(self):
         with tempfile.TemporaryDirectory() as tmp:

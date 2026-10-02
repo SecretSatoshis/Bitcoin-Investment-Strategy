@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bitcoin-investment-strategy"
 version = "0.1.0"
-description = "Bitcoin savings-plan notebook, daily data release and savings report"
+description = "Bitcoin savings-plan, supply and demand notebooks, their daily data releases and the savings report"
 requires-python = ">=3.12,<3.13"
 dependencies = [
   "ipykernel==7.3.0",

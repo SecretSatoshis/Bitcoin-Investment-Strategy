@@ -1,0 +1,18 @@
+entity,jurisdiction,acquisition_type,evidence_tier,classification_note
+United States,national,seized,estimated_from_forensics,Primarily seized assets; holdings and legal disposition can change.
+China,national,seized,estimated_from_forensics,Attributed to past enforcement seizures.
+United Kingdom,national,seized,estimated_from_forensics,Attributed to enforcement seizures.
+Ukraine (holdings of public officials),not_state,unclassified,estimated_from_forensics,Public-official declarations are not state reserve assets.
+Ukraine,national,unclassified,published_api_listing,Classification requires manual review.
+El Salvador,national,bought,official_disclosure,Government purchase program; the government publishes its balance.
+United Arab Emirates,national,unclassified,published_api_listing,Classification requires manual review.
+Bhutan,national,mined,estimated_from_forensics,Associated with state-linked mining activity.
+Kazakhstan,national,unclassified,published_api_listing,Classification requires manual review.
+North Korea,national,stolen,estimated_from_forensics,Attributed to state-linked cyber theft.
+Venezuela,national,unclassified,published_api_listing,Classification requires manual review.
+Taiwan,national,unclassified,published_api_listing,Classification requires manual review.
+Finland,national,seized,estimated_from_forensics,Attributed to enforcement seizures.
+Texas,sub_national,bought,official_disclosure,"Strategic reserve bought through IBIT shares in November 2025, so these coins are already inside the ETF total."
+"Roswell, New Mexico",sub_national,donated,official_disclosure,Municipal reserve started with a donation in 2025.
+Bulgaria,national,seized,estimated_from_forensics,Historical seizure claim; current balance may be zero.
+Germany,national,seized,estimated_from_forensics,Sold its seized coins in 2024.

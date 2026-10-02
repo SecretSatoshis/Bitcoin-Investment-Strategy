@@ -1,3 +1,3 @@
 column,upstream_series,source,description
 price,price_close,Bitcoin Report Library (BRK data),BTC daily close in USD
-median_household_income_usd,MEHOINUSA646N,FRED / U.S. Census Bureau,Nominal U.S. median household income
+median_household_income_usd,us_median_household_income_usd,Bitcoin Report Library (FRED / U.S. Census Bureau data),"Nominal U.S. median household income, FRED series MEHOINUSA646N"
