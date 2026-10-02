@@ -2,7 +2,16 @@
 import numpy as np
 import pandas as pd
 
+# The brand palette, re-exported for the notebooks.
+from ..style import (  # noqa: F401
+    BG, BLUE, BORDER, CASH, GREEN, MONO, MONO_MEDIUM, ORANGE, PRIMARY, RED, SECONDARY, apply_theme,
+)
 from .config import HALVING_DATES
+
+GREY = SECONDARY
+# Coin-age bands, youngest to oldest: cool to warm, with every neighbouring pair kept apart
+# for the common forms of colour blindness.
+AGE_PALETTE = ["#7C9CF0", "#45BFD0", "#6CCB8E", "#F3DA75", ORANGE, "#E05A47"]
 
 
 def covered_periods(index, code, first, last):
@@ -60,7 +69,8 @@ def forward_change(series, end, last, days=90):
 # Both notebooks draw with these, so a formatting fix lands in one place.
 
 def usd(x, _=None):
-    return f"${x:,.0f}"
+    """Whole dollars; cents below $1, so early log-scale ticks don't all read $0."""
+    return f"${x:,.0f}" if x == 0 or abs(x) >= 1 else f"${x:,.2f}"
 
 
 def thousands(x, _=None):
@@ -73,9 +83,40 @@ def compact(x, _=None):
         return "0"
     for scale, suffix in ((1e12, "T"), (1e9, "B"), (1e6, "M"), (1e3, "k")):
         if abs(x) >= scale:
-            v = x / scale
-            return f"{v:,.0f}{suffix}" if abs(v) >= 10 else f"{v:,.1f}{suffix}"
+            return f"{_trim(x / scale)}{suffix}"
     return f"{x:,.0f}" if abs(x) >= 1 else f"{x:,.2f}"
+
+
+def _trim(v):
+    """One decimal at most, none when it is zero: 17.5, 20, 2.5."""
+    return f"{v:,.1f}".removesuffix(".0")
+
+
+def hashes(x, _=None):
+    """Hashes per second with SI prefixes: 1e20 -> '100 EH/s'."""
+    if x <= 0:
+        return "0"
+    for scale, prefix in ((1e21, "Z"), (1e18, "E"), (1e15, "P"), (1e12, "T"), (1e9, "G"),
+                          (1e6, "M"), (1e3, "k")):
+        if x >= scale:
+            return f"{_trim(x / scale)} {prefix}H/s"
+    return f"{_trim(x)} H/s"
+
+
+def log_axis(axis, formatter):
+    """Label a log axis's powers of ten, and some of the steps between them when the visible
+    range is too narrow for the powers alone to give more than a label or two."""
+    from matplotlib.ticker import FuncFormatter
+
+    def between(x, _):
+        low, high = sorted(axis.get_view_interval())
+        if low <= 0 or x <= 0:
+            return ""
+        leads = (2, 3, 4, 5, 6, 8) if high / low < 10 else (2, 5) if high / low < 100 else ()
+        return formatter(x) if round(x / 10 ** np.floor(np.log10(x))) in leads else ""
+
+    axis.set_major_formatter(FuncFormatter(formatter))
+    axis.set_minor_formatter(FuncFormatter(between))
 
 
 def period_centers(idx, code):
@@ -89,10 +130,8 @@ def period_centers(idx, code):
 
 
 def price_axis(ax, label="Bitcoin price (USD, log scale)"):
-    from matplotlib.ticker import FuncFormatter
     ax.set_yscale("log"); ax.set_ylabel(label)
-    ax.yaxis.set_major_formatter(FuncFormatter(usd))
-    ax.yaxis.set_minor_formatter(FuncFormatter(lambda x, _: ""))
+    log_axis(ax.yaxis, usd)
     return ax
 
 
@@ -122,17 +161,51 @@ def credit_line(sources):
     return "   |   ".join(parts)
 
 
-def finish(fig, title=None, ax=None, sources=()):
+HEADER_INCHES = 0.35
+WORDMARK = "SECRET SATOSHIS · RESEARCH"
+
+
+def apply_research_theme():
+    """The Secret Satoshis dark chart theme (as the savings notebook), with a light grid and the
+    brand colours as the default cycle, for every following figure."""
+    from cycler import cycler
     import matplotlib.pyplot as plt
+    apply_theme()
+    plt.rcParams.update({
+        "figure.figsize": (15, 6.5),
+        "axes.grid": True, "axes.grid.axis": "y", "grid.color": BORDER, "grid.linewidth": 0.6,
+        "axes.prop_cycle": cycler(color=[ORANGE, BLUE, GREEN, RED, CASH, SECONDARY]),
+        # Partial periods are hatched over a faded bar; light lines keep them legible on the dark ground.
+        "hatch.color": PRIMARY,
+    })
+
+
+def finish(fig, title=None, ax=None, sources=()):
+    """Lay out the figure with the Secret Satoshis wordmark at the top and the source credit at
+    the bottom, then show it."""
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
     if title and ax is not None:
         ax.set_title(title, fontsize=12, pad=12)
-    fig.autofmt_xdate()
+    from matplotlib.dates import DateLocator
+    for axis in fig.axes:
+        # Slant date labels so they never collide; numeric and category axes stay level.
+        if isinstance(axis.xaxis.get_major_locator(), DateLocator):
+            for label in axis.get_xticklabels():
+                label.set_rotation(30); label.set_horizontalalignment("right")
+        # A twin axis (twinx) has no background of its own; its grid would double the first's.
+        if not axis.patch.get_visible():
+            axis.grid(False)
+    height = fig.get_size_inches()[1]
+    bottom = FOOTER_INCHES / height if sources else 0
+    fig.tight_layout(rect=(0, bottom, 1, 1 - HEADER_INCHES / height))
+    middle = 1 - 0.18 / height
+    fig.add_artist(Rectangle((0.01, middle - 0.06 / height), 0.0035, 0.12 / height,
+                             transform=fig.transFigure, facecolor=ORANGE, edgecolor="none"))
+    fig.text(0.017, middle, WORDMARK, fontproperties=MONO_MEDIUM, fontsize=9, color=SECONDARY, va="center")
     if sources:
-        fig.tight_layout(rect=(0, FOOTER_INCHES / fig.get_size_inches()[1], 1, 1))
-        fig.text(0.01, 0.012, credit_line(sources), fontsize=10, color="#4a5568",
+        fig.text(0.01, 0.012, credit_line(sources), fontproperties=MONO, fontsize=10, color=SECONDARY,
                  ha="left", va="bottom")
-    else:
-        fig.tight_layout()
     plt.show(); plt.close(fig)
 
 
