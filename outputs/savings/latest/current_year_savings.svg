@@ -1690,7 +1690,7 @@ z
     </g>
    </g>
    <g id="text_6">
-    <!-- Interim  ·  1 Oct 2026 -->
+    <!-- Interim  ·  2 Oct 2026 -->
     <g style="fill: #9090a8" transform="translate(968.16 139.68) scale(0.1 -0.1)">
      <defs>
       <path id="JetBrainsMono-Regular-21a" d="M 589 0 
@@ -1760,7 +1760,7 @@ z
      <use xlink:href="#JetBrainsMono-Regular-244" transform="translate(540 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(600 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(660 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(720 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(720 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(780 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-5f" transform="translate(840 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-ce" transform="translate(900 0)"/>
@@ -1860,7 +1860,7 @@ z
     </g>
    </g>
    <g id="text_9">
-    <!-- $18,178 -->
+    <!-- $18,151 -->
     <g style="fill: #f7931a" transform="translate(927.36 270.563) scale(0.23 -0.23)">
      <defs>
       <path id="Syne-Regular-261" d="M 2016 4480 
@@ -1995,15 +1995,43 @@ Q 1229 -243 1014 -521
 Q 800 -800 429 -954 
 z
 " transform="scale(0.015625)"/>
-      <path id="Syne-Regular-1c4" d="M 211 2470 
-L 211 3181 
-L 3866 3181 
-L 3866 2470 
-L 1869 -960 
-L 864 -960 
-L 3168 2790 
-L 3341 2470 
-L 211 2470 
+      <path id="Syne-Regular-1c2" d="M 2586 1658 
+Q 2899 1658 3171 1574 
+Q 3443 1491 3648 1328 
+Q 3853 1165 3968 915 
+Q 4083 666 4083 339 
+Q 4083 -102 3859 -409 
+Q 3635 -717 3232 -880 
+Q 2829 -1043 2285 -1043 
+Q 1901 -1043 1561 -953 
+Q 1222 -864 960 -697 
+Q 698 -531 541 -291 
+Q 384 -51 371 256 
+L 1165 256 
+Q 1190 58 1344 -80 
+Q 1498 -218 1738 -288 
+Q 1978 -358 2253 -358 
+Q 2445 -358 2621 -316 
+Q 2797 -275 2941 -192 
+Q 3085 -109 3168 25 
+Q 3251 160 3251 346 
+Q 3251 531 3171 665 
+Q 3091 800 2953 889 
+Q 2816 979 2640 1020 
+Q 2464 1062 2272 1062 
+Q 2074 1062 1869 1027 
+Q 1664 992 1491 902 
+Q 1318 813 1216 659 
+L 493 794 
+L 685 3200 
+L 3648 3200 
+L 3648 2490 
+L 1459 2490 
+L 1331 941 
+L 1242 986 
+Q 1331 1203 1536 1350 
+Q 1741 1498 2016 1578 
+Q 2291 1658 2586 1658 
 z
 " transform="scale(0.015625)"/>
      </defs>
@@ -2012,8 +2040,8 @@ z
      <use xlink:href="#Syne-Regular-1c5" transform="translate(94.90625 0)"/>
      <use xlink:href="#Syne-Regular-223" transform="translate(162.40625 0)"/>
      <use xlink:href="#Syne-Regular-1be" transform="translate(182.09375 0)"/>
-     <use xlink:href="#Syne-Regular-1c4" transform="translate(221.09375 0)"/>
-     <use xlink:href="#Syne-Regular-1c5" transform="translate(285.390625 0)"/>
+     <use xlink:href="#Syne-Regular-1c2" transform="translate(221.6875 0)"/>
+     <use xlink:href="#Syne-Regular-1be" transform="translate(290.1875 0)"/>
     </g>
    </g>
    <g id="text_10">
@@ -2125,90 +2153,28 @@ z
     </g>
    </g>
    <g id="text_11">
-    <!-- $16,853 -->
+    <!-- $16,854 -->
     <g style="fill: #b0a5d8" transform="translate(927.36 377.483) scale(0.23 -0.23)">
      <defs>
-      <path id="Syne-Regular-1c2" d="M 2586 1658 
-Q 2899 1658 3171 1574 
-Q 3443 1491 3648 1328 
-Q 3853 1165 3968 915 
-Q 4083 666 4083 339 
-Q 4083 -102 3859 -409 
-Q 3635 -717 3232 -880 
-Q 2829 -1043 2285 -1043 
-Q 1901 -1043 1561 -953 
-Q 1222 -864 960 -697 
-Q 698 -531 541 -291 
-Q 384 -51 371 256 
-L 1165 256 
-Q 1190 58 1344 -80 
-Q 1498 -218 1738 -288 
-Q 1978 -358 2253 -358 
-Q 2445 -358 2621 -316 
-Q 2797 -275 2941 -192 
-Q 3085 -109 3168 25 
-Q 3251 160 3251 346 
-Q 3251 531 3171 665 
-Q 3091 800 2953 889 
-Q 2816 979 2640 1020 
-Q 2464 1062 2272 1062 
-Q 2074 1062 1869 1027 
-Q 1664 992 1491 902 
-Q 1318 813 1216 659 
-L 493 794 
-L 685 3200 
-L 3648 3200 
-L 3648 2490 
-L 1459 2490 
-L 1331 941 
-L 1242 986 
-Q 1331 1203 1536 1350 
-Q 1741 1498 2016 1578 
-Q 2291 1658 2586 1658 
+      <path id="Syne-Regular-1c1" d="M 3558 3206 
+L 3558 -928 
+L 2726 -928 
+L 2726 2534 
+L 2976 2445 
+L 1056 288 
+L 934 570 
+L 2829 570 
+L 2829 -70 
+L 301 -70 
+L 301 570 
+L 2726 3206 
+L 3558 3206 
 z
-" transform="scale(0.015625)"/>
-      <path id="Syne-Regular-1c0" d="M 2144 1178 
-L 2144 1210 
-Q 2522 1197 2838 1149 
-Q 3155 1101 3385 989 
-Q 3616 877 3744 678 
-Q 3872 480 3872 173 
-Q 3872 -186 3645 -461 
-Q 3418 -736 3002 -893 
-Q 2586 -1050 2022 -1050 
-Q 1472 -1050 1059 -880 
-Q 646 -710 428 -412 
-Q 211 -115 230 275 
-L 1037 275 
-Q 1043 90 1161 -48 
-Q 1280 -186 1501 -262 
-Q 1722 -339 2022 -339 
-Q 2490 -339 2739 -179 
-Q 2989 -19 2989 294 
-Q 2989 595 2701 720 
-Q 2413 845 1888 845 
-L 1344 845 
-L 1344 1485 
-L 1888 1485 
-Q 2253 1485 2480 1533 
-Q 2707 1581 2812 1693 
-Q 2918 1805 2918 1990 
-Q 2918 2253 2707 2403 
-Q 2496 2554 2022 2554 
-Q 1574 2554 1334 2394 
-Q 1094 2234 1082 1971 
-L 275 1971 
-Q 256 2272 387 2509 
-Q 518 2746 764 2915 
-Q 1011 3085 1334 3174 
-Q 1658 3264 2022 3264 
-Q 2573 3264 2969 3123 
-Q 3366 2982 3577 2726 
-Q 3789 2470 3789 2131 
-Q 3789 1850 3667 1667 
-Q 3546 1485 3322 1379 
-Q 3098 1274 2800 1229 
-Q 2502 1184 2144 1178 
+M 3456 -70 
+L 3456 570 
+L 4294 570 
+L 4294 -70 
+L 3456 -70 
 z
 " transform="scale(0.015625)"/>
      </defs>
@@ -2218,7 +2184,7 @@ z
      <use xlink:href="#Syne-Regular-223" transform="translate(163.8125 0)"/>
      <use xlink:href="#Syne-Regular-1c5" transform="translate(186.90625 0)"/>
      <use xlink:href="#Syne-Regular-1c2" transform="translate(254.40625 0)"/>
-     <use xlink:href="#Syne-Regular-1c0" transform="translate(322.90625 0)"/>
+     <use xlink:href="#Syne-Regular-1c1" transform="translate(322.90625 0)"/>
     </g>
    </g>
    <g id="text_12">
@@ -2250,6 +2216,19 @@ z
    <g id="text_13">
     <!-- $16,667 -->
     <g style="fill: #9090a8" transform="translate(927.36 484.403) scale(0.23 -0.23)">
+     <defs>
+      <path id="Syne-Regular-1c4" d="M 211 2470 
+L 211 3181 
+L 3866 3181 
+L 3866 2470 
+L 1869 -960 
+L 864 -960 
+L 3168 2790 
+L 3341 2470 
+L 211 2470 
+z
+" transform="scale(0.015625)"/>
+     </defs>
      <use xlink:href="#Syne-Regular-261"/>
      <use xlink:href="#Syne-Regular-1be" transform="translate(55.90625 0)"/>
      <use xlink:href="#Syne-Regular-1c3" transform="translate(94.90625 0)"/>
@@ -2933,7 +2912,8 @@ L 620.687473 277.205434
 L 622.776264 245.765051 
 L 683.351209 245.094001 
 L 685.44 213.651018 
-L 685.44 213.651018 
+L 687.528791 213.625306 
+L 687.528791 213.625306 
 " clip-path="url(#p52b487f3a7)" style="fill: none; stroke: #b0a5d8; stroke-width: 1.7; stroke-linecap: square"/>
    </g>
    <g id="line2d_32">
@@ -2956,7 +2936,8 @@ L 622.776264 280.001483
 L 622.776264 248.581669 
 L 685.44 248.581669 
 L 685.44 217.161854 
-L 685.44 217.161854 
+L 687.528791 217.161854 
+L 687.528791 217.161854 
 " clip-path="url(#p52b487f3a7)" style="fill: none; stroke-dasharray: 6.29,2.72; stroke-dashoffset: 0; stroke: #9090a8; stroke-width: 1.7"/>
    </g>
    <g id="line2d_33">
@@ -3218,7 +3199,8 @@ L 679.173626 222.689922
 L 681.262418 222.141324 
 L 683.351209 222.535092 
 L 685.44 188.667692 
-L 685.44 188.667692 
+L 687.528791 189.171579 
+L 687.528791 189.171579 
 " clip-path="url(#p52b487f3a7)" style="fill: none; stroke: #f7931a; stroke-width: 2.6; stroke-linecap: square"/>
    </g>
    <g id="PathCollection_1">
@@ -3236,7 +3218,7 @@ z
 " style="stroke: #08080c; stroke-width: 0.7"/>
     </defs>
     <g clip-path="url(#p52b487f3a7)">
-     <use xlink:href="#m5638608a91" x="685.44" y="188.667692" style="fill: #f7931a; stroke: #08080c; stroke-width: 0.7"/>
+     <use xlink:href="#m5638608a91" x="687.528791" y="189.171579" style="fill: #f7931a; stroke: #08080c; stroke-width: 0.7"/>
     </g>
    </g>
    <g id="PathCollection_2">
@@ -3254,7 +3236,7 @@ z
 " style="stroke: #08080c; stroke-width: 0.7"/>
     </defs>
     <g clip-path="url(#p52b487f3a7)">
-     <use xlink:href="#m3003a7d5a7" x="685.44" y="213.651018" style="fill: #b0a5d8; stroke: #08080c; stroke-width: 0.7"/>
+     <use xlink:href="#m3003a7d5a7" x="687.528791" y="213.625306" style="fill: #b0a5d8; stroke: #08080c; stroke-width: 0.7"/>
     </g>
    </g>
    <g id="PathCollection_3">
@@ -3272,7 +3254,7 @@ z
 " style="stroke: #08080c; stroke-width: 0.7"/>
     </defs>
     <g clip-path="url(#p52b487f3a7)">
-     <use xlink:href="#m979c1afd6d" x="685.44" y="217.161854" style="fill: #9090a8; stroke: #08080c; stroke-width: 0.7"/>
+     <use xlink:href="#m979c1afd6d" x="687.528791" y="217.161854" style="fill: #9090a8; stroke: #08080c; stroke-width: 0.7"/>
     </g>
    </g>
   </g>
