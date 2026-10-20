@@ -59,7 +59,7 @@
   },
   "core_data_end": "2026-10-19",
   "release_id": "2026-10-19-feee11efecb8",
-  "retrieved_at_utc": "2026-10-20T07:10:45.968403+00:00",
+  "retrieved_at_utc": "2026-10-20T12:42:30.171684+00:00",
   "schema_version": 1,
   "sources": {
     "coinmetrics_efficiency": {
@@ -68,7 +68,7 @@
       "observation_end": "2026-09-30"
     },
     "report_library": {
-      "generated_at": "2026-10-20T05:09:34+00:00",
+      "generated_at": "2026-10-20T12:13:48+00:00",
       "release_id": "2026-10-19",
       "sha256": {
         "annual_reference_data.csv": "95d569d814b5d1c79ce170fed2b0f3e9deea50e1ad772e4783d062cff216ad62",
