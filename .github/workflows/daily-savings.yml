@@ -12,6 +12,11 @@ concurrency:
   group: bitcoin-daily-savings-${{ github.ref }}
   cancel-in-progress: false
 
+# Use the runner's refreshed CA bundle rather than Node's embedded roots.
+env:
+  NODE_OPTIONS: --use-openssl-ca
+  SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,6 +30,18 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONHASHSEED: "0"
     steps:
+      - name: Refresh TLS certificate trust
+        working-directory: ${{ runner.temp }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade -y ca-certificates
+          # Enforce the emergency distrust even if this runner's apt mirror lags.
+          sudo sed -i \
+            -e 's|^mozilla/emSign_ECC_Root_CA_-_G3.crt$|!&|' \
+            -e 's|^mozilla/emSign_Root_TLS_CA_-_G3.crt$|!&|' \
+            -e 's|^mozilla/Comodo_AAA_Services_root.crt$|!&|' \
+            /etc/ca-certificates.conf
+          sudo update-ca-certificates
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -38,7 +55,7 @@ jobs:
       - name: Set up uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
-          version: "0.12.5"
+          version: "0.13.4"
 
       - name: Install locked dependencies
         run: uv sync --locked
@@ -97,6 +114,18 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Refresh TLS certificate trust
+        working-directory: ${{ runner.temp }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade -y ca-certificates
+          # Enforce the emergency distrust even if this runner's apt mirror lags.
+          sudo sed -i \
+            -e 's|^mozilla/emSign_ECC_Root_CA_-_G3.crt$|!&|' \
+            -e 's|^mozilla/emSign_Root_TLS_CA_-_G3.crt$|!&|' \
+            -e 's|^mozilla/Comodo_AAA_Services_root.crt$|!&|' \
+            /etc/ca-certificates.conf
+          sudo update-ca-certificates
       - name: Check out the exact revision used to build
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
