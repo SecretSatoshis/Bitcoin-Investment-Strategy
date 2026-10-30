@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_id": "20261030T071108811593Z",
+  "run_id": "20261030T140612926540Z",
   "report_date": "2026-10-29",
   "snapshot_status": "interim",
   "provenance": {
@@ -8,7 +8,7 @@
     "source_data_end": "2026-10-29",
     "price_file": "data/processed/bitcoin_daily.csv",
     "price_sha256": "7cac3ca08b002e541bbc0d0dd121f708fabce1e11de79b53f5b50bfacacc0d36",
-    "source_manifest_sha256": "14902707d79674195e9afa53dad442d56286215f0e4334c304d1a3f6708567ae",
+    "source_manifest_sha256": "0caac45d3d4f1855d505c89dbeb723a50c5569577d0081184b4790f2088d2c52",
     "engine_sha256": "30a4596f9af08e3b2d025cdd70bcde2d747d11578b9e32f488ad161c54607964",
     "exporter_sha256": "e25edd1fe993861515e083632d6e2e7408385b118c7bd705ba2da7b7b8c02998"
   },
@@ -50,7 +50,7 @@
       "bytes": 1156
     },
     "savings_report.json": {
-      "sha256": "2cd1c9b587f5cba16b573a1cc9e121c6fb5e957d5fc6e33499f401e519090a31",
+      "sha256": "2c3a6eade4b347b3ae13c8ce4338ff4df6b5df85cc5fb3d2d1029feefd6bd5f7",
       "bytes": 12330
     },
     "ytd_summary.csv": {
