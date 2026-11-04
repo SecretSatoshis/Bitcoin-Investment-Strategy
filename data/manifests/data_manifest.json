@@ -13,12 +13,12 @@
       "sha256": "7588ce1a10c65e45a533b62d3da4efe20760a47fec361646168473140c176ade"
     },
     "data/processed/bitcoin_daily.csv": {
-      "bytes": 110512,
+      "bytes": 110532,
       "columns": 2,
-      "data_end": "2026-11-02",
+      "data_end": "2026-11-03",
       "data_start": "2010-08-16",
-      "rows": 5923,
-      "sha256": "4e482a891187232f5d8db0dd3dcd75e92211381ebb2884746d19f6c8f763b679"
+      "rows": 5924,
+      "sha256": "bab801c2c1119fdd8ea0ac5ffd696aae318120b3b9832674359d61c116d0dac0"
     },
     "data/processed/median_household_income_annual.csv": {
       "bytes": 579,
@@ -29,18 +29,18 @@
       "sha256": "a44f84a53f997e9bafb44a297b3b44aad9ab26349fc381e983f004da22403eeb"
     }
   },
-  "core_data_end": "2026-11-02",
-  "last_completed_utc_day": "2026-11-02",
-  "release_id": "2026-11-02-9ce8c2ec65ae",
-  "retrieved_at_utc": "2026-11-03T15:04:49.339423+00:00",
+  "core_data_end": "2026-11-03",
+  "last_completed_utc_day": "2026-11-03",
+  "release_id": "2026-11-03-53049e7df006",
+  "retrieved_at_utc": "2026-11-04T07:10:51.909019+00:00",
   "schema_version": 1,
   "sources": {
     "report_library": {
-      "generated_at": "2026-11-03T07:08:51+00:00",
-      "release_id": "2026-11-02",
+      "generated_at": "2026-11-04T06:54:51+00:00",
+      "release_id": "2026-11-03",
       "sha256": {
-        "annual_reference_data.csv": "e3bbf45d4137aa8a8212a232a92d9fe905e23720960ce078f01ec9db0e71841a",
-        "master_metrics_data.csv.gz": "1169c04d11c6509fe617ba2d60a01ccc27c45eae51d44ffa3941c4c9e7aedc67"
+        "annual_reference_data.csv": "21e06e80a0bf44254eb6f30acbc219a1e82c53733aaac91ffcf1d223c7624ffd",
+        "master_metrics_data.csv.gz": "0e83ee91511722734d9578dc9da45454fe10369d2602596f6099929c1d4f4fdb"
       },
       "status": "live",
       "url": "https://secretsatoshis.github.io/Bitcoin-Report-Library/csv"
