@@ -1,12 +1,12 @@
 {
   "artifacts": {
     "data/research/bitcoin_daily.csv": {
-      "bytes": 3703697,
+      "bytes": 3704394,
       "columns": 52,
-      "data_end": "2026-11-03",
+      "data_end": "2026-11-04",
       "data_start": "2010-01-01",
-      "rows": 6151,
-      "sha256": "3259192a6864c3ccd5ac562b082ce834d3755ff6e71f2b900f340e5904d72bc9"
+      "rows": 6152,
+      "sha256": "4a741834ea14e0ffdfa4e9f0f41e5f0a980ca20728fb194e4d7ce81361422813"
     },
     "data/research/bitcoin_owner_estimates.csv": {
       "bytes": 794,
@@ -15,26 +15,26 @@
       "sha256": "2c3a11d280be8c6b7d9acee13e405f3cd7430e68fd017aa17c8e65094a896ac1"
     },
     "data/research/etf_daily.csv": {
-      "bytes": 1308074,
+      "bytes": 1309751,
       "columns": 14,
-      "data_end": "2026-11-03",
+      "data_end": "2026-11-04",
       "data_start": "2024-01-11",
-      "rows": 7775,
-      "sha256": "fa636495ddee6b8420da198886174d3689e63a8f2ed04082ce9507abbc7dc4ca"
+      "rows": 7787,
+      "sha256": "8743d862975448b649e0c114a9f2b317311fbe1d45c099bad04bf5c3d6091827"
     },
     "data/research/etf_quarterly.csv": {
-      "bytes": 23952,
+      "bytes": 23932,
       "columns": 15,
       "rows": 156,
-      "sha256": "4dd296db9f574f40d5de005040bd66498da4c98b58f1005f2b6cceb45db2696d"
+      "sha256": "5899a6320890dce46c63bf1fd0d9b3fc5338eb535a62a5746cd4c8e1240990df"
     },
     "data/research/etf_totals_daily.csv": {
-      "bytes": 71241,
+      "bytes": 71322,
       "columns": 9,
-      "data_end": "2026-11-03",
+      "data_end": "2026-11-04",
       "data_start": "2024-01-11",
-      "rows": 706,
-      "sha256": "948f28cc473c1dd0f172595606caa7cb1065537becd47d16516abf0dd14065af"
+      "rows": 707,
+      "sha256": "fb69ce31d5e0129e3306f34a6a317db5e4595e806db4b6399787c277629b9730"
     },
     "data/research/manifests/column_dictionary.csv": {
       "bytes": 3872,
@@ -57,25 +57,25 @@
       "sha256": "0ff9b1943aaca3b8ca37043dba7c7ea81c7986c80f02a73429f314ce17e679b4"
     }
   },
-  "core_data_end": "2026-11-03",
-  "release_id": "2026-11-03-dc0fdf0dd470",
-  "retrieved_at_utc": "2026-11-04T15:23:59.148743+00:00",
+  "core_data_end": "2026-11-04",
+  "release_id": "2026-11-04-ce66fda3ce7a",
+  "retrieved_at_utc": "2026-11-05T07:10:56.748046+00:00",
   "schema_version": 1,
   "sources": {
     "coinmetrics_efficiency": {
-      "carried_days": 3,
+      "carried_days": 4,
       "maximum_carry_days": 365,
       "observation_end": "2026-10-31"
     },
     "report_library": {
-      "generated_at": "2026-11-04T06:54:51+00:00",
-      "release_id": "2026-11-03",
+      "generated_at": "2026-11-05T00:27:33+00:00",
+      "release_id": "2026-11-04",
       "sha256": {
-        "annual_reference_data.csv": "21e06e80a0bf44254eb6f30acbc219a1e82c53733aaac91ffcf1d223c7624ffd",
-        "etf_daily.csv": "f8e17584db135cc52c1531585a21ab7d239b1292cd77cd8d0a70584d7272cadf",
-        "etf_quarterly.csv": "85c4fd8ad6a5cf37a80ef2da8f3282af3e24431241d4005eb3f0b71751f9d5c4",
-        "etf_totals_daily.csv": "d7e9a15249a942ca877241dcc9980f458b41db49e30243884db3bbbbc2f6a5cb",
-        "master_metrics_data.csv.gz": "0e83ee91511722734d9578dc9da45454fe10369d2602596f6099929c1d4f4fdb"
+        "annual_reference_data.csv": "1af754f733201e22078dce185f67993714939f87c8ba134ed076136ef0517eef",
+        "etf_daily.csv": "b7315096b42f40b1aa2a8d9597864fd891330e6b1c5d555cce4ed9ac36e51a76",
+        "etf_quarterly.csv": "8cfc6485d4428a7a4348df78cbdf5fcdf50eb40892881c07fedabc692db95942",
+        "etf_totals_daily.csv": "8f89a310457056d548ae911347b6ac47ae4ff503a3d0f76c3d7673d650b642f7",
+        "master_metrics_data.csv.gz": "95aa04f7c23e0110bd196867be157740b0218dc899b1971ba36ac9ab749cf657"
       },
       "status": "live",
       "url": "https://secretsatoshis.github.io/Bitcoin-Report-Library/csv"
