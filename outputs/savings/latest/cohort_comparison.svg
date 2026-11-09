@@ -1740,19 +1740,51 @@ z
     </g>
    </g>
    <g id="text_6">
-    <!-- Interim  ·  7 Nov 2026 -->
+    <!-- Interim  ·  8 Nov 2026 -->
     <g style="fill: #9090a8" transform="translate(968.16 172.728) scale(0.1 -0.1)">
      <defs>
-      <path id="JetBrainsMono-Regular-21f" d="M 1184 0 
-L 2854 4147 
-L 1088 4147 
-L 1088 3456 
-L 512 3456 
-L 512 4672 
-L 3424 4672 
-L 3424 4109 
-L 1805 0 
-L 1184 0 
+      <path id="JetBrainsMono-Regular-220" d="M 1920 -64 
+Q 1491 -64 1174 86 
+Q 858 237 685 518 
+Q 512 800 512 1178 
+Q 512 1594 739 1894 
+Q 966 2195 1459 2432 
+L 2080 2733 
+Q 2362 2867 2515 3084 
+Q 2669 3302 2669 3565 
+Q 2669 3872 2467 4051 
+Q 2266 4230 1920 4230 
+Q 1574 4230 1372 4048 
+Q 1171 3866 1171 3558 
+Q 1171 3302 1321 3084 
+Q 1472 2867 1734 2739 
+L 2355 2445 
+Q 2867 2208 3097 1904 
+Q 3328 1600 3328 1178 
+Q 3328 608 2947 272 
+Q 2566 -64 1920 -64 
+z
+M 1920 448 
+Q 2310 448 2537 649 
+Q 2765 851 2765 1190 
+Q 2765 1466 2617 1690 
+Q 2470 1914 2195 2048 
+L 1581 2349 
+Q 1069 2598 838 2886 
+Q 608 3174 608 3578 
+Q 608 3936 768 4198 
+Q 928 4461 1222 4601 
+Q 1517 4742 1920 4742 
+Q 2323 4742 2617 4601 
+Q 2912 4461 3072 4198 
+Q 3232 3936 3232 3578 
+Q 3232 3174 3001 2889 
+Q 2771 2605 2240 2342 
+L 1626 2042 
+Q 1363 1914 1219 1693 
+Q 1075 1472 1075 1203 
+Q 1075 858 1302 653 
+Q 1530 448 1920 448 
 z
 " transform="scale(0.015625)"/>
       <path id="JetBrainsMono-Regular-21a" d="M 589 0 
@@ -1822,7 +1854,7 @@ z
      <use xlink:href="#JetBrainsMono-Regular-244" transform="translate(540 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(600 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(660 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(720 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(720 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(780 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-59" transform="translate(840 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-117" transform="translate(900 0)"/>
@@ -2342,52 +2374,6 @@ z
    <g id="text_19">
     <!-- $18,333 -->
     <g style="fill: #e4e4ef" transform="translate(173.376 295.92) scale(0.12 -0.12)">
-     <defs>
-      <path id="JetBrainsMono-Regular-220" d="M 1920 -64 
-Q 1491 -64 1174 86 
-Q 858 237 685 518 
-Q 512 800 512 1178 
-Q 512 1594 739 1894 
-Q 966 2195 1459 2432 
-L 2080 2733 
-Q 2362 2867 2515 3084 
-Q 2669 3302 2669 3565 
-Q 2669 3872 2467 4051 
-Q 2266 4230 1920 4230 
-Q 1574 4230 1372 4048 
-Q 1171 3866 1171 3558 
-Q 1171 3302 1321 3084 
-Q 1472 2867 1734 2739 
-L 2355 2445 
-Q 2867 2208 3097 1904 
-Q 3328 1600 3328 1178 
-Q 3328 608 2947 272 
-Q 2566 -64 1920 -64 
-z
-M 1920 448 
-Q 2310 448 2537 649 
-Q 2765 851 2765 1190 
-Q 2765 1466 2617 1690 
-Q 2470 1914 2195 2048 
-L 1581 2349 
-Q 1069 2598 838 2886 
-Q 608 3174 608 3578 
-Q 608 3936 768 4198 
-Q 928 4461 1222 4601 
-Q 1517 4742 1920 4742 
-Q 2323 4742 2617 4601 
-Q 2912 4461 3072 4198 
-Q 3232 3936 3232 3578 
-Q 3232 3174 3001 2889 
-Q 2771 2605 2240 2342 
-L 1626 2042 
-Q 1363 1914 1219 1693 
-Q 1075 1472 1075 1203 
-Q 1075 858 1302 653 
-Q 1530 448 1920 448 
-z
-" transform="scale(0.015625)"/>
-     </defs>
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(120 0)"/>
@@ -2424,7 +2410,7 @@ z
     </g>
    </g>
    <g id="text_21">
-    <!-- $9,556 -->
+    <!-- $9,457 -->
     <g style="fill: #e4e4ef" transform="translate(421.6896 295.92) scale(0.12 -0.12)">
      <defs>
       <path id="JetBrainsMono-Regular-221" d="M 1197 0 
@@ -2457,6 +2443,21 @@ Q 1011 2784 1260 2512
 Q 1510 2240 1920 2240 
 z
 " transform="scale(0.015625)"/>
+      <path id="JetBrainsMono-Regular-21c" d="M 2624 0 
+L 2624 1024 
+L 512 1024 
+L 512 1926 
+L 2362 4672 
+L 2989 4672 
+L 1088 1805 
+L 1088 1549 
+L 2624 1549 
+L 2624 2688 
+L 3200 2688 
+L 3200 0 
+L 2624 0 
+z
+" transform="scale(0.015625)"/>
       <path id="JetBrainsMono-Regular-21d" d="M 1907 -64 
 Q 1338 -64 973 230 
 Q 608 525 544 1024 
@@ -2487,57 +2488,52 @@ Q 3296 659 2931 297
 Q 2566 -64 1907 -64 
 z
 " transform="scale(0.015625)"/>
+      <path id="JetBrainsMono-Regular-21f" d="M 1184 0 
+L 2854 4147 
+L 1088 4147 
+L 1088 3456 
+L 512 3456 
+L 512 4672 
+L 3424 4672 
+L 3424 4109 
+L 1805 0 
+L 1184 0 
+z
+" transform="scale(0.015625)"/>
      </defs>
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(120 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(180 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(300 0)"/>
     </g>
    </g>
    <g id="text_22">
-    <!-- $9,285 -->
+    <!-- $9,286 -->
     <g style="fill: #e4e4ef" transform="translate(537.0048 295.92) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(300 0)"/>
     </g>
    </g>
    <g id="text_23">
-    <!-- $18,841 -->
+    <!-- $18,743 -->
     <g style="fill: #f7931a" transform="translate(660.8448 295.92) scale(0.12 -0.12)">
-     <defs>
-      <path id="JetBrainsMono-Regular-21c" d="M 2528 0 
-L 2528 947 
-L 442 947 
-L 442 2048 
-L 2246 4672 
-L 3078 4672 
-L 1158 1856 
-L 1158 1613 
-L 2528 1613 
-L 2528 2688 
-L 3270 2688 
-L 3270 0 
-L 2528 0 
-z
-" transform="scale(0.015625)"/>
-     </defs>
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_24">
-    <!-- +$508 -->
+    <!-- +$409 -->
     <g style="fill: #e4e4ef" transform="translate(795.8016 295.92) scale(0.12 -0.12)">
      <defs>
       <path id="JetBrainsMono-Regular-2c3" d="M 1638 608 
@@ -2558,13 +2554,13 @@ z
      </defs>
      <use xlink:href="#JetBrainsMono-Regular-2c3"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(240 0)"/>
     </g>
    </g>
    <g id="text_25">
-    <!-- $18,571 -->
+    <!-- $18,572 -->
     <g style="fill: #e4e4ef" transform="translate(907.2 295.92) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(60 0)"/>
@@ -2572,15 +2568,15 @@ z
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_26">
-    <!-- +$270 -->
+    <!-- +$170 -->
     <g style="fill: #e4e4ef" transform="translate(1052.64 295.92) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c3"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(240 0)"/>
     </g>
@@ -2620,19 +2616,19 @@ z
     </g>
    </g>
    <g id="text_30">
-    <!-- $17,161 -->
+    <!-- $16,983 -->
     <g style="fill: #e4e4ef" transform="translate(414.4896 334.8) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_31">
-    <!-- $19,706 -->
+    <!-- $19,708 -->
     <g style="fill: #e4e4ef" transform="translate(529.8048 334.8) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(60 0)"/>
@@ -2640,23 +2636,23 @@ z
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_32">
-    <!-- $36,867 -->
+    <!-- $36,691 -->
     <g style="fill: #f7931a" transform="translate(660.8448 334.8) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_33">
-    <!-- −$1,466 -->
+    <!-- −$1,643 -->
     <g style="fill: #e4e4ef" transform="translate(781.4016 334.8) scale(0.12 -0.12)">
      <defs>
       <path id="JetBrainsMono-Regular-2c4" d="M 896 1856 
@@ -2671,13 +2667,13 @@ z
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_34">
-    <!-- $39,412 -->
+    <!-- $39,415 -->
     <g style="fill: #e4e4ef" transform="translate(907.2 334.8) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(60 0)"/>
@@ -2685,19 +2681,19 @@ z
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_35">
-    <!-- −$2,545 -->
+    <!-- −$2,724 -->
     <g style="fill: #e4e4ef" transform="translate(1038.24 334.8) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c4"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_36">
@@ -2735,73 +2731,75 @@ z
     </g>
    </g>
    <g id="text_39">
-    <!-- $29,690 -->
+    <!-- $29,382 -->
     <g style="fill: #e4e4ef" transform="translate(414.4896 373.68) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_40">
-    <!-- $30,439 -->
+    <!-- $30,441 -->
     <g style="fill: #e4e4ef" transform="translate(529.8048 373.68) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_41">
-    <!-- $60,129 -->
+    <!-- $59,823 -->
     <g style="fill: #f7931a" transform="translate(660.8448 373.68) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(60 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_42">
-    <!-- +$1,795 -->
+    <!-- +$1,490 -->
     <g style="fill: #e4e4ef" transform="translate(781.4016 373.68) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c3"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_43">
-    <!-- $60,878 -->
+    <!-- $60,883 -->
     <g style="fill: #e4e4ef" transform="translate(907.2 373.68) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_44">
-    <!-- −$749 -->
-    <g style="fill: #e4e4ef" transform="translate(1052.64 373.68) scale(0.12 -0.12)">
+    <!-- −$1,059 -->
+    <g style="fill: #e4e4ef" transform="translate(1038.24 373.68) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c4"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(120 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_45">
@@ -2839,19 +2837,19 @@ z
     </g>
    </g>
    <g id="text_48">
-    <!-- $58,034 -->
+    <!-- $57,432 -->
     <g style="fill: #e4e4ef" transform="translate(414.4896 412.56) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_49">
-    <!-- $41,494 -->
+    <!-- $41,498 -->
     <g style="fill: #e4e4ef" transform="translate(529.8048 412.56) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(60 0)"/>
@@ -2859,57 +2857,57 @@ z
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(360 0)"/>
-    </g>
-   </g>
-   <g id="text_50">
-    <!-- $99,528 -->
-    <g style="fill: #f7931a" transform="translate(660.8448 412.56) scale(0.12 -0.12)">
-     <use xlink:href="#JetBrainsMono-Regular-2af"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(120 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(300 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(360 0)"/>
     </g>
    </g>
+   <g id="text_50">
+    <!-- $98,930 -->
+    <g style="fill: #f7931a" transform="translate(660.8448 412.56) scale(0.12 -0.12)">
+     <use xlink:href="#JetBrainsMono-Regular-2af"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(60 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(360 0)"/>
+    </g>
+   </g>
    <g id="text_51">
-    <!-- +$21,195 -->
+    <!-- +$20,597 -->
     <g style="fill: #e4e4ef" transform="translate(774.2016 412.56) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c3"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(120 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(180 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(300 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(360 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(420 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(420 0)"/>
     </g>
    </g>
    <g id="text_52">
-    <!-- $82,989 -->
+    <!-- $82,996 -->
     <g style="fill: #e4e4ef" transform="translate(907.2 412.56) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_53">
-    <!-- +$16,539 -->
+    <!-- +$15,934 -->
     <g style="fill: #e4e4ef" transform="translate(1031.04 412.56) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c3"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(120 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(180 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(360 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(420 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(420 0)"/>
     </g>
    </g>
    <g id="text_54">
@@ -2947,19 +2945,19 @@ z
     </g>
    </g>
    <g id="text_57">
-    <!-- $86,795 -->
+    <!-- $85,895 -->
     <g style="fill: #e4e4ef" transform="translate(414.4896 451.44) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(60 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(120 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(240 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_58">
-    <!-- $52,881 -->
+    <!-- $52,886 -->
     <g style="fill: #e4e4ef" transform="translate(529.8048 451.44) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(60 0)"/>
@@ -2967,37 +2965,37 @@ z
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(360 0)"/>
     </g>
    </g>
    <g id="text_59">
-    <!-- $139,676 -->
+    <!-- $138,781 -->
     <g style="fill: #f7931a" transform="translate(653.6448 451.44) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(120 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(180 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(360 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(420 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-220" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(420 0)"/>
     </g>
    </g>
    <g id="text_60">
-    <!-- +$41,343 -->
+    <!-- +$40,447 -->
     <g style="fill: #e4e4ef" transform="translate(774.2016 451.44) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c3"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(120 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(180 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(300 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21c" transform="translate(360 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(420 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(420 0)"/>
     </g>
    </g>
    <g id="text_61">
-    <!-- $105,763 -->
+    <!-- $105,771 -->
     <g style="fill: #e4e4ef" transform="translate(900 451.44) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2af"/>
      <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(60 0)"/>
@@ -3005,21 +3003,21 @@ z
      <use xlink:href="#JetBrainsMono-Regular-21d" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(240 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(360 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(420 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21f" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(420 0)"/>
     </g>
    </g>
    <g id="text_62">
-    <!-- +$33,913 -->
+    <!-- +$33,009 -->
     <g style="fill: #e4e4ef" transform="translate(1031.04 451.44) scale(0.12 -0.12)">
      <use xlink:href="#JetBrainsMono-Regular-2c3"/>
      <use xlink:href="#JetBrainsMono-Regular-2af" transform="translate(60 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(120 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(180 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-23c" transform="translate(240 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(300 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(360 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21b" transform="translate(420 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(300 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(360 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(420 0)"/>
     </g>
    </g>
    <g id="text_63">
