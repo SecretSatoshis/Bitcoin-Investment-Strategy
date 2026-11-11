@@ -1690,39 +1690,9 @@ z
     </g>
    </g>
    <g id="text_6">
-    <!-- Interim  ·  9 Nov 2026 -->
-    <g style="fill: #9090a8" transform="translate(968.16 139.68) scale(0.1 -0.1)">
+    <!-- Interim  ·  10 Nov 2026 -->
+    <g style="fill: #9090a8" transform="translate(962.16 139.68) scale(0.1 -0.1)">
      <defs>
-      <path id="JetBrainsMono-Regular-221" d="M 1197 0 
-L 2522 2125 
-L 2496 2144 
-Q 2374 1965 2163 1869 
-Q 1952 1773 1690 1773 
-Q 1312 1773 1027 1952 
-Q 742 2131 588 2460 
-Q 435 2790 435 3232 
-Q 435 3686 620 4022 
-Q 806 4358 1139 4547 
-Q 1472 4736 1914 4736 
-Q 2362 4736 2698 4547 
-Q 3034 4358 3219 4022 
-Q 3405 3686 3405 3232 
-Q 3405 2880 3305 2541 
-Q 3206 2202 3008 1888 
-L 1837 0 
-L 1197 0 
-z
-M 1920 2240 
-Q 2330 2240 2579 2512 
-Q 2829 2784 2829 3232 
-Q 2829 3680 2579 3952 
-Q 2330 4224 1920 4224 
-Q 1510 4224 1260 3952 
-Q 1011 3680 1011 3232 
-Q 1011 2784 1260 2512 
-Q 1510 2240 1920 2240 
-z
-" transform="scale(0.015625)"/>
       <path id="JetBrainsMono-Regular-21a" d="M 589 0 
 L 589 589 
 L 2016 2106 
@@ -1790,16 +1760,17 @@ z
      <use xlink:href="#JetBrainsMono-Regular-244" transform="translate(540 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(600 0)"/>
      <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(660 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-221" transform="translate(720 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(780 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-59" transform="translate(840 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-117" transform="translate(900 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-158" transform="translate(960 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(1020 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(1080 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(1140 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(1200 0)"/>
-     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(1260 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-219" transform="translate(720 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(780 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(840 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-59" transform="translate(900 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-117" transform="translate(960 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-158" transform="translate(1020 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-2a8" transform="translate(1080 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(1140 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-218" transform="translate(1200 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21a" transform="translate(1260 0)"/>
+     <use xlink:href="#JetBrainsMono-Regular-21e" transform="translate(1320 0)"/>
     </g>
    </g>
    <g id="text_7">
@@ -1890,7 +1861,7 @@ z
     </g>
    </g>
    <g id="text_9">
-    <!-- $18,737 -->
+    <!-- $18,539 -->
     <g style="fill: #f7931a" transform="translate(927.36 270.563) scale(0.23 -0.23)">
      <defs>
       <path id="Syne-Regular-261" d="M 2016 4480 
@@ -2025,15 +1996,43 @@ Q 1229 -243 1014 -521
 Q 800 -800 429 -954 
 z
 " transform="scale(0.015625)"/>
-      <path id="Syne-Regular-1c4" d="M 211 2470 
-L 211 3181 
-L 3866 3181 
-L 3866 2470 
-L 1869 -960 
-L 864 -960 
-L 3168 2790 
-L 3341 2470 
-L 211 2470 
+      <path id="Syne-Regular-1c2" d="M 2586 1658 
+Q 2899 1658 3171 1574 
+Q 3443 1491 3648 1328 
+Q 3853 1165 3968 915 
+Q 4083 666 4083 339 
+Q 4083 -102 3859 -409 
+Q 3635 -717 3232 -880 
+Q 2829 -1043 2285 -1043 
+Q 1901 -1043 1561 -953 
+Q 1222 -864 960 -697 
+Q 698 -531 541 -291 
+Q 384 -51 371 256 
+L 1165 256 
+Q 1190 58 1344 -80 
+Q 1498 -218 1738 -288 
+Q 1978 -358 2253 -358 
+Q 2445 -358 2621 -316 
+Q 2797 -275 2941 -192 
+Q 3085 -109 3168 25 
+Q 3251 160 3251 346 
+Q 3251 531 3171 665 
+Q 3091 800 2953 889 
+Q 2816 979 2640 1020 
+Q 2464 1062 2272 1062 
+Q 2074 1062 1869 1027 
+Q 1664 992 1491 902 
+Q 1318 813 1216 659 
+L 493 794 
+L 685 3200 
+L 3648 3200 
+L 3648 2490 
+L 1459 2490 
+L 1331 941 
+L 1242 986 
+Q 1331 1203 1536 1350 
+Q 1741 1498 2016 1578 
+Q 2291 1658 2586 1658 
 z
 " transform="scale(0.015625)"/>
       <path id="Syne-Regular-1c0" d="M 2144 1178 
@@ -2080,14 +2079,53 @@ Q 3098 1274 2800 1229
 Q 2502 1184 2144 1178 
 z
 " transform="scale(0.015625)"/>
+      <path id="Syne-Regular-1c6" d="M 1907 474 
+Q 1414 474 1033 650 
+Q 653 826 441 1139 
+Q 230 1453 230 1875 
+Q 237 2310 473 2624 
+Q 710 2938 1158 3107 
+Q 1606 3277 2240 3277 
+Q 2880 3277 3337 3117 
+Q 3795 2957 4041 2653 
+Q 4288 2349 4282 1907 
+Q 4282 1741 4224 1555 
+Q 4166 1370 4026 1152 
+Q 4006 1120 3920 989 
+Q 3834 858 3702 666 
+Q 3571 474 3420 253 
+Q 3270 32 3123 -182 
+Q 2976 -397 2854 -573 
+Q 2733 -749 2659 -854 
+Q 2586 -960 2586 -960 
+L 1530 -960 
+L 3686 1722 
+L 3942 1914 
+Q 3693 1581 3462 1315 
+Q 3232 1050 3001 861 
+Q 2771 672 2502 573 
+Q 2234 474 1907 474 
+z
+M 2240 2605 
+Q 1715 2605 1404 2419 
+Q 1094 2234 1088 1862 
+Q 1082 1504 1386 1309 
+Q 1690 1114 2214 1114 
+Q 2765 1114 3094 1325 
+Q 3424 1536 3430 1869 
+Q 3437 2112 3283 2275 
+Q 3130 2438 2861 2521 
+Q 2592 2605 2240 2605 
+z
+" transform="scale(0.015625)"/>
      </defs>
      <use xlink:href="#Syne-Regular-261"/>
      <use xlink:href="#Syne-Regular-1be" transform="translate(55.90625 0)"/>
      <use xlink:href="#Syne-Regular-1c5" transform="translate(94.90625 0)"/>
      <use xlink:href="#Syne-Regular-223" transform="translate(162.40625 0)"/>
-     <use xlink:href="#Syne-Regular-1c4" transform="translate(185.5 0)"/>
-     <use xlink:href="#Syne-Regular-1c0" transform="translate(249.796875 0)"/>
-     <use xlink:href="#Syne-Regular-1c4" transform="translate(313.890625 0)"/>
+     <use xlink:href="#Syne-Regular-1c2" transform="translate(185.5 0)"/>
+     <use xlink:href="#Syne-Regular-1c0" transform="translate(254 0)"/>
+     <use xlink:href="#Syne-Regular-1c6" transform="translate(318.09375 0)"/>
     </g>
    </g>
    <g id="text_10">
@@ -2199,67 +2237,18 @@ z
     </g>
    </g>
    <g id="text_11">
-    <!-- $18,574 -->
+    <!-- $18,575 -->
     <g style="fill: #b0a5d8" transform="translate(927.36 377.483) scale(0.23 -0.23)">
      <defs>
-      <path id="Syne-Regular-1c2" d="M 2586 1658 
-Q 2899 1658 3171 1574 
-Q 3443 1491 3648 1328 
-Q 3853 1165 3968 915 
-Q 4083 666 4083 339 
-Q 4083 -102 3859 -409 
-Q 3635 -717 3232 -880 
-Q 2829 -1043 2285 -1043 
-Q 1901 -1043 1561 -953 
-Q 1222 -864 960 -697 
-Q 698 -531 541 -291 
-Q 384 -51 371 256 
-L 1165 256 
-Q 1190 58 1344 -80 
-Q 1498 -218 1738 -288 
-Q 1978 -358 2253 -358 
-Q 2445 -358 2621 -316 
-Q 2797 -275 2941 -192 
-Q 3085 -109 3168 25 
-Q 3251 160 3251 346 
-Q 3251 531 3171 665 
-Q 3091 800 2953 889 
-Q 2816 979 2640 1020 
-Q 2464 1062 2272 1062 
-Q 2074 1062 1869 1027 
-Q 1664 992 1491 902 
-Q 1318 813 1216 659 
-L 493 794 
-L 685 3200 
-L 3648 3200 
-L 3648 2490 
-L 1459 2490 
-L 1331 941 
-L 1242 986 
-Q 1331 1203 1536 1350 
-Q 1741 1498 2016 1578 
-Q 2291 1658 2586 1658 
-z
-" transform="scale(0.015625)"/>
-      <path id="Syne-Regular-1c1" d="M 3558 3206 
-L 3558 -928 
-L 2726 -928 
-L 2726 2534 
-L 2976 2445 
-L 1056 288 
-L 934 570 
-L 2829 570 
-L 2829 -70 
-L 301 -70 
-L 301 570 
-L 2726 3206 
-L 3558 3206 
-z
-M 3456 -70 
-L 3456 570 
-L 4294 570 
-L 4294 -70 
-L 3456 -70 
+      <path id="Syne-Regular-1c4" d="M 211 2470 
+L 211 3181 
+L 3866 3181 
+L 3866 2470 
+L 1869 -960 
+L 864 -960 
+L 3168 2790 
+L 3341 2470 
+L 211 2470 
 z
 " transform="scale(0.015625)"/>
      </defs>
@@ -2269,7 +2258,7 @@ z
      <use xlink:href="#Syne-Regular-223" transform="translate(162.40625 0)"/>
      <use xlink:href="#Syne-Regular-1c2" transform="translate(185.5 0)"/>
      <use xlink:href="#Syne-Regular-1c4" transform="translate(252.703125 0)"/>
-     <use xlink:href="#Syne-Regular-1c1" transform="translate(309.09375 0)"/>
+     <use xlink:href="#Syne-Regular-1c2" transform="translate(316.09375 0)"/>
     </g>
    </g>
    <g id="text_12">
@@ -3006,8 +2995,8 @@ L 683.351209 263.305854
 L 685.44 233.863232 
 L 748.103736 233.140084 
 L 750.192527 203.69502 
-L 766.902857 203.482814 
-L 766.902857 203.482814 
+L 768.991648 203.456279 
+L 768.991648 203.456279 
 " clip-path="url(#p52b487f3a7)" style="fill: none; stroke: #b0a5d8; stroke-width: 1.7; stroke-linecap: square"/>
    </g>
    <g id="line2d_34">
@@ -3032,8 +3021,8 @@ L 685.44 266.571642
 L 685.44 237.150713 
 L 750.192527 237.150713 
 L 750.192527 207.729785 
-L 766.902857 207.729785 
-L 766.902857 207.729785 
+L 768.991648 207.729785 
+L 768.991648 207.729785 
 " clip-path="url(#p52b487f3a7)" style="fill: none; stroke-dasharray: 6.29,2.72; stroke-dashoffset: 0; stroke: #9090a8; stroke-width: 1.7"/>
    </g>
    <g id="line2d_35">
@@ -3332,7 +3321,8 @@ L 760.636484 198.694832
 L 762.725275 198.766936 
 L 764.814066 200.502079 
 L 766.902857 200.602992 
-L 766.902857 200.602992 
+L 768.991648 204.10374 
+L 768.991648 204.10374 
 " clip-path="url(#p52b487f3a7)" style="fill: none; stroke: #f7931a; stroke-width: 2.6; stroke-linecap: square"/>
    </g>
    <g id="PathCollection_1">
@@ -3350,7 +3340,7 @@ z
 " style="stroke: #08080c; stroke-width: 0.7"/>
     </defs>
     <g clip-path="url(#p52b487f3a7)">
-     <use xlink:href="#m5638608a91" x="766.902857" y="200.602992" style="fill: #f7931a; stroke: #08080c; stroke-width: 0.7"/>
+     <use xlink:href="#m5638608a91" x="768.991648" y="204.10374" style="fill: #f7931a; stroke: #08080c; stroke-width: 0.7"/>
     </g>
    </g>
    <g id="PathCollection_2">
@@ -3368,7 +3358,7 @@ z
 " style="stroke: #08080c; stroke-width: 0.7"/>
     </defs>
     <g clip-path="url(#p52b487f3a7)">
-     <use xlink:href="#m3003a7d5a7" x="766.902857" y="203.482814" style="fill: #b0a5d8; stroke: #08080c; stroke-width: 0.7"/>
+     <use xlink:href="#m3003a7d5a7" x="768.991648" y="203.456279" style="fill: #b0a5d8; stroke: #08080c; stroke-width: 0.7"/>
     </g>
    </g>
    <g id="PathCollection_3">
@@ -3386,7 +3376,7 @@ z
 " style="stroke: #08080c; stroke-width: 0.7"/>
     </defs>
     <g clip-path="url(#p52b487f3a7)">
-     <use xlink:href="#m979c1afd6d" x="766.902857" y="207.729785" style="fill: #9090a8; stroke: #08080c; stroke-width: 0.7"/>
+     <use xlink:href="#m979c1afd6d" x="768.991648" y="207.729785" style="fill: #9090a8; stroke: #08080c; stroke-width: 0.7"/>
     </g>
    </g>
   </g>
