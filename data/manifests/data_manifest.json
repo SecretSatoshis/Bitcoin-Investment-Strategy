@@ -32,15 +32,15 @@
   "core_data_end": "2026-11-11",
   "last_completed_utc_day": "2026-11-11",
   "release_id": "2026-11-11-2d5b06cb5c6c",
-  "retrieved_at_utc": "2026-11-12T07:10:51.390897+00:00",
+  "retrieved_at_utc": "2026-11-12T15:58:12.745845+00:00",
   "schema_version": 1,
   "sources": {
     "report_library": {
-      "generated_at": "2026-11-12T00:27:31+00:00",
+      "generated_at": "2026-11-12T07:34:44+00:00",
       "release_id": "2026-11-11",
       "sha256": {
         "annual_reference_data.csv": "a7fa0cce31020d2e780aae68b332c78c5bfd03dcb1b8fe4145fdd9c84370ef51",
-        "master_metrics_data.csv.gz": "fda34e25175f964c2f4a1bff62bd45271013da0bbfdca0b8caaff1e7f5439ece"
+        "master_metrics_data.csv.gz": "f5ef09842a401b902406a879ee02d0a215d9906c35470f0986d5123be8c35532"
       },
       "status": "live",
       "url": "https://secretsatoshis.github.io/Bitcoin-Report-Library/csv"
