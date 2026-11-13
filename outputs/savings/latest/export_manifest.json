@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "run_id": "20261112T155826303686Z",
-  "report_date": "2026-11-11",
+  "run_id": "20261113T071109399109Z",
+  "report_date": "2026-11-12",
   "snapshot_status": "interim",
   "provenance": {
-    "source_release_id": "2026-11-11-2d5b06cb5c6c",
-    "source_data_end": "2026-11-11",
+    "source_release_id": "2026-11-12-618f1179dbbf",
+    "source_data_end": "2026-11-12",
     "price_file": "data/processed/bitcoin_daily.csv",
-    "price_sha256": "ed1552785ace7238b83e9a74b778634385b427b940a07ae46fdb9ac1648882e5",
-    "source_manifest_sha256": "c5c00a5f695d16775edcd96fa5764f0581d79c81e473cbc0da12e4d9889cd520",
+    "price_sha256": "50af5e40c9037e9f07e84583511912ebc0646d06b0d8a7cb8e9238816cada409",
+    "source_manifest_sha256": "a51359cd6af3ad1589452c8fb53f8e60d5ec076f9f9b8153f0f109fe2a8e150c",
     "engine_sha256": "30a4596f9af08e3b2d025cdd70bcde2d747d11578b9e32f488ad161c54607964",
     "exporter_sha256": "e25edd1fe993861515e083632d6e2e7408385b118c7bd705ba2da7b7b8c02998"
   },
@@ -18,44 +18,44 @@
       "bytes": 2963
     },
     "cohort_comparison.png": {
-      "sha256": "3d1c7e1b57c70f8f56922ed4bb8887cffc4195d1891c9f81e0c1112fb5cc62f9",
-      "bytes": 285366
+      "sha256": "ed07be282043eaa3a0029f9752b4d92894c29f1a29903590295147b05e8ec136",
+      "bytes": 285012
     },
     "cohort_comparison.svg": {
-      "sha256": "dc3b952d7cfd4f92a4199d1b69d0293d46a633e61fc0d214e63153cbb42a1dc6",
-      "bytes": 139547
+      "sha256": "0057e5ad971b619cd48f1001c19615d5da3519da6b6a50c3c13e7b7b445fb7cb",
+      "bytes": 139608
     },
     "cohort_paths.csv": {
-      "sha256": "7e2976e0c73fc0c35a7391addf41c46d31a0b996fdafee19beffb171cab8462b",
-      "bytes": 1055110
+      "sha256": "d6bca1c5224d22a0e91e6a55efca9d75e2a17fb00acfd7f6944ec476da6a1396",
+      "bytes": 1056175
     },
     "cohort_summary.csv": {
-      "sha256": "85529e302c09494965e530ac2aa1c36746a4a9cea42721604279b782134c8b52",
-      "bytes": 2155
+      "sha256": "6294c2cbdd15198bac0b509becee35c0ac74585c1d0e60e4d9084eb8e21300e6",
+      "bytes": 2158
     },
     "contribution_schedule.csv": {
       "sha256": "b28d1f44a6f54c8153bc06c98f031c1174947e8d762ae45b6f0357693c190c3c",
       "bytes": 16802
     },
     "current_year_savings.png": {
-      "sha256": "2bc899a6c737ac470029e4bf44f526b3d7c9599a50f5de39f33e9c11f268e296",
-      "bytes": 207707
+      "sha256": "f2a38d03a71a6f49017029d981c4e29ca8faab9b920aafe057c81e7f2271b95d",
+      "bytes": 210622
     },
     "current_year_savings.svg": {
-      "sha256": "d42aea32c7a9b0c51e00186da3a997e882923ddbc4895f1ef1d6b357a9478d1a",
-      "bytes": 108595
+      "sha256": "939f6813053a14a3038ff47c76c7233594ef0a86bdb3722324d174aa6148d7fb",
+      "bytes": 108608
     },
     "plan_definition.json": {
-      "sha256": "654cc62bd704dd312bfbdb247c41b57ab1c3d9ab536461baae6d4185612845f6",
+      "sha256": "9d81ef02a886519d2dae7308e17eda0d792e451a636d4ec79ec2b9b23c2678c5",
       "bytes": 1156
     },
     "savings_report.json": {
-      "sha256": "aa69b4d232dbc73cc8d3e9ed994ae2a2b75c0df02ba8d9919f666d16330db6bb",
-      "bytes": 12338
+      "sha256": "e6148bc4129dd4ec7ed958588a1767b33f15ffc1ad8a9f6af5c761f4948bd57f",
+      "bytes": 12347
     },
     "ytd_summary.csv": {
-      "sha256": "af614eb55c1b122242c8963fe79901d7bc01f89583afc4586094a5217f31e8d3",
-      "bytes": 1950
+      "sha256": "8d5694963d51482c41073a275d83d9875357c9d7297b17ac2c873896f0bd1be6",
+      "bytes": 1953
     }
   }
 }
