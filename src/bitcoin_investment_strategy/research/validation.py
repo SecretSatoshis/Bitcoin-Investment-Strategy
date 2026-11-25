@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 import numpy as np
 import pandas as pd
@@ -14,6 +15,26 @@ from .config import COHORTS, FLOW_SERIES, REPORT_LIBRARY_SERIES, UNDER_AGE_SUPPL
 
 DERIVED_COLUMNS = ("market_cap_usd", "days_since_genesis")
 JURISDICTIONS = {"national", "sub_national", "not_state"}
+
+# Word-bounded pattern so company names like "Netflix", "Rocketfuel", or "CleanSpark"
+# never false-match "etf" or "ark", while covering every US spot bitcoin ETF sponsor/trust.
+FUND_NAME_PATTERN = re.compile(
+    r"\b(?:grayscale|blackrock|ishares|fidelity|21shares|ark|arkb|bitwise|"
+    r"vaneck|invesco|franklin|valkyrie|wisdomtree|etf)\b",
+    re.IGNORECASE,
+)
+# Co-sponsors with separate corporate balance-sheet listings (e.g. Galaxy Digital / BTCO).
+ETF_COSPONSOR_PATTERN = re.compile(r"\bgalaxy\s+digital\b", re.IGNORECASE)
+
+
+def find_fund_issuer_overlap(entities: pd.Series) -> pd.Series:
+    """Boolean mask for corporate entries whose names match a US spot ETF trust or sponsor."""
+    return entities.fillna("").astype(str).str.contains(FUND_NAME_PATTERN, regex=True)
+
+
+def find_etf_cosponsors(entities: pd.Series) -> pd.Series:
+    """Boolean mask for corporate entries that co-sponsor an ETF alongside corporate holdings."""
+    return entities.fillna("").astype(str).str.contains(ETF_COSPONSOR_PATTERN, regex=True)
 
 
 def validate_release_manifest(path: Path) -> dict:
@@ -49,6 +70,41 @@ def validate_bitcoin_daily(frame: pd.DataFrame) -> None:
         raise ValueError("Invalid mining efficiency")
 
 
+def validate_etf_quarterly(frame: pd.DataFrame) -> None:
+    """Require valid quarter-end SEC filing rows and at least one aggregate ALL cost row."""
+    required = {"fund", "quarter_end", "btc", "cost_per_btc", "funds_with_cost"}
+    missing = required.difference(frame.columns)
+    if frame.empty or missing:
+        raise ValueError(f"ETF quarterly: empty or missing required columns {sorted(missing)}")
+    if frame["fund"].isna().any():
+        raise ValueError("ETF quarterly: missing fund identifier")
+    quarters = pd.to_datetime(frame["quarter_end"], errors="coerce")
+    if quarters.isna().any():
+        raise ValueError("ETF quarterly: invalid quarter_end dates")
+    if frame.assign(_q=quarters).duplicated(["fund", "_q"]).any():
+        raise ValueError("ETF quarterly: duplicate (fund, quarter_end) rows")
+    btc = pd.to_numeric(frame["btc"], errors="coerce")
+    if not np.isfinite(btc).all() or btc.lt(0).any():
+        raise ValueError("ETF quarterly: missing or negative btc holdings")
+    for col in ("cost_per_btc", "fair_value_usd", "cost_usd", "price_usd"):
+        if col in frame.columns:
+            values = pd.to_numeric(frame[col], errors="coerce").dropna()
+            if not np.isfinite(values).all() or values.lt(0).any():
+                raise ValueError(f"ETF quarterly: invalid numeric values in {col}")
+    aggregate = frame[frame["fund"] == "ALL"].copy()
+    if aggregate.empty:
+        raise ValueError("ETF quarterly: missing required 'ALL' aggregate row")
+    cost_rows = aggregate.dropna(subset=["cost_per_btc", "funds_with_cost"])
+    if cost_rows.empty:
+        raise ValueError("ETF quarterly: 'ALL' has no row with cost_per_btc and funds_with_cost")
+    costs = pd.to_numeric(cost_rows["cost_per_btc"], errors="coerce")
+    fund_counts = pd.to_numeric(cost_rows["funds_with_cost"], errors="coerce")
+    if not np.isfinite(costs).all() or not costs.gt(0).all():
+        raise ValueError("ETF quarterly: 'ALL' cost_per_btc must be finite and positive")
+    if not np.isfinite(fund_counts).all() or not fund_counts.ge(1).all():
+        raise ValueError("ETF quarterly: 'ALL' funds_with_cost must be >= 1")
+
+
 def validate_etf(tables: dict[str, pd.DataFrame]) -> None:
     """The ETF tables: complete trading days, totals equal to the sum of funds, no negative holdings."""
     daily, totals = tables["etf_daily.csv"], tables["etf_totals_daily.csv"]
@@ -64,6 +120,8 @@ def validate_etf(tables: dict[str, pd.DataFrame]) -> None:
     share = daily.groupby("date")["market_share_pct"].sum()
     if not np.allclose(share, 100):
         raise ValueError("ETF: market shares do not sum to 100%")
+    if "etf_quarterly.csv" in tables:
+        validate_etf_quarterly(tables["etf_quarterly.csv"])
 
 
 def validate_technology(frame: pd.DataFrame) -> None:

@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from bitcoin_investment_strategy.savings_report import build_report
+from bitcoin_investment_strategy.savings_report import build_report, format_table_dollar
 
 
 class SavingsReportTests(unittest.TestCase):
@@ -82,6 +82,26 @@ class SavingsReportTests(unittest.TestCase):
             y = t["ytd_summary"]
             np.testing.assert_allclose(y.total_gain_ytd_usd, 0., atol=1e-8)
             np.testing.assert_allclose(t["cohort_summary"].advantage_vs_cash_usd, 0., atol=1e-8)
+
+    def test_jan_1_to_4_weekly_and_biweekly_cadence_do_not_crash(self):
+        # 2026-01-01 is a Thursday; the first Monday is 2026-01-05.
+        for day in ("2026-01-01", "2026-01-02", "2026-01-04"):
+            for cadence in ("weekly", "biweekly"):
+                with self.subTest(day=day, cadence=cadence):
+                    _, t = build_report(self.prices, **{**self.settings, "as_of": day, "cadence": cadence})
+                    s = t["cohort_summary"].set_index("cohort_year")
+                    self.assertEqual(s.loc[2026, "purchases"], 0)
+                    self.assertEqual(s.loc[2026, "total_contributed_usd"], 0.0)
+                    self.assertTrue(pd.isna(s.loc[2026, "worst_vs_contributions_date"]))
+                    self.assertTrue(pd.isna(s.loc[2026, "average_purchase_price_usd"]))
+
+    def test_format_table_dollar_avoids_signed_zero(self):
+        for value in (-0.49, -0.01, -0.0, 0.0, 0.01, 0.49):
+            self.assertEqual(format_table_dollar(value, signed=False), "$0")
+            self.assertEqual(format_table_dollar(value, signed=True), "$0")
+        self.assertEqual(format_table_dollar(-1.2, signed=True), "−$1")
+        self.assertEqual(format_table_dollar(1234.6, signed=True), "+$1,235")
+        self.assertEqual(format_table_dollar(1234.6, signed=False), "$1,235")
 
 
 if __name__ == "__main__":

@@ -28,8 +28,11 @@ def main() -> None:
     folder = ROOT / "data/research"
     research.validate_bitcoin_daily(pd.read_csv(folder / "bitcoin_daily.csv", parse_dates=["date"]).set_index("date"))
     research.validate_technology(pd.read_csv(folder / "technology_adoption_annual.csv"))
-    research.validate_etf({name: pd.read_csv(folder / name, parse_dates=["date"])
-                           for name in ("etf_daily.csv", "etf_totals_daily.csv")})
+    research.validate_etf({
+        "etf_daily.csv": pd.read_csv(folder / "etf_daily.csv", parse_dates=["date"]),
+        "etf_totals_daily.csv": pd.read_csv(folder / "etf_totals_daily.csv", parse_dates=["date"]),
+        "etf_quarterly.csv": pd.read_csv(folder / "etf_quarterly.csv", parse_dates=["quarter_end"]),
+    })
     print(f"Validated release {research_manifest['release_id']} ({len(research_manifest['artifacts'])} artifacts)")
 
 

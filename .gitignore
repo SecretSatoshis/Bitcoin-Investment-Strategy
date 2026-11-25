@@ -30,3 +30,6 @@ outputs/savings/*
 
 # CoinGecko snapshots are never committed (its API terms); kept here up to 24 hours.
 .cache/
+
+# Executed notebook artifacts and rendered HTML pages (published via GitHub Pages).
+build/

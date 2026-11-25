@@ -65,10 +65,18 @@ def build_owner_estimates(annual: pd.DataFrame) -> pd.DataFrame:
                          "source_url": rows["source_url"]}).sort_values("year").reset_index(drop=True)
 
 
+PRIVATE_COMPANY_ENTITIES = frozenset({
+    "Space Exploration Technologies Corp.",
+})
+
+
 def build_company_treasuries(frame: pd.DataFrame, as_of: pd.Timestamp) -> pd.DataFrame:
     columns = [column for column in ("entity", "ticker", "country", "btc", "cost_basis_usd",
                                      "current_value_usd", "pct_of_supply") if column in frame.columns]
     result = frame[columns].copy()
+    result["ownership_type"] = result["entity"].isin(PRIVATE_COMPANY_ENTITIES).map(
+        {True: "private", False: "public"}
+    )
     result["as_of"] = as_of.date().isoformat()
     result["source"] = "CoinGecko public treasury API"
     return result.sort_values("btc", ascending=False).reset_index(drop=True)

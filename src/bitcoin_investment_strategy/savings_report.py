@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import shutil
 import tempfile
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -13,6 +14,21 @@ import pandas as pd
 from .io import sha256
 from .release_files import REPORT_FILES
 from .savings import money_weighted_return, prepare_prices, run_plan, validate_allocations
+
+SCHEDULE_COLUMNS = [
+    "cohort_year", "date", "btc_contribution_usd", "cash_contribution_usd",
+    "total_contribution_usd", "purchase_price_usd", "btc_bought",
+]
+
+
+def format_table_dollar(value: float, *, signed: bool = False) -> str:
+    """Format whole USD values without rendering −$0 or +$0 for values in (-0.5, 0.5)."""
+    rounded = round(float(value))
+    if rounded == 0:
+        return "$0"
+    if rounded < 0:
+        return f"−${abs(rounded):,d}"
+    return f"+${rounded:,d}" if signed else f"${rounded:,d}"
 
 
 def records(frame):
@@ -142,11 +158,12 @@ def build_report(prices, *, as_of=None, cohort_years=None, annual_income=100000,
         final, cf = plan.iloc[-1], cash.iloc[-1]
         pnl = plan.total_value - plan.total_contributed
         raw_ratio = pnl / plan.total_contributed.replace(0, np.nan)
-        worst = raw_ratio.idxmin()
+        worst = raw_ratio.idxmin() if raw_ratio.notna().any() else None
         summary = {
             "cohort_year": year, "start_date": str(start.date()), "report_date": str(cutoff.date()),
             "purchases": len(buys), "btc_held": float(final.coins),
-            "sats_held": float(final.coins * 1e8), "average_purchase_price_usd": float(final.cost_basis),
+            "sats_held": float(final.coins * 1e8),
+            "average_purchase_price_usd": float(final.cost_basis) if pd.notna(final.cost_basis) else np.nan,
             "spot_price_usd": float(final.price),
             "btc_contributed_usd": float(final.btc_contributed),
             "cash_contributed_usd": float(final.cash_contributed),
@@ -161,8 +178,9 @@ def build_report(prices, *, as_of=None, cohort_years=None, annual_income=100000,
             "money_weighted_return_annualized": money_weighted_return(
                 list(buys), plan.attrs["total_contributions"], float(final.total_value), cutoff),
             "days_below_contributions": int((pnl < -1e-8).sum()),
-            "observed_days": len(plan), "worst_vs_contributions_date": str(worst.date()),
-            "worst_gain_to_contributions_ratio": float(raw_ratio.loc[worst]),
+            "observed_days": len(plan),
+            "worst_vs_contributions_date": str(worst.date()) if worst is not None else None,
+            "worst_gain_to_contributions_ratio": float(raw_ratio.loc[worst]) if worst is not None else np.nan,
             "still_contributing": bool(plan.attrs["still_contributing"]),
         }
         summaries.append(summary)
@@ -202,7 +220,7 @@ def build_report(prices, *, as_of=None, cohort_years=None, annual_income=100000,
     return assumptions, {
         "cohort_summary": pd.DataFrame(summaries), "ytd_summary": pd.DataFrame(ytd_rows),
         "cohort_paths": pd.concat(paths, ignore_index=True),
-        "contribution_schedule": pd.DataFrame(schedules),
+        "contribution_schedule": pd.DataFrame(schedules, columns=SCHEDULE_COLUMNS),
     }
 
 
@@ -272,8 +290,7 @@ def render_cohort_comparison(assumptions, summary):
         for c, col in enumerate(columns):
             value = row[col]
             label = (str(int(value)) if c == 0 else f"{value:.6f}" if c == 2 else
-                     f"−${abs(value):,.0f}" if value < 0 else
-                     f"+${value:,.0f}" if c in (6, 8) and value > 0 else f"${value:,.0f}")
+                     format_table_dollar(value, signed=c in (6, 8)))
             text(edges[c]+.010 if c == 0 else edges[c+1]-.010, top-height/2,
                  label, 12, accent if c == 5 or (c == 0 and current) else primary,
                  medium if c in (0, 5) else mono, "left" if c == 0 else "right")
@@ -354,7 +371,8 @@ def render_current_year_savings(assumptions, current):
         ax.scatter(current.date.iloc[-1], current[col].iloc[-1], color=color,
                    s=24, zorder=4, edgecolors=bg, linewidths=.7)
     ax.set_xlim(pd.Timestamp(year, 1, 1), pd.Timestamp(year, 12, 31))
-    ax.set_ylim(0, current[[s[0] for s in series]].to_numpy().max()*1.04)
+    peak = float(current[[s[0] for s in series]].to_numpy().max())
+    ax.set_ylim(0, max(peak * 1.04, 1.0))
     ax.yaxis.set_major_locator(MaxNLocator(nbins=6, min_n_ticks=3))
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"${v:,.0f}"))
     ax.xaxis.set_major_locator(mdates.MonthLocator())
@@ -466,8 +484,8 @@ def export_report(root, *, output_dir=None, **settings):
     parent = destination.parent
     parent.mkdir(parents=True, exist_ok=True)
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    with tempfile.TemporaryDirectory(prefix=".building-", dir=parent) as tmp:
-        stage = Path(tmp)
+    stage = Path(tempfile.mkdtemp(prefix=".building-", dir=parent))
+    try:
         for name, table in tables.items():
             table.to_csv(stage / f"{name}.csv", index=False, date_format="%Y-%m-%d", float_format="%.15g")
         (stage / "plan_definition.json").write_text(json.dumps(assumptions, indent=2, allow_nan=False) + "\n")
@@ -478,23 +496,45 @@ def export_report(root, *, output_dir=None, **settings):
         (stage / "savings_report.json").write_text(json.dumps(packet, indent=2, allow_nan=False) + "\n")
         (stage / "README.md").write_text(EXPORT_NOTES)
         render_charts(assumptions, tables, stage)
-        exported_manifest = {"schema_version": 1, "run_id": run_id,
+        staged_files = {
+            p.name: {"sha256": sha256(p), "bytes": p.stat().st_size}
+            for p in sorted(stage.iterdir()) if p.is_file()
+        }
+        # Preserve an identical existing bundle (including its run_id) so re-runs are idempotent.
+        existing_manifest_path = destination / "export_manifest.json"
+        if existing_manifest_path.is_file():
+            try:
+                existing_manifest = validate_report_bundle(destination, root=root)
+            except (OSError, ValueError):
+                existing_manifest = None
+            if (existing_manifest is not None
+                    and existing_manifest.get("report_date") == assumptions["report_date"]
+                    and existing_manifest.get("snapshot_status") == assumptions["snapshot_status"]
+                    and existing_manifest.get("provenance") == provenance
+                    and existing_manifest.get("files") == staged_files):
+                return destination, assumptions, tables
+        exported_manifest = {
+            "schema_version": 1, "run_id": run_id,
             "report_date": assumptions["report_date"], "snapshot_status": assumptions["snapshot_status"],
-            "provenance": provenance, "files": {
-                p.name: {"sha256": sha256(p), "bytes": p.stat().st_size}
-                for p in sorted(stage.iterdir()) if p.is_file()}}
+            "provenance": provenance, "files": staged_files,
+        }
         (stage / "export_manifest.json").write_text(json.dumps(exported_manifest, indent=2) + "\n")
         # Build and validate completely before replacing the latest view.
         validate_report_bundle(stage, root=root)
-        previous = parent / f".previous-{run_id}"
+        previous = parent / f".previous-{run_id}-{uuid.uuid4().hex[:8]}"
+        moved_previous = False
         if destination.exists():
             destination.rename(previous)
+            moved_previous = True
         try:
             stage.rename(destination)
         except BaseException:
-            if previous.exists():
+            if moved_previous and previous.exists():
                 previous.rename(destination)
             raise
-        if previous.exists():
+        if moved_previous and previous.exists():
             shutil.rmtree(previous)
+    finally:
+        if stage.exists():
+            shutil.rmtree(stage)
     return destination, assumptions, tables

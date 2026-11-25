@@ -72,6 +72,40 @@ class SavingsTests(unittest.TestCase):
                                      plan.total_value.iloc[-1], plan.index[-1])
         self.assertAlmostEqual(rate, .03, places=10)
 
+    def test_stop_after_yrs_exact_monthly_buys_across_leap_and_non_leap_starts(self):
+        long_prices = pd.Series(100., index=pd.date_range("2021-01-01", "2030-12-31"))
+        for start_year in (2021, 2022, 2023, 2024, 2025):
+            for yrs in range(1, 6):
+                with self.subTest(start_year=start_year, yrs=yrs):
+                    plan = run_plan(
+                        pd.Timestamp(f"{start_year}-01-01"),
+                        12000,
+                        0,
+                        cadence="monthly",
+                        prices=long_prices,
+                        still_buying=False,
+                        stop_after_yrs=yrs,
+                    )
+                    self.assertEqual(len(plan.attrs["buy_dates"]), 12 * yrs)
+                    self.assertAlmostEqual(plan.btc_contributed.iloc[-1], 12000.0 * yrs)
+                    self.assertEqual(plan.attrs["stop_date"], pd.Timestamp(f"{start_year + yrs}-01-01"))
+
+    def test_milestone_status_zero_annual_btc_does_not_divide_by_zero(self):
+        text = milestone_status(1.0, 0.25, 0.0, 80000.0, pd.Timestamp("2026-08-22"), True)
+        self.assertIn("25% there", text)
+        self.assertIn("no ongoing Bitcoin contributions", text)
+
+    def test_money_weighted_return_solves_steep_short_window_and_rejects_mismatched_lengths(self):
+        # 2x gain in 40 days is >55,000% annualized — well above the old hi=100.0 cap.
+        start = pd.Timestamp("2026-01-01")
+        end = start + pd.Timedelta(days=40)
+        rate = money_weighted_return([start], [1000.0], 2000.0, end)
+        expected = 2.0 ** (365.25 / 40.0) - 1.0
+        self.assertTrue(np.isfinite(rate))
+        self.assertAlmostEqual(rate, expected, delta=expected * 1e-9)
+        with self.assertRaisesRegex(ValueError, "same length"):
+            money_weighted_return([start, end], [1000.0], 2000.0, end)
+
 
 if __name__ == "__main__":
     unittest.main()

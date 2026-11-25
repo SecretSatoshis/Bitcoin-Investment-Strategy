@@ -27,3 +27,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 bitcoin_investment_strategy = ["assets/fonts/*.ttf", "assets/fonts/*.txt", "assets/fonts/*.md"]
+
+[tool.ruff]
+target-version = "py312"
+extend-exclude = ["notebooks", "outputs", "build"]

@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import json
 from typing import Any
 
 import pandas as pd
 
 from .config import MANIFEST_DIR, PROCESSED_DIR, ROOT, ensure_directories, last_completed_utc
-from .fetchers.report_library import fetch_savings_inputs
+from .fetchers.report_library import ReportLibraryRelease, fetch_savings_inputs
 from .io import artifact_metadata, atomic_write_csv, atomic_write_json, release_id
 from .release_files import DATA_MANIFEST
 from .validation import validate_bitcoin_daily, validate_income, validate_release_manifest
@@ -34,7 +35,29 @@ def _column_dictionary() -> pd.DataFrame:
     )
 
 
-def update_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
+def _preserve_retrieved_at(manifest_path, candidate: dict[str, Any]) -> dict[str, Any]:
+    """Keep the prior retrieved_at_utc when the release content and metadata are identical."""
+    if not manifest_path.is_file():
+        return candidate
+    try:
+        existing = json.loads(manifest_path.read_text())
+    except (OSError, ValueError):
+        return candidate
+    if not isinstance(existing, dict) or "retrieved_at_utc" not in existing:
+        return candidate
+    existing_stable = {k: v for k, v in existing.items() if k != "retrieved_at_utc"}
+    candidate_stable = {k: v for k, v in candidate.items() if k != "retrieved_at_utc"}
+    if existing_stable == candidate_stable:
+        return {**candidate, "retrieved_at_utc": existing["retrieved_at_utc"]}
+    return candidate
+
+
+def update_data(
+    as_of: pd.Timestamp | None = None,
+    *,
+    allow_slice: bool = False,
+    release: ReportLibraryRelease | None = None,
+) -> dict[str, Any]:
     ensure_directories()
     as_of = (as_of or last_completed_utc()).normalize()
     if pd.isna(as_of) or as_of.tz is not None or as_of > last_completed_utc():
@@ -43,7 +66,7 @@ def update_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
     print(f"Building the data release through completed UTC day {as_of.date()}")
 
     # Price and income come from the same Report Library release.
-    daily, income, provenance = fetch_savings_inputs(as_of)
+    daily, income, provenance = fetch_savings_inputs(as_of, allow_slice=allow_slice, release=release)
     validate_bitcoin_daily(daily)
     validate_income(income, as_of)
 
@@ -67,6 +90,7 @@ def update_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
         "sources": {"report_library": {"status": "live", **provenance}},
     }
     manifest_path = ROOT / DATA_MANIFEST
+    manifest = _preserve_retrieved_at(manifest_path, manifest)
     atomic_write_json(manifest_path, manifest)
     validate_release_manifest(manifest_path)
     print(f"Published release {manifest['release_id']}: {len(daily):,} daily rows through {as_of.date()}")

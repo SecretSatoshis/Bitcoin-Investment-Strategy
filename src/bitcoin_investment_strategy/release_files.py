@@ -34,12 +34,31 @@ RESEARCH_FILES = frozenset({
 })
 
 NOTEBOOK = "notebooks/bitcoin_savings_plan.ipynb"
+MANDATORY_NOTEBOOKS = frozenset({
+    "notebooks/bitcoin_savings_plan.ipynb",
+    "notebooks/bitcoin_supply_dynamics.ipynb",
+})
+OPTIONAL_NOTEBOOKS = frozenset({
+    "notebooks/bitcoin_demand_dynamics.ipynb",
+})
 RESEARCH_NOTEBOOKS = frozenset({
     "notebooks/bitcoin_supply_dynamics.ipynb",
     "notebooks/bitcoin_demand_dynamics.ipynb",
 })
 NOTEBOOKS = frozenset({NOTEBOOK}) | RESEARCH_NOTEBOOKS
 
-PUBLICATION_FILES = DATA_FILES | RESEARCH_FILES | {DATA_MANIFEST, RESEARCH_MANIFEST} | NOTEBOOKS | {
+EXECUTED_NOTEBOOK_DIR = "build/executed-notebooks"
+EXECUTED_MANDATORY_NOTEBOOKS = frozenset({
+    f"{EXECUTED_NOTEBOOK_DIR}/bitcoin_savings_plan.ipynb",
+    f"{EXECUTED_NOTEBOOK_DIR}/bitcoin_supply_dynamics.ipynb",
+})
+EXECUTED_OPTIONAL_NOTEBOOKS = frozenset({
+    f"{EXECUTED_NOTEBOOK_DIR}/bitcoin_demand_dynamics.ipynb",
+})
+EXECUTED_NOTEBOOKS = EXECUTED_MANDATORY_NOTEBOOKS | EXECUTED_OPTIONAL_NOTEBOOKS
+
+# Committed daily publication files on main. Committed notebooks stay stripped of
+# outputs in Git; daily rendered HTML is published separately to GitHub Pages.
+PUBLICATION_FILES = DATA_FILES | RESEARCH_FILES | {DATA_MANIFEST, RESEARCH_MANIFEST} | {
     f"{REPORT_DIR}/{name}" for name in REPORT_FILES | {REPORT_MANIFEST}
 }

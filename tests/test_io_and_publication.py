@@ -1,4 +1,4 @@
-"""HTTP retry policy and the weekly notebook publication rule."""
+"""HTTP retry policy, atomic writes, and notebook stripping / release verification."""
 from __future__ import annotations
 
 import importlib.util
@@ -12,6 +12,8 @@ import pandas as pd
 import requests
 
 from bitcoin_investment_strategy import io
+from bitcoin_investment_strategy.notebook_html import is_notebook_stripped
+from bitcoin_investment_strategy.release_files import NOTEBOOKS
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("publication", ROOT / "scripts/publication.py")
@@ -28,12 +30,17 @@ def response(status, headers=None):
 
 
 class RequestRetryTests(unittest.TestCase):
-    def test_retry_after_is_honored_for_rate_limits(self):
+    def test_retry_after_is_honored_for_rate_limits_up_to_65s(self):
         ok = response(200)
-        with patch.object(io.requests, "get", side_effect=[response(429, {"Retry-After": "7"}), ok]), \
+        with patch.object(io.requests, "get", side_effect=[response(429, {"Retry-After": "60"}), ok]), \
                 patch.object(io.time, "sleep") as sleep:
             self.assertIs(io.request("https://example.invalid/data"), ok)
-        sleep.assert_called_once_with(7.0)
+        sleep.assert_called_once_with(60.0)
+
+        with patch.object(io.requests, "get", side_effect=[response(429, {"Retry-After": "120"}), ok]), \
+                patch.object(io.time, "sleep") as sleep:
+            self.assertIs(io.request("https://example.invalid/data"), ok)
+        sleep.assert_called_once_with(65)
 
     def test_client_errors_fail_without_retrying(self):
         with patch.object(io.requests, "get", return_value=response(404)) as get, \
@@ -43,12 +50,19 @@ class RequestRetryTests(unittest.TestCase):
         self.assertEqual(get.call_count, 1)
         sleep.assert_not_called()
 
-    def test_server_errors_are_retried(self):
+    def test_server_errors_are_retried_and_raise_transient_error(self):
         with patch.object(io.requests, "get", return_value=response(503)) as get, \
                 patch.object(io.time, "sleep"):
-            with self.assertRaisesRegex(RuntimeError, "after 3 attempts"):
+            with self.assertRaisesRegex(io.TransientRequestError, "after 3 attempts"):
                 io.request("https://example.invalid/data", attempts=3)
         self.assertEqual(get.call_count, 3)
+
+    def test_atomic_write_bytes_leaves_no_temp_files(self):
+        with TemporaryDirectory() as directory:
+            target = Path(directory) / "sample.txt"
+            io.atomic_write_text(target, "hello")
+            self.assertEqual(target.read_text(), "hello")
+            self.assertEqual([p.name for p in Path(directory).iterdir()], ["sample.txt"])
 
 
 class ReleaseMetadataTests(unittest.TestCase):
@@ -69,21 +83,36 @@ class ReleaseMetadataTests(unittest.TestCase):
                 pd.Timestamp("2026-01-01"), {"data.csv": io.artifact_metadata(path)}))
 
 
-class WeeklyNotebookTests(unittest.TestCase):
-    def notebook(self, directory, release_date):
-        path = Path(directory) / "notebook.ipynb"
-        path.write_text(json.dumps({"cells": [{"cell_type": "code", "outputs": [
-            {"output_type": "stream", "text": [f"Data release: {release_date}-abc123\n"]}]}]}))
+class NotebookReleaseTests(unittest.TestCase):
+    def write_notebook(self, path: Path, output_text: str | None = None) -> Path:
+        outputs = [{"output_type": "stream", "text": [output_text]}] if output_text else []
+        exec_count = 1 if output_text else None
+        path.write_text(json.dumps({"cells": [
+            {"cell_type": "code", "execution_count": exec_count, "outputs": outputs, "source": []},
+        ]}))
         return path
 
-    def test_notebook_is_committed_for_sunday_data_or_after_a_week(self):
+    def test_notebook_data_end_reads_all_three_notebook_formats(self):
         with TemporaryDirectory() as directory:
-            committed = self.notebook(directory, "2026-09-20")
-            self.assertEqual(publication.notebook_data_end(committed), "2026-09-20")
-            self.assertTrue(publication.notebook_due("2026-09-27", committed))   # Sunday
-            self.assertFalse(publication.notebook_due("2026-09-23", committed))  # midweek
-            self.assertTrue(publication.notebook_due("2026-09-26", self.notebook(directory, "2026-09-19")))
-            self.assertTrue(publication.notebook_due("2026-09-23", Path(directory) / "missing.ipynb"))
+            base = Path(directory)
+            cases = [
+                ("savings.ipynb", "Data release: 2026-09-20-abc123\n", "2026-09-20"),
+                ("supply.ipynb", "Release 2026-09-21-def456\n", "2026-09-21"),
+                ("demand.ipynb", "release         2026-09-22-ghi789\nData cutoff: 2026-09-22\n", "2026-09-22"),
+            ]
+            for name, text, expected in cases:
+                with self.subTest(name=name):
+                    nb = self.write_notebook(base / name, text)
+                    self.assertEqual(publication.notebook_data_end(nb), expected)
+                    self.assertFalse(publication.is_notebook_stripped(nb))
+
+    def test_committed_notebooks_remain_output_stripped(self):
+        for rel in sorted(NOTEBOOKS):
+            nb_path = ROOT / rel
+            with self.subTest(notebook=rel):
+                self.assertTrue(nb_path.is_file(), f"Missing notebook {rel}")
+                self.assertTrue(is_notebook_stripped(nb_path), f"{rel} still contains outputs or execution counts")
+                self.assertTrue(publication.is_notebook_stripped(nb_path))
 
 
 if __name__ == "__main__":

@@ -62,6 +62,61 @@ class ReportLibraryTests(unittest.TestCase):
         with patch.object(report_library, "request", side_effect=responses), self.assertRaises(SourceSchemaError):
             report_library.fetch_savings_inputs(pd.Timestamp("2010-08-17"))
 
+    def test_allow_slice_backfills_earlier_cutoff_and_records_provenance(self):
+        master_bytes = gzip.compress(MASTER.encode())
+        annual_with_2010 = (
+            ANNUAL + "us_median_household_income_usd,2010,49276,current USD,FRED,,,2011-01-01\n"
+        ).encode()
+        etf_daily = (
+            "date,fund,btc_held\n2010-08-15,IBIT,10\n2010-08-16,IBIT,12\n2010-08-17,IBIT,15\n"
+        ).encode()
+        etf_quarterly = (
+            "fund,quarter_end,btc\nALL,2010-06-30,10\nALL,2010-09-30,15\n"
+        ).encode()
+        manifest = {
+            "report_date": "2010-08-17",
+            "release_id": "2010-08-17",
+            "files": {
+                "master_metrics_data.csv.gz": {"sha256": hashlib.sha256(master_bytes).hexdigest()},
+                "annual_reference_data.csv": {"sha256": hashlib.sha256(annual_with_2010).hexdigest()},
+                "etf_daily.csv": {"sha256": hashlib.sha256(etf_daily).hexdigest()},
+                "etf_quarterly.csv": {"sha256": hashlib.sha256(etf_quarterly).hexdigest()},
+            },
+        }
+        responses = [
+            Mock(**{"json.return_value": manifest}),
+            Mock(content=master_bytes),
+            Mock(content=annual_with_2010),
+            Mock(content=etf_daily),
+            Mock(content=etf_quarterly),
+        ]
+        with patch.object(report_library, "request", side_effect=responses) as req:
+            raw = report_library.fetch_raw_release(
+                pd.Timestamp("2010-08-16"),
+                ("etf_daily.csv", "etf_quarterly.csv"),
+                allow_slice=True,
+            )
+            # Reusing the raw release triggers zero extra HTTP calls.
+            price, income, sav_prov = report_library.fetch_savings_inputs(
+                pd.Timestamp("2010-08-16"), allow_slice=True, release=raw,
+            )
+            daily, annual, extra, res_prov = report_library.fetch_release_files(
+                pd.Timestamp("2010-08-16"),
+                ["price_close", "supply"],
+                ("etf_daily.csv", "etf_quarterly.csv"),
+                allow_slice=True,
+                release=raw,
+            )
+        self.assertEqual(req.call_count, 5)
+        self.assertEqual(list(price.index.strftime("%Y-%m-%d")), ["2010-08-16"])
+        self.assertEqual(list(daily.index.strftime("%Y-%m-%d")), ["2010-08-15", "2010-08-16"])
+        self.assertEqual(income["Year"].tolist(), [2008, 2009])
+        self.assertEqual(annual["year"].max(), 2009)
+        self.assertEqual(extra["etf_daily.csv"]["date"].tolist(), ["2010-08-15", "2010-08-16"])
+        self.assertEqual(extra["etf_quarterly.csv"]["quarter_end"].tolist(), ["2010-06-30"])
+        self.assertEqual(sav_prov["sliced_from_report_date"], "2010-08-17")
+        self.assertEqual(res_prov["sliced_from_report_date"], "2010-08-17")
+
 
 if __name__ == "__main__":
     unittest.main()

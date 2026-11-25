@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from ..config import ROOT
-from ..io import SourceSchemaError, atomic_write_csv, atomic_write_json, request
+from ..io import SourceSchemaError, TransientRequestError, atomic_write_csv, atomic_write_json, request
 from .config import COINGECKO_BASE_URL, REFERENCE_DIR
 from .transforms import build_company_treasuries, build_government_treasuries
 from .validation import validate_treasuries
@@ -27,19 +27,28 @@ MAX_AGE = pd.Timedelta(hours=24)
 PAGE_SIZE = 250
 
 
+class CoinGeckoTransientError(TransientRequestError):
+    """CoinGecko rate-limited or failed transiently across all retry attempts."""
+
+
 def fetch_public_treasuries(entity_type: str) -> tuple[pd.DataFrame, dict[str, Any]]:
     if entity_type not in {"companies", "governments"}:
         raise ValueError(f"unsupported treasury entity type: {entity_type}")
     # An optional free Demo key raises the rate limit; the keyless API works without one.
-    key = os.environ.get("COINGECKO_API_KEY")
+    key = (os.environ.get("COINGECKO_API_KEY") or "").strip()
     headers = {"x-cg-demo-api-key": key} if key else {}
     records: list[dict[str, Any]] = []
     for page in range(1, 41):
-        response = request(
-            f"{COINGECKO_BASE_URL}/{entity_type}/public_treasury/bitcoin",
-            params={"per_page": PAGE_SIZE, "page": page},
-            headers=headers,
-        )
+        try:
+            response = request(
+                f"{COINGECKO_BASE_URL}/{entity_type}/public_treasury/bitcoin",
+                params={"per_page": PAGE_SIZE, "page": page},
+                headers=headers,
+            )
+        except TransientRequestError as error:
+            raise CoinGeckoTransientError(
+                f"CoinGecko {entity_type} transient error: {error}"
+            ) from error
         payload = response.json()
         batch = payload.get(entity_type) if isinstance(payload, dict) else None
         if not isinstance(batch, list):
@@ -64,13 +73,15 @@ def fetch_public_treasuries(entity_type: str) -> tuple[pd.DataFrame, dict[str, A
     for column in ("btc", "cost_basis_usd", "current_value_usd", "pct_of_supply"):
         if column in frame:
             frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    # Check the API's reported total before deduplicating or dropping null rows so a
+    # duplicate entity name does not trigger a false mismatch and a missing page still fails.
+    raw_total = float(frame["btc"].sum(min_count=1))
+    reported = payload.get("total_holdings")
+    if reported is not None and not np.isclose(raw_total, float(reported), rtol=1e-6):
+        raise ValueError(f"CoinGecko {entity_type}: rows sum to {raw_total:,.2f} BTC, "
+                         f"not the reported {float(reported):,.2f}")
     frame = frame.dropna(subset=["entity", "btc"]).sort_values("btc", ascending=False)
     frame = frame.drop_duplicates("entity", keep="first").reset_index(drop=True)
-    # The response states its own total, so a missing page cannot pass unnoticed.
-    reported = payload.get("total_holdings")
-    if reported is not None and not np.isclose(frame["btc"].sum(), float(reported), rtol=1e-6):
-        raise ValueError(f"CoinGecko {entity_type}: rows sum to {frame['btc'].sum():,.2f} BTC, "
-                         f"not the reported {float(reported):,.2f}")
     provenance = {
         "url": response.url,
         "authenticated": bool(key),

@@ -36,8 +36,12 @@ def prepare_prices(prices):
 
 
 def milestone_status(level, held, annual_btc, spot, as_of, contributing, stop_date=None):
+    if not np.isfinite(level) or level <= 0 or not np.isfinite(spot) or spot <= 0:
+        raise ValueError("Milestone level and spot price must be finite and positive")
     if not contributing:
         return f"{held/level:.0%} there"
+    if not np.isfinite(annual_btc) or annual_btc <= 0:
+        return f"{held/level:.0%} there — no ongoing Bitcoin contributions"
     years = max(level - held, 0) / (annual_btc / spot)
     if stop_date is not None and years * 365.25 > (stop_date - as_of).total_seconds() / 86400:
         return f"{held/level:.0%} there — beyond the planned contribution horizon"
@@ -52,6 +56,16 @@ def milestone_status(level, held, annual_btc, spot, as_of, contributing, stop_da
 
 CADENCE_RULE = {"weekly": "W-MON", "biweekly": "2W-MON", "monthly": "MS"}
 
+
+def _compute_stop_date(start: pd.Timestamp, stop_after_yrs: float) -> pd.Timestamp:
+    yrs = float(stop_after_yrs)
+    if yrs.is_integer():
+        return (start + pd.DateOffset(years=int(yrs))).normalize()
+    whole_years = int(np.floor(yrs))
+    fractional_days = (yrs - whole_years) * 365.25
+    return start + pd.DateOffset(years=whole_years) + pd.Timedelta(days=fractional_days)
+
+
 def annual_buy_count(year, cadence, anchor):
     """Scheduled contributions in a full calendar year on this plan's cadence."""
     if cadence == "monthly":
@@ -59,6 +73,7 @@ def annual_buy_count(year, cadence, anchor):
     mondays = pd.date_range(f"{year}-01-01", f"{year}-12-31", freq="W-MON")
     step = 7 if cadence == "weekly" else 14
     return int((((mondays - anchor).days % step) == 0).sum())
+
 
 def run_plan(start, annual_btc, annual_cash, cadence="monthly", cash_apy=0.03,
              prices=None, still_buying=True, stop_after_yrs=None):
@@ -87,18 +102,22 @@ def run_plan(start, annual_btc, annual_cash, cadence="monthly", cash_apy=0.03,
     if not still_buying:
         if stop_after_yrs is None or not np.isfinite(stop_after_yrs) or stop_after_yrs <= 0:
             raise ValueError("STOP_AFTER_YRS must be positive when STILL_BUYING is False.")
-        stop_date = start + pd.Timedelta(days=float(stop_after_yrs) * 365.25)
+        stop_date = _compute_stop_date(start, stop_after_yrs)
         buy_dates = [d for d in buy_dates if d < stop_date]
-    if not buy_dates:
+    if not buy_dates and stop_date is not None and last >= stop_date:
         raise ValueError("The plan makes no purchases with these settings; check PLAN_START and STOP_AFTER_YRS.")
 
     # Spread each calendar year's budget across its actual number of scheduled
     # contributions (52/53 weekly or 26/27 biweekly), keeping the annual total exact.
-    anchor = buy_dates[0]
-    counts = {year: annual_buy_count(year, cadence, anchor)
-              for year in {d.year for d in buy_dates}}
-    btc_schedule = {d: annual_btc / counts[d.year] for d in buy_dates}
-    cash_schedule = {d: annual_cash / counts[d.year] for d in buy_dates}
+    if buy_dates:
+        anchor = buy_dates[0]
+        counts = {year: annual_buy_count(year, cadence, anchor)
+                  for year in {d.year for d in buy_dates}}
+        btc_schedule = {d: annual_btc / counts[d.year] for d in buy_dates}
+        cash_schedule = {d: annual_cash / counts[d.year] for d in buy_dates}
+    else:
+        btc_schedule = {}
+        cash_schedule = {}
     daily_rate = (1 + cash_apy) ** (1 / 365.25) - 1
     buys = set(buy_dates)
 
@@ -130,8 +149,13 @@ def run_plan(start, annual_btc, annual_cash, cadence="monthly", cash_apy=0.03,
     p.attrs["total_contributions"] = [btc_schedule[d] + cash_schedule[d] for d in buy_dates]
     return p
 
+
 def money_weighted_return(dates, amounts, final_value, final_date):
     # The annual rate that turns the contribution stream into the final value. May be negative.
+    dates = list(dates)
+    amounts = list(amounts)
+    if len(dates) != len(amounts):
+        raise ValueError("dates and amounts must have the same length")
     contributed = float(sum(amounts))
     if not dates or contributed <= 0:
         return np.nan
@@ -141,20 +165,36 @@ def money_weighted_return(dates, amounts, final_value, final_date):
     if final_value <= 0:               # everything lost; the rate is -100%
         return -1.0
 
-    def npv(r):
-        return sum(-a * (1 + r) ** ((final_date - d).days / 365.25)
-                   for d, a in zip(dates, amounts)) + final_value
+    exponents = [(final_date - d).days / 365.25 for d in dates]
 
-    # Bracket wide enough for a plan that multiplied many times over a short window.
-    lo, hi = -0.999, 100.0
+    def npv(r):
+        try:
+            total = sum(-a * (1.0 + r) ** t for a, t in zip(amounts, exponents, strict=True))
+        except OverflowError:
+            return -np.inf
+        return total + final_value
+
+    # Bracket dynamically so steep short-window gains still solve instead of returning NaN.
+    lo = -0.999999
     npv_lo = npv(lo)
-    if npv_lo * npv(hi) > 0:
+    if npv_lo == 0:
+        return lo
+    hi = 10.0
+    npv_hi = npv(hi)
+    while np.isfinite(npv_hi) and npv_lo * npv_hi > 0 and hi < 1e15:
+        hi *= 10.0
+        npv_hi = npv(hi)
+    if npv_lo * npv_hi > 0:
         return np.nan
-    for _ in range(300):
-        mid = (lo + hi) / 2
+    for _ in range(200):
+        mid = (lo + hi) / 2.0
+        if (hi - lo) <= 1e-12 * max(1.0, abs(mid)):
+            return mid
         npv_mid = npv(mid)
+        if np.isfinite(npv_mid) and abs(npv_mid) <= 1e-12 * max(1.0, float(final_value)):
+            return mid
         if npv_lo * npv_mid <= 0:
             hi = mid
         else:
             lo, npv_lo = mid, npv_mid
-    return (lo + hi) / 2
+    return (lo + hi) / 2.0

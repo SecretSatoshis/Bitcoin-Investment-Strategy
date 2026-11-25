@@ -130,7 +130,8 @@ def period_centers(idx, code):
 
 
 def price_axis(ax, label="Bitcoin price (USD, log scale)"):
-    ax.set_yscale("log"); ax.set_ylabel(label)
+    ax.set_yscale("log")
+    ax.set_ylabel(label)
     log_axis(ax.yaxis, usd)
     return ax
 
@@ -192,7 +193,8 @@ def finish(fig, title=None, ax=None, sources=()):
         # Slant date labels so they never collide; numeric and category axes stay level.
         if isinstance(axis.xaxis.get_major_locator(), DateLocator):
             for label in axis.get_xticklabels():
-                label.set_rotation(30); label.set_horizontalalignment("right")
+                label.set_rotation(30)
+                label.set_horizontalalignment("right")
         # A twin axis (twinx) has no background of its own; its grid would double the first's.
         if not axis.patch.get_visible():
             axis.grid(False)
@@ -206,7 +208,8 @@ def finish(fig, title=None, ax=None, sources=()):
     if sources:
         fig.text(0.01, 0.012, credit_line(sources), fontproperties=MONO, fontsize=10, color=SECONDARY,
                  ha="left", va="bottom")
-    plt.show(); plt.close(fig)
+    plt.show()
+    plt.close(fig)
 
 
 # ------------------------------------------------------------ data-age disclosure

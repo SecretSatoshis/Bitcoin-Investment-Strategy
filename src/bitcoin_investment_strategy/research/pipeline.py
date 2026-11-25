@@ -13,12 +13,13 @@ them from CoinGecko when it runs (see treasuries.py).
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import json
 from typing import Any
 
 import pandas as pd
 
 from ..config import ROOT, last_completed_utc
-from ..fetchers.report_library import fetch_release_files
+from ..fetchers.report_library import ReportLibraryRelease, fetch_release_files
 from ..io import artifact_metadata, atomic_write_csv, atomic_write_json, release_id
 from .config import (
     ETF_FILES, FLOW_SERIES, MANIFEST_DIR, REPORT_LIBRARY_COLUMNS, REPORT_LIBRARY_SERIES, RESEARCH_DIR,
@@ -55,7 +56,29 @@ def _column_dictionary() -> pd.DataFrame:
     return pd.DataFrame(rows, columns=["column", "upstream_series", "source"])
 
 
-def update_research_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
+def _preserve_retrieved_at(manifest_path, candidate: dict[str, Any]) -> dict[str, Any]:
+    """Keep the prior retrieved_at_utc when the release content and metadata are identical."""
+    if not manifest_path.is_file():
+        return candidate
+    try:
+        existing = json.loads(manifest_path.read_text())
+    except (OSError, ValueError):
+        return candidate
+    if not isinstance(existing, dict) or "retrieved_at_utc" not in existing:
+        return candidate
+    existing_stable = {k: v for k, v in existing.items() if k != "retrieved_at_utc"}
+    candidate_stable = {k: v for k, v in candidate.items() if k != "retrieved_at_utc"}
+    if existing_stable == candidate_stable:
+        return {**candidate, "retrieved_at_utc": existing["retrieved_at_utc"]}
+    return candidate
+
+
+def update_research_data(
+    as_of: pd.Timestamp | None = None,
+    *,
+    allow_slice: bool = False,
+    release: ReportLibraryRelease | None = None,
+) -> dict[str, Any]:
     """Build and write the release through `as_of` (default: the last completed UTC day)."""
     as_of = (as_of or last_completed_utc()).normalize()
     if pd.isna(as_of) or as_of.tz is not None or as_of > last_completed_utc():
@@ -63,7 +86,9 @@ def update_research_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
     retrieved_at = datetime.now(timezone.utc).isoformat()
     print(f"Building the supply and demand release through completed UTC day {as_of.date()}")
 
-    master, annual, etf, provenance = fetch_release_files(as_of, REPORT_LIBRARY_COLUMNS, ETF_FILES)
+    master, annual, etf, provenance = fetch_release_files(
+        as_of, REPORT_LIBRARY_COLUMNS, ETF_FILES, allow_slice=allow_slice, release=release,
+    )
     bitcoin_daily = build_bitcoin_daily(master, as_of)
     if bitcoin_daily.index[-1] != as_of:
         raise ValueError(f"The Report Library release ends {bitcoin_daily.index[-1].date()}, expected {as_of.date()}")
@@ -101,6 +126,7 @@ def update_research_data(as_of: pd.Timestamp | None = None) -> dict[str, Any]:
                                        "carried_days": (as_of - efficiency_end).days, "maximum_carry_days": 365},
         },
     }
+    manifest = _preserve_retrieved_at(RESEARCH_MANIFEST, manifest)
     atomic_write_json(RESEARCH_MANIFEST, manifest)
     validate_release_manifest(RESEARCH_MANIFEST)
     print(f"Published release {manifest['release_id']}: {len(bitcoin_daily):,} daily rows through {as_of.date()}")

@@ -3,13 +3,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
 
-import requests
 import pandas as pd
+import requests
 
 
 USER_AGENT = "bitcoin-investment-strategy-data/0.1 (+public research notebook)"
@@ -17,6 +19,12 @@ USER_AGENT = "bitcoin-investment-strategy-data/0.1 (+public research notebook)"
 # Statuses worth retrying: timeouts, rate limits and server-side failures. Anything else
 # (404 for a renamed series, 400 for a bad request) will not change on a retry.
 TRANSIENT_STATUSES = {408, 425, 429}
+# CoinGecko rate limits reset on a 60-second window; allow 65s so Retry-After is honored.
+MAX_RETRY_WAIT_SECONDS = 65
+
+
+class TransientRequestError(RuntimeError):
+    """A network, rate-limit, or server error persisted across all retry attempts."""
 
 
 class SourceSchemaError(ValueError):
@@ -90,16 +98,40 @@ def request(
             if attempt == attempts:
                 break
             retry_after = response.headers.get("Retry-After") if response is not None else None
-            wait = float(retry_after) if retry_after and retry_after.isdigit() else 2 ** attempt
-            time.sleep(min(wait, 30))
-    raise RuntimeError(f"request failed after {attempts} attempts: {url}") from last_error
+            wait: float | None = None
+            if retry_after is not None:
+                try:
+                    parsed = float(retry_after.strip())
+                except ValueError:
+                    parsed = float("nan")
+                if math.isfinite(parsed) and parsed >= 0:
+                    wait = parsed
+            if wait is None:
+                wait = float(2 ** attempt)
+            time.sleep(min(wait, MAX_RETRY_WAIT_SECONDS))
+    raise TransientRequestError(f"request failed after {attempts} attempts: {url}") from last_error
 
 
 def atomic_write_bytes(path: Path, content: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
-    temporary.write_bytes(content)
-    os.replace(temporary, path)
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            dir=path.parent,
+            delete=False,
+        ) as handle:
+            temp_path = Path(handle.name)
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temp_path, path)
+        temp_path = None
+    finally:
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink(missing_ok=True)
 
 
 def atomic_write_text(path: Path, content: str) -> None:

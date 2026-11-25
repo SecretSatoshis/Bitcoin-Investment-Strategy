@@ -87,12 +87,15 @@ uv run --no-sync python -m unittest discover -s tests
 
 ## Daily publication
 
-A GitHub Actions workflow runs every day, scheduled for 07:17 UTC. It runs the tests,
-refreshes both data releases (waiting up to three hours for that day's Report Library release),
-runs the notebooks, checks the releases and the savings report, and commits them. The executed
-notebooks embed their charts, so they are committed weekly to keep the repository small. Any
-failed check stops publication and leaves the last release in place; if a supply or demand
-notebook cannot run (CoinGecko can rate-limit), its last good copy stays.
+A GitHub Actions workflow runs when `Bitcoin-Report-Library` dispatches `report-library-updated`
+(with a daily 10:00 UTC backup cron and manual `workflow_dispatch` with optional `as_of` backfill).
+It lints with `ruff`, runs the tests, refreshes both data releases from one Report Library download,
+executes the notebooks (writing daily rendered HTML to GitHub Pages while keeping committed
+`notebooks/*.ipynb` stripped of outputs), validates the releases and savings report, and commits
+only changed data and `outputs/savings/latest/` files. On quarter-end dates (`snapshot_status == "quarter_end"`),
+it also tags and publishes an immutable `savings-YYYY-QN` GitHub Release. The savings and supply
+notebooks are mandatory; the demand notebook reads CoinGecko live (using an optional
+`COINGECKO_API_KEY` secret when configured) and only downgrades transient CoinGecko network/429 errors.
 
 ## Project layout
 
