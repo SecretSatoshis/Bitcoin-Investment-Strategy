@@ -42,7 +42,7 @@
     "source_data_end": "2026-11-25",
     "price_file": "data/processed/bitcoin_daily.csv",
     "price_sha256": "3c3631944e3c1d0dda8072d5685c9fd9bd9e83247cc7c3c8ebe27c60561dc0ca",
-    "source_manifest_sha256": "77753efd25adce1d3ddd264d21b36fc0db2c0cff36bbc341580b1fbce11a364d",
+    "source_manifest_sha256": "6aea622771460efe52cf0de418c0d9a47d53a6c626c0cd356995ad8a98bfbc19",
     "engine_sha256": "943c3d1fa9d2375096d693b14af790bb79009a0c5425c7396abdde630c7cfb9e",
     "exporter_sha256": "3d28baf2986843211eba1aff27286f7c35db573867b70889c43d40a280e8346e"
   },
